@@ -1,7 +1,7 @@
 load_sc_data <- function() {
-    load(system.file("extdata", "single_cell_data.RData", package = "scBench"))
+    load(system.file("extdata", "single_cell_data.RData", package = "CellBench"))
     assign(
-        "scbench_sc_data",
+        "cellbench_sc_data",
         list(
             "sc_10x" = sc_10x,
             "sc_celseq" = sc_celseq,
@@ -12,9 +12,9 @@ load_sc_data <- function() {
 }
 
 load_cell_mix_data <- function() {
-    load(system.file("extdata", "mix_9cell_data.RData", package = "scBench"))
+    load(system.file("extdata", "mix_9cell_data.RData", package = "CellBench"))
     assign(
-        "scbench_cell_mix_data",
+        "cellbench_cell_mix_data",
         list(
             "cell_mix1" = mix_9cell_07clean_1cell_mat,
             "cell_mix2" = mix_9cell_08clean_1cell_mat,
@@ -27,9 +27,9 @@ load_cell_mix_data <- function() {
 }
 
 load_mrna_mix_data <- function() {
-    load(system.file("extdata", "mrna_mix_data.RData", package = "scBench"))
+    load(system.file("extdata", "mrna_mix_data.RData", package = "CellBench"))
     assign(
-        "scbench_mrna_mix_data",
+        "cellbench_mrna_mix_data",
         list(
             "mrna_mix_celseq" = mrna_mix_celseq,
             "mrna_mix_sortseq" = mrna_mix_sortseq
@@ -39,11 +39,11 @@ load_mrna_mix_data <- function() {
 }
 
 load_all_data <- function() {
-    load(system.file("extdata", "single_cell_data.RData", package = "scBench"))
-    load(system.file("extdata", "mix_9cell_data.RData", package = "scBench"))
-    load(system.file("extdata", "mrna_mix_data.RData", package = "scBench"))
+    load(system.file("extdata", "single_cell_data.RData", package = "CellBench"))
+    load(system.file("extdata", "mix_9cell_data.RData", package = "CellBench"))
+    load(system.file("extdata", "mrna_mix_data.RData", package = "CellBench"))
     assign(
-        "scbench_data",
+        "cellbench_data",
         list(
             "sc_10x" = sc_10x,
             "sc_celseq" = sc_celseq,

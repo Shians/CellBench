@@ -27,11 +27,12 @@ impute_knn_smooth <- function(data) {
 }
 
 impute_basics <- function(data) {
-    counts <- counts(data)
-    stringr::str_detect(rownames(counts), "ERCC")
-    SpikeInput = rgamma(10,1,1)
-    SpikeInfo <- data.frame("SpikeID" = paste0("Spike", 1:10), "SpikeInput" = SpikeInput)
+    counts <- counts(data) %>% filter_zero_genes()
+    tech_features <- stringr::str_detect(rownames(Counts), "ERCC")
+    tech_counts <- counts[tech_features, ]
+    spike_info <- data.frame("SpikeID" = rownames(Counts)[tech_features], "SpikeInput" = row_apply(tech_counts, max))
 
-    data = newBASiCS_Data(Counts, Tech, SpikeInfo)
-
+    data <- BaSICS::newBASiCS_Data(counts, tech_features, spike_info)
+    chain <- BaSICS::BASiCS_MCMC(data, N = 200, Thin = 2, Burn = 100, Regression = TRUE, PrintProgress = FALSE)
+    BaSICS::BASiCS_DenoisedCounts(Data = data, Chain = chain)
 }

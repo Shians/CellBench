@@ -6,6 +6,10 @@ impute_knn_smooth_and_plot_pca <- function(datasets) {
     impute_and_plot_pca(datasets, impute_knn_smooth)
 }
 
+impute_basics_and_plot_pca <- function(datasets) {
+    impute_and_plot_pca(datasets, impute_basics)
+}
+
 impute_and_plot_pca <- function(datasets, impute_fn) {
     exp_names <- names(datasets)
 
