@@ -7,7 +7,12 @@ lib_size_norm <- function(x) {
 
 # library size normalise and transform to log scale
 lib_size_norm_expr <- function(x, log = TRUE, offset = 1) {
-    counts <- counts(x)
+    stopifnot(is_one_of(x, c("matrix", "SingleCellExperiment")))
+    if (is(x, "matrix")) {
+        counts <- x
+    } else {
+        counts <- SingleCellExperiment::counts(x)
+    }
     expr <- lib_size_norm(counts)
     if (log) {
         base::log(expr + offset)
