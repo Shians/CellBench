@@ -11,6 +11,8 @@ impute_basics_and_plot_pca <- function(datasets) {
 }
 
 impute_and_plot_pca <- function(datasets, impute_fn) {
+    stopifnot(is(datasets, "list"))
+
     exp_names <- names(datasets)
 
     reg_exprs <- lapply(datasets, lib_size_norm_expr)
