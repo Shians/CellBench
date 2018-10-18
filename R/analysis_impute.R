@@ -1,19 +1,3 @@
-lib_size_norm <- function(x) {
-    lib_sizes <- colSums(x)
-    norm_factors <- lib_sizes / 1000000
-    t(t(x) / norm_factors)
-}
-
-lib_size_norm_expr <- function(x, log = TRUE, prior = 1) {
-    counts <- counts(x)
-    expr <- lib_size_norm(counts)
-    if (log) {
-        base::log(expr + prior)
-    } else {
-        expr
-    }
-}
-
 impute_drimpute <- function(data) {
     expr <- lib_size_norm_expr(data)
     expr_processed <- DrImpute::preprocessSC(expr)
@@ -32,7 +16,7 @@ impute_basics <- function(data) {
     tech_counts <- counts[tech_features, ]
     spike_info <- data.frame("SpikeID" = rownames(Counts)[tech_features], "SpikeInput" = row_apply(tech_counts, max))
 
-    data <- BaSICS::newBASiCS_Data(counts, tech_features, spike_info)
-    chain <- BaSICS::BASiCS_MCMC(data, N = 200, Thin = 2, Burn = 100, Regression = TRUE, PrintProgress = FALSE)
-    BaSICS::BASiCS_DenoisedCounts(Data = data, Chain = chain)
+    data <- BASiCS::newBASiCS_Data(counts, tech_features, spike_info)
+    chain <- BASiCS::BASiCS_MCMC(data, N = 50, Thin = 2, Burn = 10, Regression = TRUE, PrintProgress = FALSE)
+    BASiCS::BASiCS_DenoisedCounts(Data = data, Chain = chain)
 }
