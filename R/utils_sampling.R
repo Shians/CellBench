@@ -1,6 +1,3 @@
-# alias for subsetting operator for code clarity elsewhere
-subset_inds <- `[`
-
 # sample n rows from data
 sample_rows <- function(x, n) {
     if (nrow(x) > n) {
