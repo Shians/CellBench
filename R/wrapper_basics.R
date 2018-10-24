@@ -1,4 +1,11 @@
-run_basics <- function(data) {
+run_basics <- function(
+    data,
+    N = 10000,
+    Thin = 10,
+    Burn = 2000,
+    Regression = TRUE,
+    ...
+) {
     counts <- counts(data) %>% filter_zero_genes()
     tech_features <- stringr::str_detect(rownames(counts), "ERCC")
 
@@ -23,13 +30,15 @@ run_basics <- function(data) {
 
     chain <- BASiCS::BASiCS_MCMC(
         data,
-        N = 4000,
-        Thin = 10,
-        Burn = 2000,
-        Regression = TRUE,
         WithSpikes = with_spikes,
-        PrintProgress = FALSE
+        N = N,
+        Thin = Thin,
+        Burn = Burn,
+        Regression = FALSE,
+        PrintProgress = TRUE,
+        ...
     )
 
-    BASiCS::BASiCS_DenoisedCounts(Data = data, Chain = chain)
+    count_mat <- BASiCS::BASiCS_DenoisedCounts(Data = data, Chain = chain)
+    count_mat
 }
