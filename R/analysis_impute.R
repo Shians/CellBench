@@ -15,5 +15,5 @@ impute_knn_smooth <- function(data) {
 
 impute_basics <- function(data) {
     count_mat <- run_basics(data)
-    count_mat %>% lib_size_norm_expr()
+    count_mat
 }
