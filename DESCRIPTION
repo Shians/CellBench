@@ -1,6 +1,6 @@
 Package: CellBench
 Type: Package
-Title: Framework for building benchmarks for single cell analysis methods
+Title: Construct Benchmarks for Analysis Methods
 Version: 0.1.0
 Author: Shian Su
 Maintainer: Shian Su <su.s@wehi.edu.au>
