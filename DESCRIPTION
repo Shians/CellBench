@@ -19,6 +19,7 @@ Depends:
     ggplot2,
     SummarizedBenchmark
 Suggests:
+    BiocStyle,
     knitr,
     rmarkdown
 VignetteBuilder: knitr

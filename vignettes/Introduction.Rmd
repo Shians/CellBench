@@ -1,65 +1,190 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Introduction to CellBench"
+author: "Shian Su"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+library(CellBench)
+library(ggplot2)
+```
+
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.retina = 1
 )
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+# Introduction
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+CellBench is a package to assist with creating benchmarks for single cell analysis methods. We provide functions for working with `SingleCellExperiments` objects and a framework for constructing benchmarks for different single cell datasets across different methods or combinations of methods.
 
-## Vignette Info
+The aim of this package is to make it simpler for developers to construct combinatorial designs and provide a flat data structure to store the organised outputs of analysis methods. We provide some fully constructed benchmarking pipelines for a set of single-cell benchmark datasets, but we hope that the framework will allow users to easily construct and contribute benchmarks for new or absent methods into this package.
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+# Quick start
 
-## Styles
+There are 3 fundamental components to the benchmarks in this package, `list`s of data, `list`s of functions and a `tibble` with a `list-column` that we will call a `benchmark_tbl`. For simplicity we use randomly generated data and simple functions, but hopefully it's clear how the idea extends into more complex functions and benchmarks.
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+```{r}
+# ensure that a vector has 0 mean
+center <- function(x) {
+    x - mean(x)
+}
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
+# we start with random vectors
+datasets <- list(
+    set1 = rnorm(500, mean = 2, sd = 1),
+    set2 = rnorm(500, mean = 1, sd = 2)
+)
 
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+# we then have a "method" that adds additional noise
+add_noise <- list(
+    none = identity, # included to provide a baseline for comparison
+    add_bias = function(x) { x + 1 },
+    add_variance = function(x) { x + center(rnorm(500, mean = 0, sd = 2)) }
+)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+Now we have 2 `list`s.
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+* A `list` of datasets. In this context it is two randomly generated vectors, but it can be any arbitrary object. Ideally all objects in the list are of the same type, this makes it success more likely when when the same methods are applied across all datasets.
+* A `list` of functions. These are the functions that will perform one step of our pipeline stored neatly in a single object. For this example we have methods of adding noise to our sample, the first function simply returns the data as-is which is helpful for comparison. The second adds a bias by shifting all values by 1 and the third adds random noise with a standard deviation of 2.
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```{r}
+# this allows us to construct the first `benchmark_tbl`
+res1 <- apply_methods(datasets, add_noise)
+res1
 ```
 
-Also a quote using `>`:
+So we see that we have a `result` for every combination of `data` and `add_noise` method applied. We can then summarise this into metrics.
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```{r}
+metric <- list(
+    mean = mean,
+    sd = sd
+)
+
+res2 <- apply_methods(res1, metric)
+res2
+```
+
+Now the `result` column has been augmented to reflect the metric produced from each metric summary of each result from the previous table. Thus it is simple to generate combinatorial benchmarking schemes simply by successively applying further `list`s of functions.
+
+```{r, fig.retina = 1}
+# center ggplot titles and increase text size
+ggplot2::theme_update(plot.title = element_text(hjust = 0.5, size = 20))
+
+res2 %>%
+    dplyr::filter(add_noise == "add_bias" | add_noise == "none") %>%
+    ggplot(aes(x = data, y = result, group = add_noise, fill = add_noise)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    facet_grid(~metric) +
+    ggtitle("Effect of adding bias")
+
+res2 %>%
+    dplyr::filter(add_noise == "add_variance" | add_noise == "none") %>%
+    ggplot(aes(x = data, y = result, group = add_noise, fill = add_noise)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    facet_grid(~metric) +
+    ggtitle("Effect of adding variance")
+```
+
+Then for a quick summary of what pipeline has been performed you can use `summary()` on the results table.
+
+```{r}
+summary(res2)
+```
+
+# Key objects and concepts
+
+## List of datasets
+
+The benchmarking workflow starts with a list of datasets, even if you only have one dataset you will need to store it in a list for workflow to function. In our example the dataset was a list of 2 randomly generated vectors.
+
+```{r, eval = FALSE}
+# we use a list of random vectors
+datasets <- list(
+    set1 = rnorm(500, mean = 2, sd = 1),
+    set2 = rnorm(500, mean = 1, sd = 2)
+)
+
+# could have been any other kind of object as long as they are consistent
+datasets <- list(
+    set1 = matrix(rnorm(500, mean = 2, sd = 1), ncol = 5, nrow = 10),
+    set2 = matrix(rnorm(500, mean = 2, sd = 1), ncol = 5, nrow = 10)
+)
+```
+
+Any kind of object can be stored in a list, so there is great flexibility in what kind of starting point can be used for the benchmarking workflow.
+
+## List of functions
+
+In R functions themselves are a type of object, so they too can be stored in lists, this may be unfamiliar to most people but this allows very simple addition of methods.
+
+```{r, eval = FALSE}
+# "identity" is a function, and we are assigning to a new name
+# the remaining two elements of the list are just regular function definitions
+add_noise <- list(
+    none = identity, # included to provide a baseline for comparison
+    add_bias = function(x) { x + 1 },
+    add_variance = function(x) { x + center(rnorm(500, mean = 0, sd = 2)) }
+)
+```
+
+The key thing to note is that the function must be callable and take a single argument. This may mean you need to write a wrappr function or use `purrr::partial()` to fill in some arguments. For example both `mean` and `sd` have `na.rm` arguments, because the element of the list must itself be a function, simply writing something like `mean(na.rm = TRUE)` will not work, as it is an incomplete function call. Instead we have two main options:
+
+```{r, eval = FALSE}
+# using anonymous function wrappers
+metric <- list(
+    mean = function(x) { mean(x, na.rm = TRUE) },
+    sd = function(x) { sd(x, na.rm = TRUE) }
+)
+
+# using purrr partial function
+partial <- purrr::partial # explicit namespacing to avoid ambiguity
+metric <- list(
+    mean = partial(mean, na.rm = TRUE),
+    sd = partial(sd, na.rm = TRUE)
+)
+
+# example use with kmeans
+clustering <- list(
+    kmeans_4 = partial(kmeans, centers = 4),
+    kmeans_5 = partial(kmeans, centers = 5),
+    kmeans_6 = partial(kmeans, centers = 6)
+)
+```
+
+`purrr::partial()` is known as partial-application of a function: it takes a function and arguments to that function, then returns a new function that is the function with the provided arguments filled in. This is slightly more explicit than creating the function wrapper, since the function wrapper can perform many more tasks within its body than just setting arguments, whereas `purrr::partial()` makes it clear all you're doing is setting some arguments.
+
+## Benchmark tibble and list-columns
+
+The `benchmark_tbl` is a very light wrapper around the standard tibble provided by `tibble::tibble()`. This is like a regular `data.frame()` except it has some pretty printing features that are particularly useful for [list-columns](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html). A list column is a special type of column where the values are not atomic, i.e. cannot be stored in a vector. This allows arbitrary data types to be stored in a column but with the caveat that pulling out that column returns a list rather than a vector. This has implications for how to perform mutations using `dplyr` verbs and in general will not behave expectedly with vectorised functions.
+
+In the framework established by this package, the first column will be the name of the data, followed by columns specifying the names of the analysis steps and ending with a list-column containing the result of the specified dataset after processing by the chain of analysis methods.
+
+```{r}
+class(res2)
+```
+
+Because they are tibbles, they respond well to `dplyr` verbs, or most regular `data.frame` manipulations.
+
+```{r}
+res2 %>% dplyr::filter(add_noise == "add_variance" | add_noise == "none")
+```
+
+## Applying methods
+
+The final idea that ties together the CellBench framework is the `apply_methods()` function, which takes a `benchmark_tbl` and applies a `list` of functions. The result is that each row is processed through each method, a new colum is added specifying the method applied and the result is updated to the new value.
+
+# Summary
+
+TODO
