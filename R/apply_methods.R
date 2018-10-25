@@ -64,3 +64,6 @@ apply_methods.tbl_df <- function(tbl_df, fn_list) {
 
     output
 }
+
+apply_metrics <- apply_methods
+begin_benchmark <- apply_methods
