@@ -6,6 +6,5 @@ post_compute_pca <- function(gene_expr, ndims = 2) {
         ndims <- ncol(pca$x)
     }
 
-    setNames(data.frame(pca$x[, 1:ndims]), nm = glue::glue("Dim{1:ndims}")) %>%
-        as.list()
+    setNames(data.frame(pca$x[, 1:ndims]), nm = glue::glue("Dim{1:ndims}"))
 }
