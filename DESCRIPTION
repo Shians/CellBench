@@ -8,8 +8,8 @@ Authors@R: c(
     person("Luyi", "Tian", role = "aut"),
     person("Xueyi", "Dong", role = "aut"),
     person("Matthew", "Ritchie", role = "aut"),
-    person("Peter", "Hickey", role = "ctb")
-)
+    person("Peter", "Hickey", role = "ctb"),
+    person("Stuart", "Lee", role = "ctb"))
 Maintainer: Shian Su <su.s@wehi.edu.au>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
