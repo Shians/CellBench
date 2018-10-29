@@ -1,8 +1,10 @@
 # take the "head" of matrix/tables as a n by n block
 mhead <- function(x, n = 6) {
-    stopifnot(!is.null(dim(x)))
-    stopifnot(n < ncol(x))
-    stopifnot(n < nrow(x))
+    stopifnot(
+        !is.null(dim(x)),
+        n < ncol(x),
+        n < nrow(x)
+    )
 
     x[1:n, 1:n]
 }
