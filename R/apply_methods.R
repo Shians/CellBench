@@ -15,22 +15,44 @@ apply_methods.list <- function(data_list, fn_list, .name) {
         .name <- deparse(substitute(fn_list))
     }
 
-    output <- BiocParallel::bplapply(
-        d_names,
-        function(d_name) {
-            purrr::map(
-                m_names,
-                function(m_name) {
-                    result <- list(
-                        data_list = d_name,
-                        .temp = m_name,
-                        result = fn_list[[m_name]](data_list[[d_name]])
-                    )
-                    list(result)
-                }
-            ) %>% purrr::reduce(append)
-        }
-    ) %>% purrr::reduce(append)
+    n_threads <- min(getOption("CellBench.threads"), length(data_list))
+
+    if (n_threads > 1) {
+        output <- BiocParallel::bplapply(
+            BPPARAM = BiocParallel::MulticoreParam(n_threads),
+            d_names,
+            function(d_name) {
+                purrr::map(
+                    m_names,
+                    function(m_name) {
+                        result <- list(
+                            data_list = d_name,
+                            .temp = m_name,
+                            result = fn_list[[m_name]](data_list[[d_name]])
+                        )
+                        list(result)
+                    }
+                ) %>% purrr::reduce(append)
+            }
+        ) %>% purrr::reduce(append)
+    } else {
+        output <- purrr::map(
+            d_names,
+            function(d_name) {
+                purrr::map(
+                    m_names,
+                    function(m_name) {
+                        result <- list(
+                            data_list = d_name,
+                            .temp = m_name,
+                            result = fn_list[[m_name]](data_list[[d_name]])
+                        )
+                        list(result)
+                    }
+                ) %>% purrr::reduce(append)
+            }
+        ) %>% purrr::reduce(append)
+    }
 
     output <- tibble::tibble(
         data = purrr::map_chr(output, function(x) x$data),
