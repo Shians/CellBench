@@ -85,12 +85,6 @@ clustering_seurat <- function(sce) {
         do.print = FALSE
     )
 
-    pbmc <- Seurat::JackStraw(
-        pbmc,
-        num.pc = num_dim,
-        display.progress = FALSE
-    )
-
     pbmc <- Seurat::FindClusters(
         object = pbmc,
         dims.use = 1:num_dim,
