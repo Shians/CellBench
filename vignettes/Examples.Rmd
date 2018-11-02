@@ -1,0 +1,43 @@
+---
+title: "CellBench User's Guide"
+author: "Shian Su"
+date: "`r Sys.Date()`"
+output: BiocStyle::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R Markdown
+
+```{r, eval = FALSE}
+library(CellBench)
+library(purrr)
+
+load_sc_data()
+
+map <- purrr::map
+partial <- purrr::partial
+
+subset_data <- cellbench_sc_data %>%
+    map(partial(keep_high_var_genes, n = 1000)) %>%
+    map(partial(sample_cells, n = 50))
+
+clustering_method <- list(
+    sc3 = clustering_sc3,
+    race_id = clustering_raceid
+)
+
+options("CellBench.threads" = 4)
+
+res <- begin_benchmark(
+    subset_data,
+    clustering_method
+)
+```
+

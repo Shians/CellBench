@@ -1,0 +1,13 @@
+---
+title: "Introduction to CellBench"
+author: "Shian Su"
+date: "`r Sys.Date()`"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+This vignette will introduce method benchmarks performed on the CellBench data

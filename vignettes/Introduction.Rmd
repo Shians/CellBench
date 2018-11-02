@@ -185,6 +185,20 @@ res2 %>% dplyr::filter(add_noise == "add_variance" | add_noise == "none")
 
 The final idea that ties together the CellBench framework is the `apply_methods()` function, which takes a `benchmark_tbl` and applies a `list` of functions. The result is that each row is processed through each method, a new colum is added specifying the method applied and the result is updated to the new value.
 
+```{r, eval = FALSE}
+# create a named list of functions to apply
+metric <- list(
+    mean = mean,
+    sd = sd
+)
+
+# each function is applied to each entry in the results column
+res2 <- apply_methods(res1, metric)
+
+# output contains rows equal to number of methods times number of input rows
+res2
+```
+
 # Summary
 
-TODO
+CellBench provides a lightweight and flexible framework for working with benchmarks that have multiple steps and result in combinatorial designs for application of methods. It makes use of simple and transparent R objects that are easy to understand and manipulate, with simple function 
