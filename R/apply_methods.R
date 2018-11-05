@@ -1,17 +1,27 @@
-apply_methods <- function(x, fn_list, .name) {
+#' Apply methods
+#'
+#' @param x the list of data or benchmark tibble to apply methods to
+#' @param fn_list the list of methods to be applied
+#' @param .name (optional) the name of the column for methods applied
+#'
+#' @return benchmark_tbl object containing results from methods applied
+#' @export
+#'
+#' @examples
+apply_methods <- function(x, fn_list, .name = NULL) {
     UseMethod("apply_methods", x)
 }
 
 # create data x methods cross product
 # returns list of (data_name, method_name, result) values
-apply_methods.list <- function(data_list, fn_list, .name) {
+apply_methods.list <- function(data_list, fn_list, .name = NULL) {
     d_names <- names(data_list)
     m_names <- names(fn_list)
     if (length(m_names) != length(fn_list)) {
         stop("every element of fn_list must be named")
     }
 
-    if (missing(".name")) {
+    if (is.null(.name)) {
         .name <- deparse(substitute(fn_list))
     }
 
@@ -74,7 +84,7 @@ all_length_one <- function(x) {
     all(sapply(x, function(x) { length(x) == 1 }))
 }
 
-apply_methods.tbl_df <- function(tbl_df, fn_list, .name) {
+apply_methods.tbl_df <- function(tbl_df, fn_list, .name = NULL) {
     m_names <- names(fn_list)
 
     if (missing(".name")) {
