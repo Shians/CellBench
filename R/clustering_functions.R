@@ -15,8 +15,8 @@ pre_clean <- function(sce) {
     ave.counts <- rowMeans(counts(sce))
     keep <- ave.counts >= 1
     sce1 <- sce[keep,]
-    sce1 <- calculateQCMetrics(sce1)
-    sce1 <- normalize(sce1)
+    sce1 <- scater::calculateQCMetrics(sce1)
+    sce1 <- scater::normalize(sce1)
 
     return(sce1)
 }
@@ -25,7 +25,7 @@ clustering_sc3 <- function(sce, col.sym = "Symbol") {
     sce_cleaned <- pre_clean(sce)
 
     rowData(sce_cleaned)$feature_symbol <- rownames(sce_cleaned)
-    scater::isSpike(sce_cleaned, "ERCC") <- FALSE
+    SingleCellExperiment::isSpike(sce_cleaned, "ERCC") <- FALSE
 
     sce_cleaned <- SC3fork::sc3_estimate_k(sce_cleaned)
     k_est <- sce_cleaned@metadata$sc3$k_estimation
