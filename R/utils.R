@@ -49,3 +49,18 @@ fn_outer_prod <- function(fn_list1, fn_list2) {
     class(output) <- c("fn_list", class(output))
     output
 }
+
+# explicitly set namespaced function for scope of function
+using <- function(x, allow.global = FALSE) {
+    stopifnot(is.function(x))
+
+    namespaced_fn <- deparse(substitute(x))
+    fn_name <- gsub(".*::", "", namespaced_fn)
+
+    parent_is_global <- identical(parent.frame(), globalenv())
+    if (parent_is_global && !allow.global) {
+        stop(glue::glue("Cannot assign namespaced function `{namespaced_fn}` to global environment."))
+    }
+
+    assign(fn_name, eval(namespaced_fn), envir = parent.frame())
+}
