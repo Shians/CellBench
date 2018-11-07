@@ -10,4 +10,7 @@ vignette: >
 ---
 
 # Introduction
-This vignette will provide a tutorial on how to construct your own benchmarks
+
+This vignette will provide a tutorial on how to construct your own benchmarks. There are two essentialy components that need to be prepared for benchmarking, data prepared in a consistent fashion and methods that have consistent inputs and outputs. 
+
+# Preparing Data

@@ -41,3 +41,39 @@ res <- begin_benchmark(
 )
 ```
 
+# Benchmarking normalisation methods
+
+```{r}
+subset_data <- cellbench_sc_data %>%
+    map(partial(keep_high_var_genes, n = 500)) %>%
+    map(partial(sample_cells, n = 150))
+
+no_norm <- function(sce) {
+    log(counts(sce) + 1)
+}
+
+normalisation <- list(
+    none = no_norm,
+    lib_size = lib_size_norm_expr,
+    scran = scran_norm_expr
+)
+
+res <- apply_methods(
+    subset_data,
+    normalisation
+)
+
+add_cell_line <- function(result, data) {
+    tibble::add_column(result, cell_line = subset_data[[data]]$cell_line)
+}
+
+pipeline_summarise(res, drop.steps = FALSE) %>%
+    dplyr::mutate(result = map(result, compute_pca)) %>%
+    dplyr::mutate(result = map2(result, data, add_cell_line)) %>%
+    tidyr::unnest() %>%
+    ggplot(aes(x = PC1, y = PC2, col = cell_line)) +
+    geom_point() +
+    facet_grid(data~normalisation, switch = "y")
+
+```
+

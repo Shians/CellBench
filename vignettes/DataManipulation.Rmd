@@ -1,0 +1,128 @@
+---
+title: "Benchmark Data Manipulation"
+author: "Shian Su"
+date: "`r Sys.Date()`"
+output: BiocStyle::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+library(CellBench)
+```
+
+# Introduction
+
+This vignette contains some examples of common manipulations of data objects in this package. This package is built around the tidy data ideas established by Hadley Wickham's [tidyverse](https://www.tidyverse.org), the primary goals are to keep data in an organised manner and enable concise manipulations for achieving a wide range of outcomes.
+
+# Benchmark Tibble
+
+## Basics
+
+The fundamental object in this package is the benchmark tibble. [Tibbles](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html) are variant of the `data.frame`, they are used here for their nicer printing properties.
+
+The benchmark tibble is a `data.frame` structure where the `result` column is a special _list-column_ which is allowed to contain arbitrary data types compared to a regular column which may only contain [atomic data types](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Vector-objects) such as `numeric`, `logical` and `character`. A _list-column_ is a list with the same number of elements as there are rows in the data frame, they exist because the typical column is a vector which cannot contain complicated data types. However if the results of a computation are simple atomic values, then the column will be coerced to a regular vector with all the expected behaviours.
+
+**IMPORTANT!** Because the result column is a list, care must be taken when performing certain operations. Most vectorised operations do not work on lists, and when we will cover how to properly work with these columns in the [Operations On Benchmark Tibbles](#ops-on-benchmark-tibbles) section.
+
+We demonstrate how the benchmark tibble works:
+
+```{r}
+library(CellBench)
+datasets <- list(
+    random_mat1 = matrix(runif(100), 10, 10),
+    random_mat2 = matrix(runif(100), 10, 10)
+)
+
+cor_method <- list(
+    pearson = function(x) cor(x, method = "pearson"),
+    kendall = function(x) cor(x, method = "kendall")
+)
+
+res <- datasets %>%
+    apply_methods(cor_method)
+```
+
+As we can see, the table contains the data used, methods applied and the result of the computation. The reason for using tibbles is so that the result column is printed in a summarised form rather than fully expanded as would be the case for non-tibble list-columns.
+
+## Operations On Benchmark Tibbles {#ops-on-benchmark-tibbles}
+
+```{r}
+class(res)
+```
+
+The benchmark tibble inherits from tibbles which inherit from data.frame, so operations expected to work on the parent classes should be expected to work on the benchmark tibble.
+
+```{r}
+res[1:2, ]
+```
+
+By default tibbles only print the first 10 rows, this doesn't change with how many elements you subset. Instead you should use `print(res, n = Inf)` if you wish to print the whole tibble, or a desired number of rows.
+
+We can also make use of the `dplyr` functions along with piping to write concise expressions for manipulating the benchmark tibble.
+
+```{r}
+library(dplyr)
+res %>%
+    filter(cor_method == "pearson")
+```
+
+It is also possible to cbind two benchmark tibbles together, for example if you had added another set of methods 
+
+```{r}
+cor_method <- list(
+    spearman = function(x) cor(x, method = "spearman")
+)
+
+res2 <- datasets %>%
+    apply_methods(cor_method)
+
+res2
+```
+
+```{r}
+rbind(res, res2)
+```
+
+This allows new methods to be added without having to recompute results for old methods.
+
+## Operations On list-columns
+
+We note again that the benchmark column is a list.
+
+```{r}
+class(res$result)
+```
+
+This means some simple vectorised functions will not quite work as expected. For example if we wished to take the exponential of all the matrices using `dplyr::mutate`. Because `dplyr` feeds entire columns into the functions and expects the entire column to be returned, the result of the following code will attempt to run `exp()` on a `list` which it cannot handle.
+
+```{r, eval = FALSE}
+# this code will fail
+res %>%
+    mutate(exp_result = exp(result))
+```
+
+Instead we must reformulate these to expressions that take in list arguments and return lists or vectors of the same length. This can be done using either `lapply` from the base R library or `map` from the `purrr` package.
+
+```{r}
+res %>%
+    mutate(exp_result = lapply(result, exp)) %>%
+    mutate(sum_of_exp = unlist(lapply(exp_result, sum)))
+```
+
+## Unnesting with lists of data.frames
+
+One of the most useful representations that can be created in the tibble framework is to have data frames with consistent columns as the `result` list-column. This allows the data to be unnested such that the contents of the result data frames are row-contenated and the information in the remaining rows are duplicated accordingly.
+
+```{r}
+
+```
+
+
+# Further Reading
+
+* Introduction to tibbles: https://tibble.tidyverse.org
+* Introduction to purrr: https://purrr.tidyverse.org
+

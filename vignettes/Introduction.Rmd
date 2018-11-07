@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 
 CellBench is a package to assist with creating benchmarks for single cell analysis methods. We provide functions for working with `SingleCellExperiments` objects and a framework for constructing benchmarks for different single cell datasets across different methods or combinations of methods.
 
-The aim of this package is to make it simpler for developers to construct combinatorial designs and provide a flat data structure to store the organised outputs of analysis methods. We provide some fully constructed benchmarking pipelines for a set of single-cell benchmark datasets, but we hope that the framework will allow users to easily construct and contribute benchmarks for new or absent methods into this package.
+The aim of this package is to make it simpler for developers to construct combinatorial designs and provide a flat data structure to store the organised outputs of analysis methods. We provide some fully constructed benchmarking pipelines for a set of single-cell benchmark datasets, and we hope that the framework will allow users to easily construct benchmarks in an organised and expressive manner.
 
 # Quick start
 
@@ -105,6 +105,36 @@ summary(res2)
 
 # Key objects and concepts
 
+## Function Piping
+
+In this package many examples make heavy use of the pipe operator `%>%` from [magrittr](https://magrittr.tidyverse.org). This is useful for writing cleaner code that is easier to debug.
+
+```{r, eval = FALSE}
+# the following two statements are equivalent
+f(x)
+x %>% f()
+
+# as are these
+f(x, y)
+x %>% f(y)
+
+# and these
+h(g(f(x)))
+x %>% f() %>% g() %>% h()
+
+# or these
+h(g(f(x, a), b), c)
+x %>% f(a) %>% g(b) %>% h(c)
+```
+
+We can see in the last example that with many functions composed together, the piped form reads from left to right and it's clear which arguments belong to which function, whereas in the nested form it is more difficult to clearly identify what is happening. In general piping data into a function calls the function with the data serving as the first argument, more complex behaviour can be achieved and is describe on the [magrittr](https://magrittr.tidyverse.org) web page.
+
+## Mapping or List-apply
+
+Lists in R are containers for a collection of arbitrary objects. In this package we encourage users to use lists as containers for a series of identically-typed objects, using them as if they were vectors for data types that vectors cannot contain. For example we store our datasets in lists of SingleCellExperiment objects and analysis methods in lists of functions, these data types would not be accepted within a vector.
+
+<!-- TODO... Write and explain examples of mapping and lapply -->
+
 ## List of datasets
 
 The benchmarking workflow starts with a list of datasets, even if you only have one dataset you will need to store it in a list for workflow to function. In our example the dataset was a list of 2 randomly generated vectors.
@@ -139,7 +169,7 @@ add_noise <- list(
 )
 ```
 
-The key thing to note is that the function must be callable and take a single argument. This may mean you need to write a wrappr function or use `purrr::partial()` to fill in some arguments. For example both `mean` and `sd` have `na.rm` arguments, because the element of the list must itself be a function, simply writing something like `mean(na.rm = TRUE)` will not work, as it is an incomplete function call. Instead we have two main options:
+The key thing to note is that the function must be callable and take a single argument. This may mean you need to write a wrapper function or use `purrr::partial()` to fill in some arguments. For example both `mean` and `sd` have `na.rm` arguments, because the element of the list must itself be a function, simply writing something like `mean(na.rm = TRUE)` will not work, as it is an incomplete function call. Instead we have two main options:
 
 ```{r, eval = FALSE}
 # using anonymous function wrappers
@@ -178,12 +208,12 @@ class(res2)
 Because they are tibbles, they respond well to `dplyr` verbs, or most regular `data.frame` manipulations.
 
 ```{r}
-res2 %>% dplyr::filter(add_noise == "add_variance" | add_noise == "none")
+res2 %>% dplyr::filter(add_noise %in% c("add_variance", "none"))
 ```
 
 ## Applying methods
 
-The final idea that ties together the CellBench framework is the `apply_methods()` function, which takes a `benchmark_tbl` and applies a `list` of functions. The result is that each row is processed through each method, a new colum is added specifying the method applied and the result is updated to the new value.
+The final idea that ties together the CellBench framework is the `apply_methods()` function, which takes a `benchmark_tbl` and applies a `list` of functions. The result is that each row is processed through each method, a new column is added specifying the method applied and the result is updated to the new value.
 
 ```{r, eval = FALSE}
 # create a named list of functions to apply
