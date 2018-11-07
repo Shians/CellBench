@@ -33,5 +33,5 @@ scran_norm_expr <- function(x, log = TRUE) {
     x <- scran::computeSumFactors(x)
     x <- scater::normalize(x, log = log)
 
-    scater::norm_exprs(x)
+    SingleCellExperiment::logcounts(x)
 }
