@@ -64,3 +64,43 @@ using <- function(x, allow.global = FALSE) {
 
     assign(fn_name, eval(namespaced_fn), envir = parent.frame())
 }
+
+# summarise benchmark_tbl into two columns
+pipeline_summarise <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
+    stopifnot(
+        is(x, "benchmark_tbl"),
+        dplyr::last(colnames(x)) == "result"
+    )
+
+    results <- dplyr::pull(x, result)
+
+    x <- dplyr::select(x, -result) %>%
+        tidyr::unite("pipeline", dplyr::everything(), sep = sep, remove = drop.steps) %>%
+        dplyr::select(-pipeline, pipeline) %>%
+        tibble::as.tibble()
+
+    tibble::add_column(x, result = results)
+}
+
+unicode_arrow <- function(towards = c("right", "left", "up", "down")) {
+    towards <- match.arg(towards)
+    switch(
+        towards,
+        "right" = "→",
+        "left" = "←",
+        "up" = "↑",
+        "down" = "↓"
+    )
+}
+
+arrow_sep <- function(towards = c("right", "left", "up", "down")) {
+    towards <- match.arg(towards)
+    arrow <- unicode_arrow(towards)
+    glue::glue(" {arrow} ")
+}
+
+# create factor with levels in order they appear rather than alphabetically
+# sorted
+factor_no_sort <- function(x) {
+    factor(x, levels = unique(x))
+}
