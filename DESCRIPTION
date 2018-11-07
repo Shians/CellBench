@@ -20,13 +20,12 @@ Encoding: UTF-8
 LazyData: true
 Depends:
     SingleCellExperiment,
-    tibble,
-    pryr,
+    tibble
+Imports:
     purrr,
     dplyr,
     glue,
-    ggplot2,
-    SummarizedBenchmark
+    ggplot2
 Suggests:
     BiocStyle,
     knitr,
