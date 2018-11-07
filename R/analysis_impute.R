@@ -15,5 +15,5 @@ impute_knn_smooth <- function(data) {
 
 impute_basics <- function(data) {
     count_mat <- run_basics(data)
-    count_mat
+    log(count_mat + 1)
 }
