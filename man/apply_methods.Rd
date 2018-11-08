@@ -2,9 +2,23 @@
 % Please edit documentation in R/apply_methods.R
 \name{apply_methods}
 \alias{apply_methods}
+\alias{apply_methods.list}
+\alias{apply_methods.benchmark_tbl}
+\alias{apply_metrics}
+\alias{begin_benchmark}
 \title{Apply methods}
 \usage{
 apply_methods(x, fn_list, .name = NULL, suppress.messages = TRUE)
+
+\method{apply_methods}{list}(data_list, fn_list, .name = NULL,
+  suppress.messages = TRUE)
+
+\method{apply_methods}{benchmark_tbl}(tbl_df, fn_list, .name = NULL,
+  suppress.messages = TRUE)
+
+apply_metrics(x, fn_list, .name = NULL, suppress.messages = TRUE)
+
+begin_benchmark(x, fn_list, .name = NULL, suppress.messages = TRUE)
 }
 \arguments{
 \item{x}{the list of data or benchmark tibble to apply methods to}
@@ -20,7 +34,10 @@ suppressed}
 benchmark_tbl object containing results from methods applied
 }
 \description{
-Apply methods
+apply_methods and its aliases apply_metrics and begin_benchmark take either
+lists of datasets or benchmark_tbl objects and apply a list of functions. The
+output is a benchmark_tbl where each method has been applied to each dataset
+or preceeding result.
 }
 \examples{
 # list of data
@@ -32,7 +49,7 @@ datasets <- list(
 # list of functions
 add_noise <- list(
     none = identity,
-    add_bias = function(x) { x + 1 },
+    add_bias = function(x) { x + 1 }
 )
 
 res <- apply_methods(datasets, add_noise)

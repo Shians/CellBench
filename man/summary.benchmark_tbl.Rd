@@ -7,8 +7,14 @@
 \method{summary}{benchmark_tbl}(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{the benchmark_tbl to be summarised}
 }
 \description{
 Summary of benchmark_tbl
+}
+\examples{
+\dontrun{
+res <- apply_methods(datasets, methods)
+summary(res)
+}
 }

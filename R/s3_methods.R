@@ -1,11 +1,14 @@
 #' Summary of benchmark_tbl
 #'
-#' @param x
+#' @param x the benchmark_tbl to be summarised
 #'
-#' @return
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' res <- apply_methods(datasets, methods)
+#' summary(res)
+#' }
 summary.benchmark_tbl <- function(x) {
     if (dplyr::last(colnames(x)) != "result") {
         # if benchmark_tbl has been manipulated by user to non-standard form
@@ -34,13 +37,4 @@ summary.benchmark_tbl <- function(x) {
     }
 
     cat(out, sep = "\n")
-}
-
-as.list.benchmark_tbl <- function(x) {
-    if (dplyr::last(colnames(x)) != "result") {
-        # if benchmark_tbl has been manipulated by user to non-standard form
-        return(as.list.data.frame(x))
-    }
-
-    benchmark_summary
 }

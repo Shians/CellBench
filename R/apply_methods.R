@@ -1,5 +1,10 @@
 #' Apply methods
 #'
+#' apply_methods and its aliases apply_metrics and begin_benchmark take either
+#' lists of datasets or benchmark_tbl objects and apply a list of functions. The
+#' output is a benchmark_tbl where each method has been applied to each dataset
+#' or preceeding result.
+#'
 #' @param x the list of data or benchmark tibble to apply methods to
 #' @param fn_list the list of methods to be applied
 #' @param .name (optional) the name of the column for methods applied
@@ -19,7 +24,7 @@
 #' # list of functions
 #' add_noise <- list(
 #'     none = identity,
-#'     add_bias = function(x) { x + 1 },
+#'     add_bias = function(x) { x + 1 }
 #' )
 #'
 #' res <- apply_methods(datasets, add_noise)
@@ -28,8 +33,8 @@ apply_methods <- function(x, fn_list, .name = NULL, suppress.messages = TRUE) {
     UseMethod("apply_methods", x)
 }
 
-# create data x methods cross product
-# returns list of (data_name, method_name, result) values
+#' @rdname apply_methods
+#' @export
 apply_methods.list <- function(data_list, fn_list, .name = NULL, suppress.messages = TRUE) {
     d_names <- names(data_list)
     m_names <- names(fn_list)
@@ -101,7 +106,9 @@ all_length_one <- function(x) {
     all(sapply(x, function(x) { length(x) == 1 }))
 }
 
-apply_methods.tbl_df <- function(tbl_df, fn_list, .name = NULL, suppress.messages = TRUE) {
+#' @rdname apply_methods
+#' @export
+apply_methods.benchmark_tbl <- function(tbl_df, fn_list, .name = NULL, suppress.messages = TRUE) {
     m_names <- names(fn_list)
 
     if (missing(".name")) {
@@ -130,13 +137,13 @@ apply_methods.tbl_df <- function(tbl_df, fn_list, .name = NULL, suppress.message
     output
 }
 
-#' @describeIn apply_methods
+#' @rdname apply_methods
 #'
 #' @export
 #'
 apply_metrics <- apply_methods
 
-#' @describeIn apply_methods
+#' @rdname apply_methods
 #'
 #' @export
 #'
