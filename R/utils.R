@@ -104,3 +104,17 @@ arrow_sep <- function(towards = c("right", "left", "up", "down")) {
 factor_no_sort <- function(x) {
     factor(x, levels = unique(x))
 }
+
+# convert to list of results with pipeline as name
+as_pipeline_list <- function(x) {
+    stopifnot(is(x, "benchmark_tbl"))
+
+    if (dplyr::last(colnames(x)) != "result") {
+        # if benchmark_tbl has been manipulated by user to non-standard form
+        return(as.list.data.frame(x))
+    }
+
+    x <- pipeline_summarise(x, sep = "..")
+
+    setNames(x$result, nm = x$pipeline)
+}
