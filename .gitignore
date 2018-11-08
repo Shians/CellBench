@@ -4,6 +4,8 @@ doc
 .Rhistory
 .RData
 .Ruserdata
+.CellBenchCache
 
 *.RData
 inst/doc
+
