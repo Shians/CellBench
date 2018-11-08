@@ -112,14 +112,17 @@ res %>%
     mutate(sum_of_exp = unlist(lapply(exp_result, sum)))
 ```
 
-## Unnesting with lists of data.frames
+## Unnesting with Lists of data.frames
 
 One of the most useful representations that can be created in the tibble framework is to have data frames with consistent columns as the `result` list-column. This allows the data to be unnested such that the contents of the result data frames are row-contenated and the information in the remaining rows are duplicated accordingly.
 
-```{r}
+# Manipulating Functions
 
-```
+## Basics of Functional Programming
 
+## Partial Application
+
+## Memoisation
 
 # Further Reading
 

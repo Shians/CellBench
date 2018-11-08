@@ -134,6 +134,17 @@ We can see in the last example that with many functions composed together, the p
 Lists in R are containers for a collection of arbitrary objects. In this package we encourage users to use lists as containers for a series of identically-typed objects, using them as if they were vectors for data types that vectors cannot contain. For example we store our datasets in lists of SingleCellExperiment objects and analysis methods in lists of functions, these data types would not be accepted within a vector.
 
 <!-- TODO... Write and explain examples of mapping and lapply -->
+To work with lists we encourage using `lapply` or `purrr::map`, these allow functions to be applied to each element of a list and return the result in a list.
+
+```{r}
+x <- list(
+    a = 1,
+    b = 2,
+    c = 3
+)
+
+lapply(x, sqrt)
+```
 
 ## List of datasets
 
