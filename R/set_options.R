@@ -23,3 +23,26 @@ set_cellbench_threads <- function(nthreads = 1) {
 
     invisible()
 }
+
+#' Set CellBench cache path
+#'
+#' @param path the path to where method caches should be stored
+#'
+#' @export
+#'
+#' @seealso [cache_method()]
+#'
+#' @examples
+#' \dontrun{
+#' set_cellbench_cache_path(path = ".CellBenchCache")
+#' }
+#'
+set_cellbench_cache_path <- function(path = "./.CellBenchCache") {
+    stopifnot(is.character(path))
+
+    options("CellBench.cache" = memoise::cache_filesystem(path = path))
+    options("CellBench.cache_path" = path)
+
+    invisible()
+}
+
