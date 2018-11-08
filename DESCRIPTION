@@ -25,7 +25,8 @@ Imports:
     purrr,
     dplyr,
     glue,
-    ggplot2
+    ggplot2,
+    memoise
 Suggests:
     BiocStyle,
     knitr,
