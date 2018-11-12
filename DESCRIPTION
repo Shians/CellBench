@@ -20,7 +20,8 @@ Encoding: UTF-8
 LazyData: true
 Depends:
     SingleCellExperiment,
-    tibble
+    tibble,
+    magrittr
 Imports:
     purrr,
     dplyr,
