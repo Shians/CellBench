@@ -118,3 +118,18 @@ as_pipeline_list <- function(x) {
 
     setNames(x$result, nm = x$pipeline)
 }
+
+# suppress prints, which many people use as if they were messages
+suppressPrint <- function(expr) {
+    capture.output(x <- expr)
+    x
+}
+
+# suppresses messages and prints
+suppressMsgAndPrint <- function(expr, suppress = TRUE) {
+    if (suppress) {
+        suppressMessages(suppressPrint(expr))
+    } else {
+        expr
+    }
+}
