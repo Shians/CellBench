@@ -44,14 +44,42 @@ plot_map_metrics <- function(datasets, metrics = c("mapped_to_exon", "mapped_to_
         ggplot2::ggtitle("Mapping proportions")
 }
 
+#' @export
+# get pca coords
 compute_pca <- function(gene_expr, ndims = 2) {
     pca <- prcomp(t(gene_expr))
 
-    if (ndims < ncol(pca$x)) {
-        data.frame(pca$x[, 1:ndims])
-    } else {
-        data.frame(pca$x)
+    if (ndims > ncol(pca$x)) {
+        ndims <- ncol(pca$x)
     }
+
+    setNames(data.frame(pca$x[, 1:ndims]), nm = glue::glue("Dim{1:ndims}"))
+}
+
+#' @export
+# get pca coords
+compute_pca_most_var <- function(gene_expr, ndims = 2, ngenes = 500) {
+    stopifnot(
+        is.matrix(gene_expr),
+        ngenes > 0
+    )
+
+    gene_expr <- filter_zero_genes(gene_expr)
+    if (ngenes > nrow(gene_expr)) {
+        ngenes = nrow(gene_expr)
+    }
+
+    coef_of_var <- row_apply(gene_expr, var) / row_apply(gene_expr, mean)
+
+    sel <- order(coef_of_var)[1:ngenes]
+
+    pca <- prcomp(t(gene_expr[sel, ]))
+
+    if (ndims > ncol(pca$x)) {
+        ndims <- ncol(pca$x)
+    }
+
+    setNames(data.frame(pca$x[, 1:ndims]), nm = glue::glue("Dim{1:ndims}"))
 }
 
 plot_pca <- function(gene_expr, col_group = NULL) {
@@ -60,10 +88,10 @@ plot_pca <- function(gene_expr, col_group = NULL) {
     if (!is.null(col_group)) {
         plot_data$group <- col_group
         p <- plot_data %>%
-            ggplot2::ggplot(ggplot2::aes(x = dim1, y = dim2, col = group))
+            ggplot2::ggplot(ggplot2::aes(x = Dim1, y = Dim2, col = group))
     } else {
         p <- plot_data %>%
-            ggplot2::ggplot(ggplot2::aes(x = dim1, y = dim2))
+            ggplot2::ggplot(ggplot2::aes(x = Dim1, y = Dim2))
     }
 
     p +
