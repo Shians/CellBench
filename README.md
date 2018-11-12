@@ -4,9 +4,9 @@ R package for benchmarking single cell analysis methods. Currently under develop
 
 # Introduction
 
-This package revolves around one object and one function. The `benchmark_tbl` (benchmark [tibble](https://tibble.tidyverse.org)) and `apply_methods(x, methods)`.
+This package revolves around one object and one function. The `benchmark_tbl` (benchmark [tibble](https://tibble.tidyverse.org)) and the `apply_methods(x, methods)` function.
 
-We expect data to arrive in lists, and we apply lists of functions to the data. This creates a `benchmark_tbl` where the names of the lists are stored as columns and the final column contains the result of the computations.
+We expect data to to be stored in lists, and we apply functions stored in lists to the data. This creates a `benchmark_tbl` where the names of the lists items are stored as columns and the final column contains the result of the computations.
 
 ```
 library(CellBench)
