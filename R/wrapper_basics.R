@@ -1,8 +1,8 @@
 run_basics <- function(
     data,
-    N = 10000,
+    N = 2000,
     Thin = 10,
-    Burn = 2000,
+    Burn = 400,
     Regression = TRUE,
     ...
 ) {
@@ -34,8 +34,8 @@ run_basics <- function(
         N = N,
         Thin = Thin,
         Burn = Burn,
-        Regression = FALSE,
-        PrintProgress = TRUE,
+        Regression = Regression,
+        PrintProgress = FALSE,
         ...
     )
 
