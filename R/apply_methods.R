@@ -60,7 +60,10 @@ apply_methods.list <- function(data_list, fn_list, .name = NULL, suppress.messag
                         result <- list(
                             data_list = d_name,
                             .temp = m_name,
-                            result = suppressMessages(fn_list[[m_name]](data_list[[d_name]]))
+                            result = suppressMsgAndPrint(
+                                fn_list[[m_name]](data_list[[d_name]]),
+                                suppress = suppress.messages
+                            )
                         )
                         list(result)
                     }
@@ -77,7 +80,10 @@ apply_methods.list <- function(data_list, fn_list, .name = NULL, suppress.messag
                         result <- list(
                             data_list = d_name,
                             .temp = m_name,
-                            result = suppressMessages(fn_list[[m_name]](data_list[[d_name]]))
+                            result = suppressMsgAndPrint(
+                                fn_list[[m_name]](data_list[[d_name]]),
+                                suppress = suppress.messages
+                            )
                         )
                         list(result)
                     }
@@ -118,11 +124,16 @@ apply_methods.benchmark_tbl <- function(tbl_df, fn_list, .name = NULL, suppress.
     results <- list()
     for (data in tbl_df$result) {
         for (fn in fn_list) {
-            results <- append(results, list(suppressMessages(fn(data))))
+            results <- append(
+                results,
+                list(
+                    suppressMsgAndPrint(fn(data), suppress = suppress.messages)
+                )
+            )
         }
     }
 
-    output <- tbl_df %>% select(-result)
+    output <- tbl_df %>% dplyr::select(-result)
     output <- tidyr::crossing(tbl_df, factor_no_sort(m_names))
     names(output)[ncol(output)] <- .name
     output <- output %>%
