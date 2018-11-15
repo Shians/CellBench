@@ -4,9 +4,13 @@ R package for benchmarking single cell analysis methods. Currently under develop
 
 # Introduction
 
-This package revolves around one object and one function. The `benchmark_tbl` (benchmark [tibble](https://tibble.tidyverse.org)) and the `apply_methods(x, methods)` function.
+This package revolves around one object and one function: the `benchmark_tbl` (benchmark [tibble](https://tibble.tidyverse.org)) and the `apply_methods(x, methods)` function.
 
 We expect data to to be stored in lists, and we apply functions stored in lists to the data. This creates a `benchmark_tbl` where the names of the lists items are stored as columns and the final column contains the result of the computations.
+
+For example, the data could be a list of matrices of gene counts from a single-cell RNA-seq experiment, and the functions to benchmark could be various normalisation techniques.
+
+# Example
 
 ```
 library(CellBench)
@@ -67,7 +71,13 @@ datasets %>%
 
 # Development
 
-Fork and clone this repository for development. The data required has been put in the [scBenchData](https://github.com/Shians/scBenchData) repository for cleanliness as they are intended to reside elsewhere in the finished package. Download them into the `inst/extdata/` with the following commands
+Fork and clone this repository for development:
+
+```
+git clone https://github.com/CellBench
+```
+
+The data required has been put in the [scBenchData](https://github.com/Shians/scBenchData) repository for cleanliness as they are intended to reside elsewhere in the finished package. Download them into the `inst/extdata/` with the following commands
 
 ```
 # from the CellBench folder
