@@ -6,7 +6,10 @@ plot_exon_prop <- function(datasets) {
     plot_map_metrics(datasets, metrics = "mapped_to_exon")
 }
 
-plot_map_metrics <- function(datasets, metrics = c("mapped_to_exon", "mapped_to_intron", "mapped_to_MT")) {
+plot_map_metrics <- function(
+    datasets,
+    metrics = c("mapped_to_exon", "mapped_to_intron", "mapped_to_MT")
+) {
     exp_names <- names(datasets)
 
     prop <- datasets %>%
@@ -21,7 +24,9 @@ plot_map_metrics <- function(datasets, metrics = c("mapped_to_exon", "mapped_to_
                 "mapped_to_MT"
             )
 
-            total_count <- rowSums(as.matrix(scPipe::QC_metrics(x)[, map_stat_columns]))
+            total_count <- scPipe::QC_metrics(x)[, map_stat_columns] %>%
+                as.matrix() %>%
+                rowSums()
             count <- scPipe::QC_metrics(x)[, metrics, drop=FALSE]
 
             count %>%
@@ -33,7 +38,7 @@ plot_map_metrics <- function(datasets, metrics = c("mapped_to_exon", "mapped_to_
         })
 
     prop_table <- data.frame(
-        dataset = rep(exp_names, times = sapply(prop, nrow)),
+        dataset = rep(exp_names, times = purrr::map_int(prop, nrow)),
         do.call(rbind, prop)
     )
 
@@ -66,20 +71,14 @@ compute_pca_most_var <- function(gene_expr, ndims = 2, ngenes = 500) {
 
     gene_expr <- filter_zero_genes(gene_expr)
     if (ngenes > nrow(gene_expr)) {
-        ngenes = nrow(gene_expr)
+        ngenes <- nrow(gene_expr)
     }
 
     coef_of_var <- row_apply(gene_expr, var) / row_apply(gene_expr, mean)
 
     sel <- order(coef_of_var)[1:ngenes]
 
-    pca <- prcomp(t(gene_expr[sel, ]))
-
-    if (ndims > ncol(pca$x)) {
-        ndims <- ncol(pca$x)
-    }
-
-    setNames(data.frame(pca$x[, 1:ndims]), nm = glue::glue("Dim{1:ndims}"))
+    compute_pca(gene_expr[sel, ], ndims = ndims)
 }
 
 plot_pca <- function(gene_expr, col_group = NULL) {
