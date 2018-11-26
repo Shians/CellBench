@@ -11,6 +11,8 @@ vignette: >
 
 ```{r, include = FALSE}
 library(CellBench)
+library(dplyr)
+library(purrr)
 ```
 
 # Introduction
@@ -116,16 +118,140 @@ res %>%
 
 One of the most useful representations that can be created in the tibble framework is to have data frames with consistent columns as the `result` list-column. This allows the data to be unnested such that the contents of the result data frames are row-contenated and the information in the remaining rows are duplicated accordingly.
 
+```{r}
+library(tibble)
+
+df1 <- data.frame(
+    little = c(1, 3),
+    big = c(5, 7)
+)
+
+df1
+```
+
+```{r}
+df2 <- data.frame(
+    little = c(2, 4),
+    big = c(6, 8)
+)
+
+df2
+```
+
+```{r}
+tbl <- tibble(
+    type = c("odds", "evens"),
+    values = list(df1, df2)
+)
+
+tbl
+```
+
+```{r}
+tidyr::unnest(tbl)
+```
+
 # Manipulating Functions
 
 ## Basics of Functional Programming
 
+The book Advanced R contains an excellent section on [Functional Programming](http://adv-r.had.co.nz/Functional-programming.html). The primary idea we want to make use of is that functions are objects, not too different from numbers or character strings. For example we can think of anonymous functions like raw literal values.
+
+```{r, eval = FALSE}
+# a numeric literal
+1
+
+# a character literal
+"a"
+
+# a function literal
+function(x) { print(x) }
+```
+
+We can assign these to variables in the same way
+
+```{r, eval = FALSE}
+# assigning numeric literal
+x <- 1
+
+# assigning character literal
+x <- "a"
+
+# assigning function literal
+f <- function(x) { print(x) }
+```
+
+We can also reassign variables to other variables
+
+```{r}
+# assigning numeric literal
+x <- 1
+y <- x # y = 1
+
+# assigning character literal
+x <- "a"
+y <- x # y = "a"
+
+# assigning function literal
+f <- function(x) { print(x) }
+g <- f # g = function(x) { print(x) }
+```
+
+Being able to accept functions as regular objects is fundamental to making effective use of this package.
+
 ## Partial Application
 
+Partial application is a way to manipulate function objects. The idea is that you take a function which accepts multiple arguments, and "partially" apply some arguments to it. The simplest way to perform a partial application is to write a new function that wraps around the original function but with some arguments already filled in.
+
+```{r}
+# function to add two things
+plus <- function(x, y) { x + y }
+
+# function that adds 2 to x
+plus_two <- function(x) { plus(x, y = 2) }
+
+plus_two(1)
+```
+
+Equivalently, we could use `purrr::partial()` which properly encapsulates this idea into a helper function. This is preferable to writing the wrapping function because it's very explicit in what its purpose is.
+
+Wrapper function can do all sorts of computations beyond just filling in a variable, whereas `purrr::partial()` performs the singular duty of partially filling in arguments, there is no room to sneak in additional work that might complicate the process.
+
+```{r}
+library(purrr)
+
+plus_two <- partial(plus, y = 2)
+
+plus_two(1)
+```
+
 ## Memoisation
+
+Memoisation is the functional programming techinque of caching the result of computations. When a memoised function is called with arguments it had previously been evaluated with, it will simply recall the return value from the cache rather than redo the computations. 
+
+Memoisation is a operation on functions, taking in a regular function and returning a memoised version. CellBench offers memoisation through the `cache_method()` command which wraps around functionality from the `memoise` CRAN package. Memoised functions store their cache on disk, so be careful with functions that return large output objects.
+
+```{r, eval = FALSE}
+# initialise the CellBench cache
+cellbench_cache_init()
+
+# dummy simulation of a slow function
+f <- function(x) {
+    Sys.sleep(2)
+    return(x)
+}
+
+# create the memoised version of the function
+cached_f <- cache_method(f)
+
+# running the first time will be slow
+cached_f(1)
+
+# running the second time will be fast
+cached_f(1)
+```
 
 # Further Reading
 
 * Introduction to tibbles: https://tibble.tidyverse.org
 * Introduction to purrr: https://purrr.tidyverse.org
-

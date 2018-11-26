@@ -11,6 +11,8 @@ vignette: >
 
 ```{r, include = FALSE}
 library(CellBench)
+library(dplyr)
+library(purrr)
 library(ggplot2)
 ```
 
@@ -34,6 +36,11 @@ The aim of this package is to make it simpler for developers to construct combin
 There are 3 fundamental components to the benchmarks in this package, `list`s of data, `list`s of functions and a `tibble` with a `list-column` that we will call a `benchmark_tbl`. For simplicity we use randomly generated data and simple functions, but hopefully it's clear how the idea extends into more complex functions and benchmarks.
 
 ```{r}
+library(CellBench)
+library(dplyr)
+library(purrr)
+library(ggplot2)
+
 # ensure that a vector has 0 mean
 center <- function(x) {
     x - mean(x)
@@ -83,7 +90,7 @@ Now the `result` column has been augmented to reflect the metric produced from e
 ggplot2::theme_update(plot.title = element_text(hjust = 0.5, size = 20))
 
 res2 %>%
-    dplyr::filter(add_noise == "add_bias" | add_noise == "none") %>%
+    dplyr::filter(add_noise %in% c("add_bias", "none")) %>%
     ggplot(aes(x = data, y = result, group = add_noise, fill = add_noise)) +
     geom_bar(stat = "identity", position = "dodge") +
     facet_grid(~metric) +
@@ -133,7 +140,6 @@ We can see in the last example that with many functions composed together, the p
 
 Lists in R are containers for a collection of arbitrary objects. In this package we encourage users to use lists as containers for a series of identically-typed objects, using them as if they were vectors for data types that vectors cannot contain. For example we store our datasets in lists of SingleCellExperiment objects and analysis methods in lists of functions, these data types would not be accepted within a vector.
 
-<!-- TODO... Write and explain examples of mapping and lapply -->
 To work with lists we encourage using `lapply` or `purrr::map`, these allow functions to be applied to each element of a list and return the result in a list.
 
 ```{r}
