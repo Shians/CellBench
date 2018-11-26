@@ -1,61 +1,133 @@
+.get_cache <- function() {
+    cache <- rappdirs::user_cache_dir(appname = "CellBench")
+    BiocFileCache::BiocFileCache(cache)
+}
+
+get_data <- function(url, filename) {
+    bfc <- .get_cache()
+    rid <- BiocFileCache::bfcquery(bfc, filename, "rname")$rid
+
+    if (length(rid) == 0) {
+        message(glue::glue("Downloading data file from {url}"))
+        rid <- names(BiocFileCache::bfcadd(bfc, filename, url))
+    }
+
+    BiocFileCache::bfcrpath(bfc, rids = rid)
+}
+
+#' Load CellBench single cell data
+#' @export
 load_sc_data <- function() {
-    load(system.file("extdata", "single_cell_data.RData", package = "CellBench"))
-    assign(
-        "cellbench_sc_data",
-        list(
-            "sc_10x" = sc_10x,
-            "sc_celseq" = sc_celseq,
-            "sc_dropseq" = sc_dropseq
-        ),
-        envir = parent.frame(n = 1)
+    data_path <- get_data(
+        "https://github.com/Shians/scBenchData/raw/master/single_cell_data.RData",
+        "sc_data"
     )
+
+    load(data_path)
+
+    out <- list(
+        "sc_10x" = sc_10x,
+        "sc_celseq" = sc_celseq,
+        "sc_dropseq" = sc_dropseq
+    )
+
+    invisible(out)
 }
 
+#' Load CellBench cell mixture data
+#' @export
 load_cell_mix_data <- function() {
-    load(system.file("extdata", "mix_9cell_data.RData", package = "CellBench"))
-    assign(
-        "cellbench_cell_mix_data",
-        list(
-            "cell_mix1" = mix_9cell_07clean_1cell_mat,
-            "cell_mix2" = mix_9cell_08clean_1cell_mat,
-            "cell_mix3" = mix_9cell_09clean_1cell_mat,
-            "cell_mix4" = mix_9cell_07clean_3cell_mat,
-            "cell_mix5" = mix_9cell_07clean_90cell_mat
-        ),
-        envir = parent.frame(n = 1)
+    data_path <- get_data(
+        "https://github.com/Shians/scBenchData/raw/master/mix_9cell_data.RData",
+        "mrna_mix_data"
     )
+
+    load(data_path)
+
+    out <- list(
+        "cell_mix1" = mix_9cell_07clean_1cell_mat,
+        "cell_mix2" = mix_9cell_08clean_1cell_mat,
+        "cell_mix3" = mix_9cell_09clean_1cell_mat,
+        "cell_mix4" = mix_9cell_07clean_3cell_mat,
+        "cell_mix5" = mix_9cell_07clean_90cell_mat
+    )
+
+    invisible(out)
 }
 
+#' Load CellBench mrna mixture data
+#' @export
 load_mrna_mix_data <- function() {
-    load(system.file("extdata", "mrna_mix_data.RData", package = "CellBench"))
-    assign(
-        "cellbench_mrna_mix_data",
-        list(
-            "mrna_mix_celseq" = mrna_mix_celseq,
-            "mrna_mix_sortseq" = mrna_mix_sortseq
-        ),
-        envir = parent.frame(n = 1)
+    data_path <- get_data(
+        "https://github.com/Shians/scBenchData/raw/master/mrna_mix_data.RData",
+        "cell_mix_data"
     )
+
+    load(data_path)
+
+    out <- list(
+        "mrna_mix_celseq" = mrna_mix_celseq,
+        "mrna_mix_sortseq" = mrna_mix_sortseq
+    )
+
+    invisible(out)
 }
 
+#' Load all CellBench data
+#' @export
 load_all_data <- function() {
-    load(system.file("extdata", "single_cell_data.RData", package = "CellBench"))
-    load(system.file("extdata", "mix_9cell_data.RData", package = "CellBench"))
-    load(system.file("extdata", "mrna_mix_data.RData", package = "CellBench"))
-    assign(
-        "cellbench_data",
-        list(
-            "sc_10x" = sc_10x,
-            "sc_celseq" = sc_celseq,
-            "sc_dropseq" = sc_dropseq,
-            "cell_mix1" = mix_9cell_07clean_1cell_mat,
-            "cell_mix2" = mix_9cell_08clean_1cell_mat,
-            "cell_mix3" = mix_9cell_09clean_1cell_mat,
-            "cell_mix4" = mix_9cell_07clean_3cell_mat,
-            "cell_mix5" = mix_9cell_07clean_90cell_mat,
-            "mrna_mix_celseq" = mrna_mix_celseq,
-            "mrna_mix_sortseq" = mrna_mix_sortseq
-        ),
-        envir = parent.frame(n = 1)
+    data_path1 <- get_data(
+        "https://github.com/Shians/scBenchData/raw/master/single_cell_data.RData",
+        "sc_data"
     )
+    data_path2 <- get_data(
+        "https://github.com/Shians/scBenchData/raw/master/mrna_mix_data.RData",
+        "mrna_mix_data"
+    )
+    data_path3 <- get_data(
+        "https://github.com/Shians/scBenchData/raw/master/mix_9cell_data.RData",
+        "cell_mix_data"
+    )
+
+    load(data_path1)
+    load(data_path2)
+    load(data_path3)
+
+    out <- list(
+        "sc_10x" = sc_10x,
+        "sc_celseq" = sc_celseq,
+        "sc_dropseq" = sc_dropseq,
+        "cell_mix1" = mix_9cell_07clean_1cell_mat,
+        "cell_mix2" = mix_9cell_08clean_1cell_mat,
+        "cell_mix3" = mix_9cell_09clean_1cell_mat,
+        "cell_mix4" = mix_9cell_07clean_3cell_mat,
+        "cell_mix5" = mix_9cell_07clean_90cell_mat,
+        "mrna_mix_celseq" = mrna_mix_celseq,
+        "mrna_mix_sortseq" = mrna_mix_sortseq
+    )
+
+    invisible(out)
+}
+
+
+#' Clear cached datasets
+#'
+#' Delete the datasets cached by the load_*_data set of functions
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' clear_cached_datasets()
+#' }
+clear_cached_datasets <- function() {
+    bfc <- .get_cache()
+
+    get_query_rid <- function(query) {
+        BiocFileCache::bfcquery(bfc, query)$rid
+    }
+
+    BiocFileCache::bfcremove(bfc, get_query_rid("sc_data"))
+    BiocFileCache::bfcremove(bfc, get_query_rid("mrna_mix_data"))
+    BiocFileCache::bfcremove(bfc, get_query_rid("cell_mix_data"))
 }
