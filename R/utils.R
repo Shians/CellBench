@@ -133,3 +133,16 @@ suppressMsgAndPrint <- function(expr, suppress = TRUE) {
         expr
     }
 }
+
+# generate sequence along number of rows
+seq_nrow <- function(x) {
+    if (!is.numeric(nrow(x))) return(integer(0))
+    nrow(x) %>% seq_len()
+}
+
+# generate sequence along number of columns
+seq_ncol <- function(x) {
+    if (!is.numeric(ncol(x))) return(integer(0))
+    ncol(x) %>% seq_len()
+}
+
