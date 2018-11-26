@@ -27,7 +27,10 @@ summary.benchmark_tbl <- function(x) {
     out <- c(out, glue::glue_collapse(pipeline_str_vec, sep = " → "))
 
     names(method_names) <- method_names
-    unique_method_list <- purrr::map(method_names, function(nm) unique(x[, nm]) %>% dplyr::pull(1))
+    unique_method_list <- purrr::map(
+        method_names,
+        function(nm) unique(x[, nm]) %>% dplyr::pull(1)
+        )
 
     for (method_name in method_names) {
         unique_methods <- unique_method_list[[method_name]]

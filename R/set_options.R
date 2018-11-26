@@ -16,7 +16,7 @@ set_cellbench_threads <- function(nthreads = 1) {
     stopifnot(is.numeric(nthreads))
 
     if (nthreads < 1) {
-        nthreads = 1
+        nthreads <- 1
     }
 
     options("CellBench.threads" = nthreads)

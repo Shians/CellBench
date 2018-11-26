@@ -35,7 +35,12 @@ apply_methods <- function(x, fn_list, .name = NULL, suppress.messages = TRUE) {
 
 #' @rdname apply_methods
 #' @export
-apply_methods.list <- function(data_list, fn_list, .name = NULL, suppress.messages = TRUE) {
+apply_methods.list <- function(
+    data_list,
+    fn_list,
+    .name = NULL,
+    suppress.messages = TRUE
+){
     d_names <- names(data_list)
     m_names <- names(fn_list)
 
@@ -109,12 +114,16 @@ apply_methods.list <- function(data_list, fn_list, .name = NULL, suppress.messag
 
 all_length_one <- function(x) {
     stopifnot(is(x, "list"))
-    all(sapply(x, function(x) { length(x) == 1 }))
+    all(purrr::map_lgl(x, function(x) { length(x) == 1 }))
 }
 
 #' @rdname apply_methods
 #' @export
-apply_methods.benchmark_tbl <- function(tbl_df, fn_list, .name = NULL, suppress.messages = TRUE) {
+apply_methods.benchmark_tbl <- function(
+    tbl_df,
+    fn_list,
+    .name = NULL,
+    suppress.messages = TRUE) {
     m_names <- names(fn_list)
 
     if (missing(".name")) {

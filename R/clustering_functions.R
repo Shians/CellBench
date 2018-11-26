@@ -47,7 +47,7 @@ clustering_sc3 <- function(sce, col.sym = "Symbol") {
 clustering_seurat <- function(sce) {
     num_dim <- floor(nrow(sce)/5000)
     if (num_dim > 5) {
-        num_dim = 5
+        num_dim <- 5
     }
 
     # rough guess of how many PCA components to use
