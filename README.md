@@ -1,6 +1,6 @@
 # CellBench
 
-R package for benchmarking single cell analysis methods. Currently under development.
+R package for benchmarking single cell analysis methods. Currently under development. Functions and API are liable to change without warning.
 
 # Introduction
 
@@ -65,16 +65,12 @@ datasets %>%
 ## 8 sample2 covariance  median  0.0132 
 ```
 
-# Development
+The result table is essentially a regular `tibble` and works with all `tidyverse` packages.
 
-Fork and clone this repository for development. The data required has been put in the [scBenchData](https://github.com/Shians/scBenchData) repository for cleanliness as they are intended to reside elsewhere in the finished package. Download them into the `inst/extdata/` with the following commands
+# Features
 
-```
-# from the CellBench folder
-mkdir -p inst/extdata
-wget https://github.com/Shians/scBenchData/raw/master/mix_9cell_data.RData -O inst/extdata/mix_9cell_data.RData
-wget https://github.com/Shians/scBenchData/raw/master/mrna_mix_data.RData -O inst/extdata/mrna_mix_data.RData
-wget https://github.com/Shians/scBenchData/raw/master/single_cell_data.RData -O inst/extdata/single_cell_data.RData
-```
+TODO...
 
-or download and place them manually.
+# License
+
+This package is licensed under GNU General Public License v3.0 (GPL-3.0).
