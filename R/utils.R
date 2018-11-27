@@ -146,3 +146,13 @@ seq_ncol <- function(x) {
     ncol(x) %>% seq_len()
 }
 
+# wrap glue to collapse vectors with comma separators and a final separator
+nice_collapse <- function(x) {
+    collapse_with_comma <- partial(
+        glue::glue_collapse,
+        sep = ", ",
+        last = " and "
+    )
+
+    glue::glue(x) %>% collapse_with_comma()
+}
