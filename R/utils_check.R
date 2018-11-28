@@ -10,3 +10,7 @@ is_all_of <- function(x, classes) {
     stopifnot(is(classes, "character"))
     purrr::map_lgl(classes, function(class) is(x, class)) %>% any()
 }
+
+all_unique <- function(x) {
+    length(x) == length(unique(x))
+}
