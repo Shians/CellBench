@@ -18,8 +18,8 @@ SingleCellExperiment object
 Sample n cells from a SingleCellExperiment object with no replacement.
 }
 \examples{
-\dontrun{
-x <- load_mrna_mix_data()
-celseq_subsample <- sample_cells(x$mrna_mix_celseq, 50)
-}
+data(sample_sce_data)
+dim(sample_sce_data)
+x <- sample_cells(sample_sce_data, 10)
+dim(x)
 }
