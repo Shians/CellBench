@@ -15,7 +15,7 @@ get_data <- function(url, filename) {
     BiocFileCache::bfcrpath(bfc, rids = rid)
 }
 
-#' @describeIn load_all_data
+#' @describeIn load_all_data Load single cell data
 #' @export
 load_sc_data <- function() {
     data_path <- get_data(
@@ -34,7 +34,7 @@ load_sc_data <- function() {
     invisible(out)
 }
 
-#' @describeIn load_all_data
+#' @describeIn load_all_data Load cell mixture data
 #' @export
 load_cell_mix_data <- function() {
     data_path <- get_data(
@@ -55,7 +55,7 @@ load_cell_mix_data <- function() {
     invisible(out)
 }
 
-#' @describeIn load_all_data
+#' @describeIn load_all_data Load mrna mixture data
 #' @export
 load_mrna_mix_data <- function() {
     data_path <- get_data(
@@ -73,8 +73,18 @@ load_mrna_mix_data <- function() {
     invisible(out)
 }
 
-#' Load CellBench data
+
+#' Load CellBench Data
+#'
+#' Load in all CellBench data described \href{https://github.com/LuyiTian/CellBench_data/blob/25f73cfcc87a84282cf55b4ac963032cc4da4988/README.md#summary-of-all-datasets}{here}.
+#'
+#' @return list of SingleCellExperiment
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' cellbench_data <- load_all_data()
+#' }
 load_all_data <- function() {
     data_path1 <- get_data(
         "https://github.com/Shians/scBenchData/raw/master/single_cell_data.RData",
