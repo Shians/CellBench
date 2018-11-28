@@ -71,6 +71,7 @@ norm_method <- list(
 # identity simply returns its argument, here it's used to represent no imputation
 impute_method <- list(
     "none" = identity,
+    "partial(k = 2)" = partial(impute_knn_smooth, k = 2),
     "partial(k = 4)" = partial(impute_knn_smooth, k = 4),
     "partial(k = 8)" = partial(impute_knn_smooth, k = 8),
     "partial(k = 16)" = partial(impute_knn_smooth, k = 16),
@@ -79,17 +80,17 @@ impute_method <- list(
 ```
 
 ```{r}
-res <- data %>%
+res_norm <- data %>%
     apply_methods(norm_method)
 ```
 
 ```{r}
-res <- res %>%
+res_impute <- res_norm %>%
     apply_methods(impute_method)
 ```
 
 ```{r}
-res <- res %>%
+res <- res_impute %>%
     dplyr::mutate(result = lapply(result, function(x) log2(x + 1)))
 class(res) <- append("benchmark_tbl", class(res))
 ```
