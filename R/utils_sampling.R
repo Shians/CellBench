@@ -16,7 +16,6 @@ sample_cols <- function(x, n) {
     }
 }
 
-
 #' Sample cells from a SingleCellExperiment
 #'
 #' Sample n cells from a SingleCellExperiment object with no replacement.
@@ -28,10 +27,10 @@ sample_cols <- function(x, n) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' x <- load_mrna_mix_data()
-#' celseq_subsample <- sample_cells(x$mrna_mix_celseq, 50)
-#' }
+#' data(sample_sce_data)
+#' dim(sample_sce_data)
+#' x <- sample_cells(sample_sce_data, 10)
+#' dim(x)
 sample_cells <- function(x, n) {
     stopifnot(is(x, "SingleCellExperiment"))
     sample_cols(x, n)
@@ -48,10 +47,10 @@ sample_cells <- function(x, n) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' x <- load_mrna_mix_data()
-#' celseq_subsample <- sample_genes(x$mrna_mix_celseq, 50)
-#' }
+#' data(sample_sce_data)
+#' dim(sample_sce_data)
+#' x <- sample_genes(sample_sce_data, 50)
+#' dim(x)
 sample_genes <- function(x, n) {
     stopifnot(is(x, "SingleCellExperiment"))
     sample_rows(x, n)
