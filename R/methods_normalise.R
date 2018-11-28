@@ -5,7 +5,8 @@
     t(t(x) / norm_factors)
 }
 
-# library size normalise and transform to log scale
+#' Library size normalise and transform to log scale
+#' @export
 lib_size_norm_expr <- function(x, log = TRUE, offset = 1) {
     stopifnot(is_one_of(x, c("matrix", "SingleCellExperiment")))
 
@@ -26,7 +27,8 @@ lib_size_norm_expr <- function(x, log = TRUE, offset = 1) {
     output
 }
 
-# scran normalisation
+#' Scran normalisation
+#' @export
 scran_norm_expr <- function(x, log = TRUE) {
     stopifnot(is(x, "SingleCellExperiment"))
 

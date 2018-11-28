@@ -1,3 +1,4 @@
+#' @export
 clustering_raceid <- function(sce){
     sc <- RaceID::SCseq(as.data.frame(as.matrix(counts(sce))))
     sc <- RaceID::filterdata(sc, mintotal = 1)
@@ -21,6 +22,7 @@ pre_clean <- function(sce) {
     return(sce1)
 }
 
+#' @export
 clustering_sc3 <- function(sce, col.sym = "Symbol") {
     sce_cleaned <- pre_clean(sce)
 
@@ -44,6 +46,7 @@ clustering_sc3 <- function(sce, col.sym = "Symbol") {
     return(factor(res))
 }
 
+#' @export
 clustering_seurat <- function(sce) {
     num_dim <- floor(nrow(sce)/5000)
     if (num_dim > 5) {

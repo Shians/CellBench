@@ -2,10 +2,10 @@
 % Please edit documentation in R/load_data.R
 \name{load_all_data}
 \alias{load_all_data}
-\title{Load all CellBench data}
+\title{Load CellBench data}
 \usage{
 load_all_data()
 }
 \description{
-Load all CellBench data
+Load CellBench data
 }

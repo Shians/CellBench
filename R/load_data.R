@@ -15,7 +15,7 @@ get_data <- function(url, filename) {
     BiocFileCache::bfcrpath(bfc, rids = rid)
 }
 
-#' Load CellBench single cell data
+#' @describeIn load_all_data
 #' @export
 load_sc_data <- function() {
     data_path <- get_data(
@@ -34,7 +34,7 @@ load_sc_data <- function() {
     invisible(out)
 }
 
-#' Load CellBench cell mixture data
+#' @describeIn load_all_data
 #' @export
 load_cell_mix_data <- function() {
     data_path <- get_data(
@@ -55,7 +55,7 @@ load_cell_mix_data <- function() {
     invisible(out)
 }
 
-#' Load CellBench mrna mixture data
+#' @describeIn load_all_data
 #' @export
 load_mrna_mix_data <- function() {
     data_path <- get_data(
@@ -73,7 +73,7 @@ load_mrna_mix_data <- function() {
     invisible(out)
 }
 
-#' Load all CellBench data
+#' Load CellBench data
 #' @export
 load_all_data <- function() {
     data_path1 <- get_data(
