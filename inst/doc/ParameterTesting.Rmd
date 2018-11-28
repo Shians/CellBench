@@ -12,6 +12,7 @@ vignette: >
 ```{r, include = FALSE}
 library(CellBench)
 library(dplyr)
+library(purrr)
 library(ggplot2)
 set_cellbench_threads(4)
 ```
@@ -25,6 +26,7 @@ This use case shows how to test a range of parameters for a given method. We wil
 ```{r}
 library(CellBench)
 library(dplyr)
+library(purrr)
 library(ggplot2)
 ```
 
@@ -36,14 +38,13 @@ cellbench_mrna_mix_data <- load_mrna_mix_data()
 data <- list(
     mrna_mix_celseq = cellbench_mrna_mix_data$mrna_mix_celseq
 )
-
-str(data, 1)
 ```
 
 We need to write some small wrappers to help run pipelines and make methods uniform in input and output. This is necessary because each step of analysis should take in the same type of data and output the same type of data, however different methods may differ in how they are called, how many steps need to run and what they output. Wrappers help manage this, in this example we want our normalisation step to take in a SingleCellExperiment and output a normalised count matrix. The imputation step should take a count matrix and return an imputed counts matrix.
 
 ```{r}
-# take in a SingleCellExperiment and return a scran normalised expression matrix
+# take in a SingleCellExperiment and return a scran normalised 
+# expression matrix
 scran_norm_expr <- function(x) {
     stopifnot(is(x, "SingleCellExperiment"))
 
@@ -55,7 +56,7 @@ scran_norm_expr <- function(x) {
 
 # take in an expression matrix and return the imputed expression matrix
 impute_knn_smooth <- function(expr, k) {
-    source("https://raw.githubusercontent.com/yanailab/knn-smoothing/master/knn_smooth.R")
+    source("https://raw.github.com/yanailab/knn-smoothing/master/knn_smooth.R")
     smoothed_mat <- knn_smoothing(mat = expr, k = k)
     smoothed_mat
 }
@@ -68,7 +69,8 @@ norm_method <- list(
     scran = scran_norm_expr
 )
 
-# identity simply returns its argument, here it's used to represent no imputation
+# identity simply returns its argument, here it's used to represent 
+# no imputation
 impute_method <- list(
     "none" = identity,
     "partial(k = 2)" = partial(impute_knn_smooth, k = 2),
@@ -82,35 +84,39 @@ impute_method <- list(
 ```{r}
 res_norm <- data %>%
     apply_methods(norm_method)
+
+res_norm
 ```
 
 ```{r}
 res_impute <- res_norm %>%
     apply_methods(impute_method)
-```
 
-```{r}
-res <- res_impute %>%
-    dplyr::mutate(result = lapply(result, function(x) log2(x + 1)))
-class(res) <- append("benchmark_tbl", class(res))
+res_impute
 ```
-
 
 ```{r}
 dim_red <- list(
     pca = compute_pca
 )
 
-res <- res %>%
+# log-transform the counts
+res_impute$result <- lapply(res_impute$result, function(x) log2(x + 1))
+
+res <- res_impute %>%
     apply_methods(dim_red)
+
+res
 ```
 
 ```{r}
 append_anno <- function(data_key, result) {
-    mRNA_amount <- colData(cellbench_mrna_mix_data$mrna_mix_celseq)$mRNA_amount
+    # get mRNA amount
+    col_data <- colData(cellbench_mrna_mix_data$mrna_mix_celseq)
+    mRNA_amount <- col_data$mRNA_amount
 
     truth <- with(
-        colData(cellbench_mrna_mix_data$mrna_mix_celseq),
+        col_data,
         paste(H2228_prop, H1975_prop, HCC827_prop)
     )
 
@@ -126,7 +132,7 @@ annotated_res <- res %>%
     dplyr::mutate(result = map2(data_key, result, append_anno)) %>%
     dplyr::select(-data_key)
 
-plot_df <- tidyr::unnest(annotated_res %>% dplyr::filter(norm_method == "scran"))
+plot_df <- tidyr::unnest(annotated_res)
 
 plot_df %>%
     ggplot(aes(x = Dim1, y = Dim2, col = truth)) +
