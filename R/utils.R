@@ -137,13 +137,13 @@ suppressMsgAndPrint <- function(expr, suppress = TRUE) {
 # generate sequence along number of rows
 seq_nrow <- function(x) {
     if (!is.numeric(nrow(x))) return(integer(0))
-    nrow(x) %>% seq_len()
+    seq_len(nrow(x))
 }
 
 # generate sequence along number of columns
 seq_ncol <- function(x) {
     if (!is.numeric(ncol(x))) return(integer(0))
-    ncol(x) %>% seq_len()
+    seq_len(ncol(x))
 }
 
 # wrap glue to collapse vectors with comma separators and a final separator
