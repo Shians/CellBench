@@ -1,5 +1,4 @@
 Meta
-doc
 .Rproj.user
 .Rhistory
 .RData
@@ -7,4 +6,3 @@ doc
 .CellBenchCache
 
 *.RData
-inst/doc
