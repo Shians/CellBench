@@ -123,7 +123,10 @@ apply_methods.benchmark_tbl <- function(
     tbl_df,
     fn_list,
     .name = NULL,
-    suppress.messages = TRUE) {
+    suppress.messages = TRUE
+) {
+    stopifnot(all_unique(names(fn_list)))
+
     m_names <- names(fn_list)
 
     if (missing(".name")) {
