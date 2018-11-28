@@ -17,7 +17,6 @@ knitr::opts_chunk$set(echo = TRUE)
 CellBench:::load_mrna_mix_data()
 
 set_cellbench_threads(4)
-set_cellbench_cache_path("/Users/su.s/Programs/R/CellBench/.CellBench")
 
 data <- list(
     mrna_mix_celseq = cellbench_mrna_mix_data$mrna_mix_celseq
