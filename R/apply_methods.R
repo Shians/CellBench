@@ -36,7 +36,7 @@ apply_methods <- function(x, fn_list, .name = NULL, suppress.messages = TRUE) {
 #' @rdname apply_methods
 #' @export
 apply_methods.list <- function(
-    data_list,
+    x,
     fn_list,
     .name = NULL,
     suppress.messages = TRUE
