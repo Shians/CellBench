@@ -72,7 +72,8 @@ The result table is essentially a regular `tibble` and works with all `tidyverse
 
 # Features
 
-TODO...
+* High compatibility with dplyr and rest of tidyverse, fundamental data object can be used with dplyr verbs
+* Multithreading, methods can be applied in parallel
 
 # License
 
