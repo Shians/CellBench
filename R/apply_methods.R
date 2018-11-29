@@ -41,7 +41,7 @@ apply_methods.list <- function(
     .name = NULL,
     suppress.messages = TRUE
 ){
-    d_names <- names(data_list)
+    d_names <- names(x)
     m_names <- names(fn_list)
 
     if (length(m_names) != length(fn_list)) {
@@ -52,7 +52,7 @@ apply_methods.list <- function(
         .name <- deparse(substitute(fn_list))
     }
 
-    n_threads <- min(getOption("CellBench.threads"), length(data_list))
+    n_threads <- min(getOption("CellBench.threads"), length(x))
 
     if (n_threads > 1) {
         output <- BiocParallel::bplapply(
@@ -66,7 +66,7 @@ apply_methods.list <- function(
                             data_list = d_name,
                             .temp = m_name,
                             result = suppressMsgAndPrint(
-                                fn_list[[m_name]](data_list[[d_name]]),
+                                fn_list[[m_name]](x[[d_name]]),
                                 suppress = suppress.messages
                             )
                         )
@@ -86,7 +86,7 @@ apply_methods.list <- function(
                             data_list = d_name,
                             .temp = m_name,
                             result = suppressMsgAndPrint(
-                                fn_list[[m_name]](data_list[[d_name]]),
+                                fn_list[[m_name]](x[[d_name]]),
                                 suppress = suppress.messages
                             )
                         )
@@ -120,7 +120,7 @@ all_length_one <- function(x) {
 #' @rdname apply_methods
 #' @export
 apply_methods.benchmark_tbl <- function(
-    tbl_df,
+    x,
     fn_list,
     .name = NULL,
     suppress.messages = TRUE
@@ -134,7 +134,7 @@ apply_methods.benchmark_tbl <- function(
     }
 
     results <- list()
-    for (data in tbl_df$result) {
+    for (data in x$result) {
         for (fn in fn_list) {
             results <- append(
                 results,
@@ -145,8 +145,8 @@ apply_methods.benchmark_tbl <- function(
         }
     }
 
-    output <- tbl_df %>% dplyr::select(-result)
-    output <- tidyr::crossing(tbl_df, factor_no_sort(m_names))
+    output <- x %>% dplyr::select(-result)
+    output <- tidyr::crossing(x, factor_no_sort(m_names))
     names(output)[ncol(output)] <- .name
     output <- output %>%
         dplyr::mutate(result = results) %>%

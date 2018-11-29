@@ -9,7 +9,7 @@
 #' res <- apply_methods(datasets, methods)
 #' summary(res)
 #' }
-summary.benchmark_tbl <- function(x) {
+summary.benchmark_tbl <- function(x, ...) {
     if (dplyr::last(colnames(x)) != "result") {
         # if benchmark_tbl has been manipulated by user to non-standard form
         print(summary.data.frame(x))
