@@ -21,6 +21,7 @@ License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
+    R (>= 3.0),
     SingleCellExperiment,
     BiocFileCache,
     tibble,
