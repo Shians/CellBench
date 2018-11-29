@@ -1,6 +1,6 @@
 #' Summary of benchmark_tbl
 #'
-#' @param x the benchmark_tbl to be summarised
+#' @param object the benchmark_tbl to be summarised
 #'
 #' @export
 #'
@@ -9,14 +9,14 @@
 #' res <- apply_methods(datasets, methods)
 #' summary(res)
 #' }
-summary.benchmark_tbl <- function(x, ...) {
-    if (dplyr::last(colnames(x)) != "result") {
+summary.benchmark_tbl <- function(object, ...) {
+    if (dplyr::last(colnames(object)) != "result") {
         # if benchmark_tbl has been manipulated by user to non-standard form
-        print(summary.data.frame(x))
+        print(summary.data.frame(object))
         return()
     }
 
-    method_names <- names(x)
+    method_names <- names(object)
     method_names <- method_names[-1]
     method_names <- method_names[-length(method_names)]
 
@@ -24,12 +24,12 @@ summary.benchmark_tbl <- function(x, ...) {
 
     out <- c(glue::glue("Pipeline summary:"), out)
     pipeline_str_vec <- c("data", glue::glue("{method_names}"), "result")
-    out <- c(out, glue::glue_collapse(pipeline_str_vec, sep = " → "))
+    out <- c(out, glue::glue_collapse(pipeline_str_vec, sep = " \u2192 "))
 
     names(method_names) <- method_names
     unique_method_list <- purrr::map(
         method_names,
-        function(nm) unique(x[, nm]) %>% dplyr::pull(1)
+        function(nm) unique(object[, nm]) %>% dplyr::pull(1)
         )
 
     for (method_name in method_names) {
