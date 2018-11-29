@@ -28,6 +28,7 @@ Depends:
 Imports:
     purrr,
     dplyr,
+    tidyr,
     glue,
     ggplot2,
     memoise
