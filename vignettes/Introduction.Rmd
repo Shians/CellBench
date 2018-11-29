@@ -62,7 +62,7 @@ add_noise <- list(
 
 Now we have 2 `list`s.
 
-* A `list` of datasets. In this context it is two randomly generated vectors, but it can be any arbitrary object. Ideally all objects in the list are of the same type, this makes it success more likely when when the same methods are applied across all datasets.
+* A `list` of datasets. In this context it is two randomly generated vectors, but it can be any arbitrary object. Ideally all objects in the list are of the same type, this makes it success more likely when the same methods are applied across all datasets.
 * A `list` of functions. These are the functions that will perform one step of our pipeline stored neatly in a single object. For this example we have methods of adding noise to our sample, the first function simply returns the data as-is which is helpful for comparison. The second adds a bias by shifting all values by 1 and the third adds random noise with a standard deviation of 2.
 
 ```{r}
