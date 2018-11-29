@@ -5,13 +5,20 @@
  
 R package for benchmarking single cell analysis methods. Currently under development. Functions and API are liable to change without warning.
 
+# Installation
+
+```r
+if (!require(remotes)) install.packages("remotes")
+remotes::install_github("shians/CellBench")
+```
+
 # Introduction
 
 This package revolves around one object and one function. The `benchmark_tbl` (benchmark [tibble](https://tibble.tidyverse.org)) and the `apply_methods(x, methods)` function.
 
 We expect data to to be stored in lists, and we apply functions stored in lists to the data. This creates a `benchmark_tbl` where the names of the lists items are stored as columns and the final column contains the result of the computations.
 
-```
+```r
 library(CellBench)
 
 sample1 <- data.frame(
@@ -45,7 +52,7 @@ datasets %>% apply_methods(transform)
 
 We can additionally chain method applications and this will combinatorially expand our `benchmark_tbl` so that combinations of methods can easily be computed.
 
-```
+```r
 metric <- list(
     mean = mean,
     median = median
