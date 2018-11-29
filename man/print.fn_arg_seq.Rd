@@ -4,7 +4,7 @@
 \alias{print.fn_arg_seq}
 \title{Print method for fn_arg_seq output}
 \usage{
-\method{print}{fn_arg_seq}(x)
+\method{print}{fn_arg_seq}(x, ...)
 }
 \arguments{
 \item{x}{fn_arg_seq object}

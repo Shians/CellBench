@@ -183,7 +183,7 @@ f <- function(x) { print(x) }
 
 We can also reassign variables to other variables
 
-```{r}
+```{r, eval = FALSE}
 # assigning numeric literal
 x <- 1
 y <- x # y = 1

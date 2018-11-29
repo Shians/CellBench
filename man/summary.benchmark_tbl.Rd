@@ -4,7 +4,7 @@
 \alias{summary.benchmark_tbl}
 \title{Summary of benchmark_tbl}
 \usage{
-\method{summary}{benchmark_tbl}(x)
+\method{summary}{benchmark_tbl}(x, ...)
 }
 \arguments{
 \item{x}{the benchmark_tbl to be summarised}
