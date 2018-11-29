@@ -86,10 +86,10 @@ unicode_arrow <- function(towards = c("right", "left", "up", "down")) {
     towards <- match.arg(towards)
     switch(
         towards,
-        "right" = "→",
-        "left" = "←",
-        "up" = "↑",
-        "down" = "↓"
+        "left" = "\u2190",
+        "up" = "\u2191",
+        "right" = "\u2192",
+        "down" = "\u2193"
     )
 }
 
