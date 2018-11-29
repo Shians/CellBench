@@ -39,8 +39,8 @@ datasets <- list(
 )
 
 cor_method <- list(
-    pearson = function(x) cor(x, method = "pearson"),
-    kendall = function(x) cor(x, method = "kendall")
+    pearson = function(x) { cor(x, method = "pearson") },
+    kendall = function(x) { cor(x, method = "kendall") }
 )
 
 res <- datasets %>%
@@ -98,7 +98,7 @@ We note again that the benchmark column is a list.
 class(res$result)
 ```
 
-This means some simple vectorised functions will not quite work as expected. For example if we wished to take the exponential of all the matrices using `dplyr::mutate`. Because `dplyr` feeds entire columns into the functions and expects the entire column to be returned, the result of the following code will attempt to run `exp()` on a `list` which it cannot handle.
+This means some simple vectorised functions will not quite work as expected. For example if we wished to take the exponential of all the matrices using `dplyr::mutate()`. Because `dplyr` feeds entire columns into the functions and expects the entire column to be returned, the result of the following code will attempt to run `exp()` on a `list` which it cannot handle.
 
 ```{r, eval = FALSE}
 # this code will fail

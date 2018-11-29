@@ -10,7 +10,7 @@
 \usage{
 apply_methods(x, fn_list, .name = NULL, suppress.messages = TRUE)
 
-\method{apply_methods}{list}(data_list, fn_list, .name = NULL,
+\method{apply_methods}{list}(x, fn_list, .name = NULL,
   suppress.messages = TRUE)
 
 \method{apply_methods}{benchmark_tbl}(x, fn_list, .name = NULL,
