@@ -12,6 +12,8 @@
 #'   suppressed
 #'
 #' @return benchmark_tbl object containing results from methods applied
+#'
+#' @importFrom magrittr %>%
 #' @export
 #'
 #' @examples
@@ -34,6 +36,8 @@ apply_methods <- function(x, fn_list, .name = NULL, suppress.messages = TRUE) {
 }
 
 #' @rdname apply_methods
+#' @importFrom BiocParallel SnowParam MulticoreParam
+#' @importFrom tibble tibble
 #' @export
 apply_methods.list <- function(
     x,
@@ -41,10 +45,10 @@ apply_methods.list <- function(
     .name = NULL,
     suppress.messages = TRUE
 ){
-    d_names <- names(x)
-    m_names <- names(fn_list)
+    data_names <- names(x)
+    method_names <- names(fn_list)
 
-    if (length(m_names) != length(fn_list)) {
+    if (length(method_names) != length(fn_list)) {
         stop("every element of fn_list must be named")
     }
 
@@ -54,46 +58,40 @@ apply_methods.list <- function(
 
     n_threads <- min(getOption("CellBench.threads"), length(x))
 
+    multithread_param <- if (.Platform$OS.type == "windows") {
+        BiocParallel::SnowParam(n_threads)
+    } else {
+        BiocParallel::MulticoreParam(n_threads)
+    }
+
+    # apply each method to the data
+    # return the data names, method name and result in a list of lists
+    expand_results <- function(data_name) {
+        purrr::map(
+            method_names,
+            function(method_name) {
+                result <- list(
+                    data_list = data_name,
+                    .temp = method_name,
+                    result =
+                        fn_list[[method_name]](x[[data_name]]),
+                        suppress = suppress.messages
+                )
+                list(result)
+            }
+        ) %>% purrr::reduce(append)
+    }
+
     if (n_threads > 1) {
         output <- BiocParallel::bplapply(
-            BPPARAM = BiocParallel::MulticoreParam(n_threads),
-            d_names,
-            function(d_name) {
-                purrr::map(
-                    m_names,
-                    function(m_name) {
-                        result <- list(
-                            data_list = d_name,
-                            .temp = m_name,
-                            result = suppressMsgAndPrint(
-                                fn_list[[m_name]](x[[d_name]]),
-                                suppress = suppress.messages
-                            )
-                        )
-                        list(result)
-                    }
-                ) %>% purrr::reduce(append)
-            }
+            BPPARAM = multithread_param,
+            data_names,
+            expand_results
         ) %>% purrr::reduce(append)
     } else {
         output <- purrr::map(
-            d_names,
-            function(d_name) {
-                purrr::map(
-                    m_names,
-                    function(m_name) {
-                        result <- list(
-                            data_list = d_name,
-                            .temp = m_name,
-                            result = suppressMsgAndPrint(
-                                fn_list[[m_name]](x[[d_name]]),
-                                suppress = suppress.messages
-                            )
-                        )
-                        list(result)
-                    }
-                ) %>% purrr::reduce(append)
-            }
+            data_names,
+            expand_results
         ) %>% purrr::reduce(append)
     }
 
@@ -118,6 +116,7 @@ all_length_one <- function(x) {
 }
 
 #' @rdname apply_methods
+#' @importFrom rlang .data
 #' @export
 apply_methods.benchmark_tbl <- function(
     x,
@@ -127,7 +126,7 @@ apply_methods.benchmark_tbl <- function(
 ) {
     stopifnot(all_unique(names(fn_list)))
 
-    m_names <- names(fn_list)
+    method_names <- names(fn_list)
 
     if (missing(".name")) {
         .name <- deparse(substitute(fn_list))
@@ -146,7 +145,7 @@ apply_methods.benchmark_tbl <- function(
     }
 
     output <- x %>% dplyr::select(-result)
-    output <- tidyr::crossing(x, factor_no_sort(m_names))
+    output <- tidyr::crossing(x, factor_no_sort(method_names))
     names(output)[ncol(output)] <- .name
     output <- output %>%
         dplyr::mutate(result = results) %>%
