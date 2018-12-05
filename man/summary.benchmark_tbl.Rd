@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{object}{the benchmark_tbl to be summarised}
+
+\item{...}{additional arguments affecting the summary produced.}
 }
 \description{
 Summary of benchmark_tbl

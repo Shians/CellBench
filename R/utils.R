@@ -105,7 +105,11 @@ factor_no_sort <- function(x) {
     factor(x, levels = unique(x))
 }
 
-# convert to list of results with pipeline as name
+#' convert to list of results with pipeline as name
+#' 
+#' @param x the benchmark_tbl object to convert
+#' 
+#' @importFrom stats setNames
 as_pipeline_list <- function(x) {
     stopifnot(is(x, "benchmark_tbl"))
 
@@ -121,7 +125,7 @@ as_pipeline_list <- function(x) {
 
 # suppress prints, which many people use as if they were messages
 suppressPrint <- function(expr) {
-    capture.output(x <- expr)
+    utils::capture.output(x <- expr)
     x
 }
 

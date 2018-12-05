@@ -6,6 +6,16 @@
 \usage{
 lib_size_norm_expr(x, log = TRUE, offset = 1)
 }
+\arguments{
+\item{x}{the SingleCellExperiment or count matrix}
+
+\item{log}{whether output should be log-scale}
+
+\item{offset}{the counts to add before taking log}
+}
+\value{
+matrix of normalised values
+}
 \description{
 Library size normalise and transform to log scale
 }

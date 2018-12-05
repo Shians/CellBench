@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{fn_arg_seq object}
+
+\item{...}{addition arguments for print}
 }
 \description{
 Print method for fn_arg_seq output

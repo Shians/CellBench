@@ -6,6 +6,14 @@
 \usage{
 scran_norm_expr(x, log = TRUE)
 }
+\arguments{
+\item{x}{the SingleCellExperiment object}
+
+\item{log}{TRUE if normalised values should be returned on log-scale}
+}
+\value{
+
+}
 \description{
 Scran normalisation
 }

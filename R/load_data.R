@@ -1,8 +1,13 @@
+#' @importFrom rappdirs user_cache_dir
+#' @importFrom BiocFileCache BiocFileCache
 .get_cache <- function() {
     cache <- rappdirs::user_cache_dir(appname = "CellBench")
     BiocFileCache::BiocFileCache(cache)
 }
 
+#' @importFrom BiocFileCache bfcquery bfcadd bfcrpath
+#' @importFrom glue glue
+#' @importClassesFrom SingleCellExperiment SingleCellExperiment
 get_data <- function(url, filename) {
     bfc <- .get_cache()
     rid <- BiocFileCache::bfcquery(bfc, filename, "rname")$rid

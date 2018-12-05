@@ -49,8 +49,17 @@ plot_map_metrics <- function(
         ggplot2::ggtitle("Mapping proportions")
 }
 
+#' Compute PCA coordinates
+#'
+#' @param gene_expr the gene expression matrix with samples in columns and expression in rows
+#' @param ndims the number of dimensions to return
+#'
+#' @return data.frame with PCA dimensions labelled Dim(n) where (n) is the dimension number
+#'
+#' @importFrom stats prcomp
+#' @importFrom stats setNames
+#'
 #' @export
-# get pca coords
 compute_pca <- function(gene_expr, ndims = 2) {
     pca <- prcomp(t(gene_expr))
 
@@ -61,8 +70,14 @@ compute_pca <- function(gene_expr, ndims = 2) {
     setNames(data.frame(pca$x[, 1:ndims]), nm = glue::glue("Dim{1:ndims}"))
 }
 
+#' Compute the PCA coordinates using the most variable genes
+#'
+#' @describeIn compute_pca
+#'
+#' @inheritParams compute_pca
+#' @param ngenes the number of most variable genes to use
+#'
 #' @export
-# get pca coords
 compute_pca_most_var <- function(gene_expr, ndims = 2, ngenes = 500) {
     stopifnot(
         is.matrix(gene_expr),

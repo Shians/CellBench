@@ -11,6 +11,8 @@
 #'
 #' @return list of functions with the specified arguments pre-applied. Names of
 #'     the list indicate the values that have been pre-applied.
+#'
+#' @importFrom stats setNames
 #' @export
 #'
 #' @examples
@@ -83,6 +85,7 @@ fn_arg_seq <- function(func, ...) {
 #' Print method for fn_arg_seq output
 #'
 #' @param x fn_arg_seq object
+#' @param ... addition arguments for print
 #'
 #' @export
 print.fn_arg_seq <- function(x, ...) {

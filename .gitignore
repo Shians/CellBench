@@ -4,5 +4,6 @@ Meta
 .RData
 .Ruserdata
 .CellBenchCache
+..Rcheck
 
 *.RData

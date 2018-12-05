@@ -1,3 +1,5 @@
+#' Clustering using RaceID
+#' @param sce the SingleCellExperiment object to perform clustering on
 #' @export
 clustering_raceid <- function(sce){
     sc <- RaceID::SCseq(as.data.frame(as.matrix(counts(sce))))
@@ -22,6 +24,9 @@ pre_clean <- function(sce) {
     return(sce1)
 }
 
+#' Clustering using SC3
+#' @inheritParams clustering_raceid
+#' @param col.sym the column name containing gene symbols
 #' @export
 clustering_sc3 <- function(sce, col.sym = "Symbol") {
     sce_cleaned <- pre_clean(sce)
@@ -29,10 +34,10 @@ clustering_sc3 <- function(sce, col.sym = "Symbol") {
     rowData(sce_cleaned)$feature_symbol <- rownames(sce_cleaned)
     SingleCellExperiment::isSpike(sce_cleaned, "ERCC") <- FALSE
 
-    sce_cleaned <- SC3fork::sc3_estimate_k(sce_cleaned)
+    sce_cleaned <- SC3::sc3_estimate_k(sce_cleaned)
     k_est <- sce_cleaned@metadata$sc3$k_estimation
 
-    sce_cleaned <- SC3fork::sc3(
+    sce_cleaned <- SC3::sc3(
         sce_cleaned,
         ks = k_est,
         biology = FALSE,
@@ -46,6 +51,8 @@ clustering_sc3 <- function(sce, col.sym = "Symbol") {
     return(factor(res))
 }
 
+#' Clustering using Seurat
+#' @inheritParams clustering_raceid
 #' @export
 clustering_seurat <- function(sce) {
     num_dim <- floor(nrow(sce)/5000)

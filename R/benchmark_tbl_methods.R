@@ -1,6 +1,7 @@
 #' Summary of benchmark_tbl
 #'
 #' @param object the benchmark_tbl to be summarised
+#' @param ... additional arguments affecting the summary produced.
 #'
 #' @export
 #'
