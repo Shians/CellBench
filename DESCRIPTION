@@ -3,7 +3,7 @@ Type: Package
 Title: Construct Benchmarks for Analysis Methods
 Version: 0.1.0
 Authors@R: c(
-    person("Shian", "Su", email = "su.s@wehi.edu.au", role = "cre"),
+    person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")),
     person("Saskia", "Freytag", role = "aut"),
     person("Luyi", "Tian", role = "aut"),
     person("Xueyi", "Dong", role = "aut"),
@@ -22,22 +22,38 @@ Encoding: UTF-8
 LazyData: true
 Depends:
     R (>= 3.0),
-    SingleCellExperiment,
     BiocFileCache,
+    BiocParallel,
+    magrittr,
+    methods,
+    SingleCellExperiment,
+    stats,
     tibble,
-    magrittr
+    utils
 Imports:
-    purrr,
     dplyr,
-    tidyr,
-    glue,
     ggplot2,
-    memoise
+    rlang,
+    SC3,
+    glue,
+    memoise,
+    purrr,
+    rappdirs,
+    stringr,
+    tidyr,
+    BASiCS,
+    DrImpute,
+    mclust,
+    RaceID,
+    scater,
+    scPipe,
+    scran,
+    Seurat
 Suggests:
     BiocStyle,
+    covr,
     knitr,
     rmarkdown,
-    testthat,
-    covr
+    testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
