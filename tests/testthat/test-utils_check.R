@@ -1,4 +1,4 @@
-context("Check checking functions")
+context("Checking functions")
 
 test_that(
 "Test class testing functions", {
