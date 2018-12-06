@@ -44,7 +44,7 @@ apply_methods.list <- function(
     fn_list,
     .name = NULL,
     suppress.messages = TRUE
-){
+) {
     data_names <- names(x)
     method_names <- names(fn_list)
 
@@ -67,19 +67,36 @@ apply_methods.list <- function(
     # apply each method to the data
     # return the data names, method name and result in a list of lists
     expand_results <- function(data_name) {
-        purrr::map(
-            method_names,
-            function(method_name) {
-                result <- list(
-                    data_list = data_name,
-                    .temp = method_name,
-                    result =
-                        fn_list[[method_name]](x[[data_name]]),
-                        suppress = suppress.messages
-                )
-                list(result)
-            }
-        ) %>% purrr::reduce(append)
+        if (n_threads > 1) {
+            BiocParallel::bplapply(
+                BPPARAM = multithread_param,
+                method_names,
+                function(method_name) {
+                    result <- list(
+                        data_list = data_name,
+                        .temp = method_name,
+                        result =
+                            fn_list[[method_name]](x[[data_name]]),
+                            suppress = suppress.messages
+                    )
+                    list(result)
+                }
+            ) %>% purrr::reduce(append)
+        } else {
+            purrr::map(
+                method_names,
+                function(method_name) {
+                    result <- list(
+                        data_list = data_name,
+                        .temp = method_name,
+                        result =
+                            fn_list[[method_name]](x[[data_name]]),
+                            suppress = suppress.messages
+                    )
+                    list(result)
+                }
+            ) %>% purrr::reduce(append)
+        }
     }
 
     if (n_threads > 1) {
