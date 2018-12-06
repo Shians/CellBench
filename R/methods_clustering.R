@@ -14,6 +14,7 @@ clustering_raceid <- function(sce){
 }
 
 # pre-cleaning required for sc3 clustering
+#' @importMethodsFrom SingleCellExperiment counts
 pre_clean <- function(sce) {
     ave.counts <- rowMeans(counts(sce))
     keep <- ave.counts >= 1
@@ -27,6 +28,7 @@ pre_clean <- function(sce) {
 #' Clustering using SC3
 #' @inheritParams clustering_raceid
 #' @param col.sym the column name containing gene symbols
+#' @importMethodsFrom SingleCellExperiment rowData colData
 #' @export
 clustering_sc3 <- function(sce, col.sym = "Symbol") {
     sce_cleaned <- pre_clean(sce)
@@ -53,6 +55,7 @@ clustering_sc3 <- function(sce, col.sym = "Symbol") {
 
 #' Clustering using Seurat
 #' @inheritParams clustering_raceid
+#' @importMethodsFrom SingleCellExperiment counts
 #' @export
 clustering_seurat <- function(sce) {
     num_dim <- floor(nrow(sce)/5000)

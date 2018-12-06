@@ -28,6 +28,11 @@ load_sc_data <- function() {
         "sc_data"
     )
 
+    # dummy bindings
+    sc_10x <- NULL
+    sc_celseq <- NULL
+    sc_dropseq <- NULL
+
     load(data_path)
 
     out <- list(
@@ -46,6 +51,13 @@ load_cell_mix_data <- function() {
         "https://github.com/Shians/scBenchData/raw/master/mix_9cell_data.RData",
         "mrna_mix_data"
     )
+
+    # dummy bindings
+    mix_9cell_07clean_1cell_mat <- NULL
+    mix_9cell_08clean_1cell_mat <- NULL
+    mix_9cell_09clean_1cell_mat <- NULL
+    mix_9cell_07clean_3cell_mat <- NULL
+    mix_9cell_07clean_90cell_mat <- NULL
 
     load(data_path)
 
@@ -67,6 +79,10 @@ load_mrna_mix_data <- function() {
         "https://github.com/Shians/scBenchData/raw/master/mrna_mix_data.RData",
         "cell_mix_data"
     )
+
+    # dummy bindings
+    mrna_mix_celseq <- NULL
+    mrna_mix_sortseq <- NULL
 
     load(data_path)
 
@@ -103,6 +119,18 @@ load_all_data <- function() {
         "https://github.com/Shians/scBenchData/raw/master/mix_9cell_data.RData",
         "cell_mix_data"
     )
+
+    # dummy bindings
+    sc_10x <- NULL
+    sc_celseq <- NULL
+    sc_dropseq <- NULL
+    mix_9cell_07clean_1cell_mat <- NULL
+    mix_9cell_08clean_1cell_mat <- NULL
+    mix_9cell_09clean_1cell_mat <- NULL
+    mix_9cell_07clean_3cell_mat <- NULL
+    mix_9cell_07clean_90cell_mat <- NULL
+    mrna_mix_celseq <- NULL
+    mrna_mix_sortseq <- NULL
 
     load(data_path1)
     load(data_path2)

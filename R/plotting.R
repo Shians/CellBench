@@ -44,7 +44,7 @@ plot_map_metrics <- function(
 
     prop_table %>%
         tidyr::gather_(metrics, key = "metric", value = "proportion") %>%
-        ggplot2::ggplot(ggplot2::aes(x = dataset, y = proportion, fill = metric)) +
+        ggplot2::ggplot(ggplot2::aes_string(x = "dataset", y = "proportion", fill = "metric")) +
         ggplot2::geom_boxplot() +
         ggplot2::ggtitle("Mapping proportions")
 }
@@ -56,8 +56,7 @@ plot_map_metrics <- function(
 #'
 #' @return data.frame with PCA dimensions labelled Dim(n) where (n) is the dimension number
 #'
-#' @importFrom stats prcomp
-#' @importFrom stats setNames
+#' @importFrom stats prcomp setNames var
 #'
 #' @export
 compute_pca <- function(gene_expr, ndims = 2) {
@@ -77,6 +76,7 @@ compute_pca <- function(gene_expr, ndims = 2) {
 #' @inheritParams compute_pca
 #' @param ngenes the number of most variable genes to use
 #'
+#' @importFrom stats var
 #' @export
 compute_pca_most_var <- function(gene_expr, ndims = 2, ngenes = 500) {
     stopifnot(
@@ -102,10 +102,10 @@ plot_pca <- function(gene_expr, col_group = NULL) {
     if (!is.null(col_group)) {
         plot_data$group <- col_group
         p <- plot_data %>%
-            ggplot2::ggplot(ggplot2::aes(x = Dim1, y = Dim2, col = group))
+            ggplot2::ggplot(ggplot2::aes_string(x = "Dim1", y = "Dim2", col = "group"))
     } else {
         p <- plot_data %>%
-            ggplot2::ggplot(ggplot2::aes(x = Dim1, y = Dim2))
+            ggplot2::ggplot(ggplot2::aes_string(x = "Dim1", y = "Dim2"))
     }
 
     p +

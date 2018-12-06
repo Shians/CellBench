@@ -16,6 +16,7 @@ impute_drimpute <- function(expr) {
 #' @return matrix of imputed expression values
 #' @export
 impute_knn_smooth <- function(expr, k = ceiling(ncol(data) / 20)) {
+    knn_smoothing <- function() {} # dummy binding
     source("https://raw.githubusercontent.com/yanailab/knn-smoothing/master/knn_smooth.R")
     count_mat <- knn_smoothing(mat = expr, k = k) %>% lib_size_norm_expr()
     count_mat

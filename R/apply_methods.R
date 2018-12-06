@@ -144,12 +144,12 @@ apply_methods.benchmark_tbl <- function(
         }
     }
 
-    output <- x %>% dplyr::select(-result)
+    output <- x %>% dplyr::select(-"result")
     output <- tidyr::crossing(x, factor_no_sort(method_names))
     names(output)[ncol(output)] <- .name
     output <- output %>%
         dplyr::mutate(result = results) %>%
-        dplyr::select(-result, result) # move result column to end
+        dplyr::select(-"result", "result") # move result column to end
 
     if (all_length_one(output$result)) {
         output$result <- unlist(output$result)

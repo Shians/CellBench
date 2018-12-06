@@ -66,6 +66,7 @@ using <- function(x, allow.global = FALSE) {
 }
 
 # summarise benchmark_tbl into two columns
+#' @importFrom rlang .data
 pipeline_summarise <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
     stopifnot(
         is(x, "benchmark_tbl"),
@@ -74,12 +75,12 @@ pipeline_summarise <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
 
     results <- dplyr::pull(x, result)
 
-    x <- dplyr::select(x, -result) %>%
+    x <- dplyr::select(x, -"result") %>%
         tidyr::unite("pipeline", dplyr::everything(), sep = sep, remove = drop.steps) %>%
-        dplyr::select(-pipeline, pipeline) %>%
+        dplyr::select(-"pipeline", "pipeline") %>%
         tibble::as.tibble()
 
-    tibble::add_column(x, result = results)
+    tibble::add_column(x, result = .data$results)
 }
 
 unicode_arrow <- function(towards = c("right", "left", "up", "down")) {
@@ -106,9 +107,9 @@ factor_no_sort <- function(x) {
 }
 
 #' convert to list of results with pipeline as name
-#' 
+#'
 #' @param x the benchmark_tbl object to convert
-#' 
+#'
 #' @importFrom stats setNames
 as_pipeline_list <- function(x) {
     stopifnot(is(x, "benchmark_tbl"))
@@ -151,8 +152,9 @@ seq_ncol <- function(x) {
 }
 
 # wrap glue to collapse vectors with comma separators and a final separator
+#' @importFrom purrr partial
 nice_collapse <- function(x) {
-    collapse_with_comma <- partial(
+    collapse_with_comma <- purrr::partial(
         glue::glue_collapse,
         sep = ", ",
         last = " and "
