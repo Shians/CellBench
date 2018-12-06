@@ -1,0 +1,85 @@
+---
+title: "ImputeBenchmark"
+author: "Shian Su"
+date: "08/11/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(CellBench)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+CellBench:::load_mrna_mix_data()
+
+set_cellbench_threads(4)
+
+data <- list(
+    mrna_mix_celseq = cellbench_mrna_mix_data$mrna_mix_celseq
+        %>% sample_cells(n = 150)
+        %>% sample_genes(n = 2000)
+)
+
+impute_method <- list(
+    scran_drimpute = impute_drimpute,
+    basics = impute_basics,
+    knn_smooth = impute_knn_smooth
+)
+
+res1 <- apply_methods(data, impute_method)
+
+res1
+```
+
+```{r}
+dim_red <- list(
+    pca = compute_pca,
+    pca_500_most_var = partial(compute_pca_most_var, ngenes = 500),
+    pca_300_most_var = partial(compute_pca_most_var, ngenes = 300),
+    pca_100_most_var = partial(compute_pca_most_var, ngenes = 100)
+)
+
+res2 <- res1 %>%
+    apply_methods(dim_red)
+
+res2
+```
+
+```{r}
+mrna_mix_data <- data$mrna_mix_celseq
+append_anno <- function(data, result) {
+    
+    mRNA_amount <- colData(mrna_mix_data)$mRNA_amount
+    truth <- with(
+        colData(mrna_mix_data),
+        paste(H2228_prop, H1975_prop, HCC827_prop)
+    )
+    
+    result %>%
+        tibble::add_column(mRNA_amount, .before = TRUE) %>%
+        tibble::add_column(truth, .before = TRUE)
+}
+
+annotated_res <- res2 %>%
+   mutate(result = map2(data, result, append_anno))
+
+annotated_res
+```
+
+```{r}
+plot_df <- tidyr::unnest(annotated_res)
+
+plot_df %>%
+    ggplot(aes(x = Dim1, y = Dim2, col = truth)) +
+    geom_point() +
+    facet_grid(dim_red~impute_method, scales = "free") + 
+    theme_bw()
+```
+
+```{r}
+
+```
