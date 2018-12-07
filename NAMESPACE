@@ -2,6 +2,7 @@
 
 S3method(apply_methods,benchmark_tbl)
 S3method(apply_methods,list)
+S3method(apply_methods,tbl_df)
 S3method(print,fn_arg_seq)
 S3method(summary,benchmark_tbl)
 export(all_unique)
@@ -52,3 +53,5 @@ importFrom(tibble,tibble)
 importMethodsFrom(SingleCellExperiment,colData)
 importMethodsFrom(SingleCellExperiment,counts)
 importMethodsFrom(SingleCellExperiment,rowData)
+importMethodsFrom(SummarizedExperiment,"colData<-")
+importMethodsFrom(SummarizedExperiment,"rowData<-")

@@ -26,11 +26,12 @@ Depends:
     BiocParallel,
     magrittr,
     methods,
-    SingleCellExperiment,
     stats,
     tibble,
     utils
 Imports:
+    SummarizedExperiment,
+    SingleCellExperiment,
     dplyr,
     ggplot2,
     rlang,
