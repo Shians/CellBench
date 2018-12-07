@@ -1,3 +1,4 @@
+# Wrapper for basics
 run_basics <- function(
     data,
     N = 2000,
