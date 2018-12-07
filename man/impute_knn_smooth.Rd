@@ -4,7 +4,7 @@
 \alias{impute_knn_smooth}
 \title{Impute using knn smooth}
 \usage{
-impute_knn_smooth(expr, k = ceiling(ncol(data)/20))
+impute_knn_smooth(expr, k = ceiling(ncol(expr)/20))
 }
 \arguments{
 \item{expr}{the expression matrix to impute on}
