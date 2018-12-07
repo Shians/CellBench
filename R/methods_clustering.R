@@ -29,6 +29,7 @@ pre_clean <- function(sce) {
 #' @inheritParams clustering_raceid
 #' @param col.sym the column name containing gene symbols
 #' @importMethodsFrom SingleCellExperiment rowData colData
+#' @importMethodsFrom SummarizedExperiment  rowData<- colData<-
 #' @export
 clustering_sc3 <- function(sce, col.sym = "Symbol") {
     sce_cleaned <- pre_clean(sce)

@@ -10,6 +10,7 @@ impute_basics_and_plot_pca <- function(datasets) {
     impute_and_plot_pca(datasets, impute_basics)
 }
 
+#' @importFrom rlang .data
 impute_and_plot_pca <- function(datasets, impute_fn, ...) {
     stopifnot(is(datasets, "list"))
 
@@ -39,7 +40,7 @@ impute_and_plot_pca <- function(datasets, impute_fn, ...) {
     plot_df$type <- factor(plot_df$type, levels = c("raw", "imputed"))
 
     plot_df %>%
-        ggplot2::ggplot(ggplot2::aes(x = Dim1, y = Dim2, col = group)) +
+        ggplot2::ggplot(ggplot2::aes_string(x = "Dim1", y = "Dim2", col = "group")) +
         ggplot2::geom_point() +
         ggplot2::facet_grid(type~dataset, scales = "free", switch = "y")
 }

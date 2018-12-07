@@ -4,6 +4,7 @@
 \alias{apply_methods}
 \alias{apply_methods.list}
 \alias{apply_methods.benchmark_tbl}
+\alias{apply_methods.tbl_df}
 \alias{apply_metrics}
 \alias{begin_benchmark}
 \title{Apply methods}
@@ -14,6 +15,9 @@ apply_methods(x, fn_list, .name = NULL, suppress.messages = TRUE)
   suppress.messages = TRUE)
 
 \method{apply_methods}{benchmark_tbl}(x, fn_list, .name = NULL,
+  suppress.messages = TRUE)
+
+\method{apply_methods}{tbl_df}(x, fn_list, .name = NULL,
   suppress.messages = TRUE)
 
 apply_metrics(x, fn_list, .name = NULL, suppress.messages = TRUE)

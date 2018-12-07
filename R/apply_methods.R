@@ -171,10 +171,17 @@ apply_methods.benchmark_tbl <- function(
     if (all_length_one(output$result)) {
         output$result <- unlist(output$result)
     }
-    class(output) <- c("benchmark_tbl", class(output))
+
+    if (!"benchmark_tbl" %in% class(output)) {
+        class(output) <- c("benchmark_tbl", class(output))
+    }
 
     output
 }
+
+#' @rdname apply_methods
+#' @export
+apply_methods.tbl_df <- apply_methods.benchmark_tbl
 
 #' @rdname apply_methods
 #'
