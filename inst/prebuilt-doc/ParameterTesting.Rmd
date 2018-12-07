@@ -11,6 +11,7 @@ vignette: >
 
 ```{r, include = FALSE}
 library(CellBench)
+library(SingleCellExperiment)
 library(dplyr)
 library(purrr)
 library(ggplot2)
@@ -19,12 +20,13 @@ set_cellbench_threads(4)
 
 # Introduction
 
-This use case shows how to test a range of parameters for a given method. We will use the CelSeq2 mRNA mixture data and apply knn-smooth with various `k` parameter to see its effects on the output.
+This use case shows how to test a range of parameters for a given method. We will use the CelSeq2 mRNA mixture data from 3 lung adenocarcinoma cell-lines and apply knn-smooth with various `k` parameter to see its effects on the output.
 
 # Setting up benchmark
 
 ```{r}
 library(CellBench)
+library(SingleCellExperiment)
 library(dplyr)
 library(purrr)
 library(ggplot2)
@@ -35,7 +37,7 @@ We load in the data and create a list of 1 SingleCellExperiment object.
 ```{r}
 cellbench_mrna_mix_data <- load_mrna_mix_data()
 
-data <- list(
+data_list <- list(
     mrna_mix_celseq = cellbench_mrna_mix_data$mrna_mix_celseq
 )
 ```
@@ -73,20 +75,26 @@ norm_method <- list(
 # no imputation
 impute_method <- list(
     "none" = identity,
-    "partial(k = 2)" = partial(impute_knn_smooth, k = 2),
-    "partial(k = 4)" = partial(impute_knn_smooth, k = 4),
-    "partial(k = 8)" = partial(impute_knn_smooth, k = 8),
-    "partial(k = 16)" = partial(impute_knn_smooth, k = 16),
-    "partial(k = 32)" = partial(impute_knn_smooth, k = 32)
+    "impute_knn_smooth(k = 2)" = partial(impute_knn_smooth, k = 2),
+    "impute_knn_smooth(k = 4)" = partial(impute_knn_smooth, k = 4),
+    "impute_knn_smooth(k = 8)" = partial(impute_knn_smooth, k = 8),
+    "impute_knn_smooth(k = 16)" = partial(impute_knn_smooth, k = 16),
+    "impute_knn_smooth(k = 32)" = partial(impute_knn_smooth, k = 32)
 )
 ```
 
+First we apply the normalisation method we can store the result of this in `res_norm` and print it.
+
 ```{r}
-res_norm <- data %>%
+res_norm <- data_list %>%
     apply_methods(norm_method)
 
 res_norm
 ```
+
+We see that it's created a tibble where the column name is taken from the name of the lists and values in the columns correspond to names within the lists. The result of the computation performed is stored in the last column. If we had another normalisation method to test then we could go back and add it to the `norm_method` list and run this code again.
+
+We can then apply our next set of methods to the results of the normalisation. This expands our table to more rows, keeping track of the combinations of `data`, `norm_method` and `impute_method`, as well as updating the results with the latest methods applied.
 
 ```{r}
 res_impute <- res_norm %>%
@@ -94,6 +102,10 @@ res_impute <- res_norm %>%
 
 res_impute
 ```
+
+Now we have the computation output of all the pipelines of methods, each producing a different imputed expression in the result column. From here we could calculate some metrics, in this instance we will create principal component plots of the imputed values for a visual assessment.
+
+We create a new method list containing a PCA transformation that returns a data.frame of two columns containing the principal component coordinates. We could add more dimensionality reduction methods into our list later on to look at it in different ways. We also transform our counts into log-scale before we perform PCA for more stable scaling.
 
 ```{r}
 dim_red <- list(
@@ -109,31 +121,53 @@ res <- res_impute %>%
 res
 ```
 
+We now have a benchmark_tbl where the results column contains two PCA coordinates. If we plot the PCA values in the results column as is, we will have a bunch of points on a plot with no additional context. We actually have annotation for these cells in terms of mixture proportions so we can append it to our results and create a more informative visualisation. This could be done using a for-loop where you iterate through the results and reassign it with the annotated version, but I will introduce a functional programming approach to this task.
+
+We define a function that takes in a data_key, the name of the dataset and the result data.frame. This function will add a new column to the result data.frame called "truth" which is the concatenated proportion values, so each combination of mixutre proportions is a unique group. Because we need information from both data and result columns, we use `map2` from `purrr` which allows use to map functions with two arguments to two columns.
+
 ```{r}
+# function to add annotation to results table
+# we could have used a single variable because we're only looking at one dataset
+# but this gives us more flexibility if we want to add more datasets to our list
 append_anno <- function(data_key, result) {
-    # get mRNA amount
-    col_data <- colData(cellbench_mrna_mix_data$mrna_mix_celseq)
-    mRNA_amount <- col_data$mRNA_amount
+    # extract the desired SingleCellExperiment from our data list
+    data <- data_list[[data_key]]
+    
+    # take the sample annotations from colData
+    sample_anno <- colData(data)
 
-    truth <- with(
-        col_data,
-        paste(H2228_prop, H1975_prop, HCC827_prop)
+    # create the truth values by concatenating cell line proportions
+    truth <- paste(
+        sample_anno$H2228_prop,
+        sample_anno$H1975_prop,
+        sample_anno$HCC827_prop
     )
-
-    result %>%
-        tibble::add_column(mRNA_amount, .before = TRUE) %>%
-        tibble::add_column(truth, .before = TRUE)
+    
+    # add truth values as a column to result and return the result
+    result$truth <- truth
+    result
 }
+
+# replace the result column with annotated results
+annotated_res_list <- map2(res$data, res$result, append_anno)
+
+annotated_res <- res %>%
+    dplyr::mutate(result = annotated_res_list)
+
+annotated_res
 ```
 
-```{r}
-annotated_res <- res %>%
-    dplyr::mutate(data_key = paste(data)) %>%
-    dplyr::mutate(result = map2(data_key, result, append_anno)) %>%
-    dplyr::select(-data_key)
+There's now a new column in the results data.frames containing the "truth" mixture groups. We want to plot all of these PCA values, it's possible to use a for-loop to iterate through the columns and call many plots, but here we can use `unnest` from `tidy` to get a nice tabular format that allows us to use ggplots. The data.frames in the result column are unnested in that they are combined row-wise, and the remaining columns are duplicated to match the new structure. For this to work the data.frames in the result column must have the same columns.
 
+```{r}
 plot_df <- tidyr::unnest(annotated_res)
 
+plot_df
+```
+
+With this tidy data.frame it is easy to use ggplots to visualise the PCA, colouring the points by the truth group. We use `facet_wrap` to create a facetted plot so that each plot has a common scale, the impute_method is used as the facetting variable so each plot shows a different imputation.
+
+```{r}
 plot_df %>%
     ggplot(aes(x = Dim1, y = Dim2, col = truth)) +
     geom_point() +
@@ -141,6 +175,28 @@ plot_df %>%
     ggtitle("KNN Smooth Imputation")
 ```
 
-# Conclusion
+We see that performing PCA on the unimputed data already separates the groups out, but not quite in the structure we expected and with quite a bit of spread within the groups. It appears that increasing the k parameter in the knn-smooth algorithm will pull the points toward the designed structure reflecting the mrna proportions. Though it appears if k is set too high then points will be pulled into almost singular points and potentially lose much of their true variability.
 
+# Summary
 
+We have seen an application of CellBench to test various parameters values in the knn-smooth algorithm. Multiple steps of methods were applied to the original data and at each step it's possible to store the result and print it in an easy to interpret form. The main complexity is in writing the wrappers, once wrappers for methods are written they are simply placed into lists and applied to data or upstream benchmark_tbls. With the wrappers and annotation function written, we could have compressed this entire example into the following code.
+
+```{r}
+res <- data_list %>%
+    apply_methods(norm_method) %>%
+    apply_methods(impute_method) %>%
+    mutate(result = lapply(result, function(x) log2(x + 1))) %>%
+    apply_methods(dim_red) %>%
+    mutate(result = map2(data, result, append_anno))
+
+res
+
+plot_df <- tidyr::unnest(res)
+plot_df %>%
+    ggplot(aes(x = Dim1, y = Dim2, col = truth)) +
+    geom_point() +
+    facet_wrap(~impute_method, nrow = 2) +
+    ggtitle("KNN Smooth Imputation")
+```
+
+Then we could easily add new data or methods to the pipeline by modifying our methods lists.
