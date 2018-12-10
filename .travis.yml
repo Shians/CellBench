@@ -6,9 +6,20 @@ sudo: false
 cache: packages
 compiler: clang
 
+bioc_packages:
+    - BiocFileCache,
+    - BiocParallel,
+    - SummarizedExperiment,
+    - SingleCellExperiment,
+    - scater,
+    - scran,
+    - SC3,
+    - BASiCS,
+    - DrImpute,
+    - scPipe
+
 apt_packages:
     - libhdf5-dev
 
 after_success:
     - Rscript -e 'covr::codecov()'
-
