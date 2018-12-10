@@ -7,15 +7,15 @@ cache: packages
 compiler: clang
 
 bioc_packages:
-    - BiocFileCache,
-    - BiocParallel,
-    - SummarizedExperiment,
-    - SingleCellExperiment,
-    - scater,
-    - scran,
-    - SC3,
-    - BASiCS,
-    - DrImpute,
+    - BiocFileCache
+    - BiocParallel
+    - SummarizedExperiment
+    - SingleCellExperiment
+    - scater
+    - scran
+    - SC3
+    - BASiCS
+    - DrImpute
     - scPipe
 
 apt_packages:
