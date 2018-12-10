@@ -31,11 +31,12 @@ keep_high_count_cells <- function(x, n) {
     x[, highest]
 }
 
+#' @importFrom stats var
 # filter down to highest expressed genes
 keep_high_var_genes <- function(x, n) {
     stopifnot(is(x, "SingleCellExperiment"))
     counts <- SingleCellExperiment::counts(x)
-    scaled_var <- row_apply(counts, var) / rowSums(counts)
+    scaled_var <- row_apply(counts, stats::var) / rowSums(counts)
     highest <- scaled_var %>%
         order(decreasing = TRUE) %>%
         `[`(seq_len(n))

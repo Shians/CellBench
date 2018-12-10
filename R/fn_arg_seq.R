@@ -89,5 +89,5 @@ fn_arg_seq <- function(func, ...) {
 #'
 #' @export
 print.fn_arg_seq <- function(x, ...) {
-    print(str(x), ...)
+    print(utils::str(x), ...)
 }

@@ -73,7 +73,7 @@ pipeline_summarise <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
         dplyr::last(colnames(x)) == "result"
     )
 
-    results <- dplyr::pull(x, result)
+    results <- dplyr::pull(x, "result")
 
     x <- dplyr::select(x, -"result") %>%
         tidyr::unite("pipeline", dplyr::everything(), sep = sep, remove = drop.steps) %>%

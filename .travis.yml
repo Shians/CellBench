@@ -11,12 +11,6 @@ bioc_packages:
     - BiocParallel
     - SummarizedExperiment
     - SingleCellExperiment
-    - scater
-    - scran
-    - SC3
-    - BASiCS
-    - DrImpute
-    - scPipe
 
 apt_packages:
     - libhdf5-dev

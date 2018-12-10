@@ -22,33 +22,24 @@ Encoding: UTF-8
 LazyData: true
 Depends:
     R (>= 3.0),
-    BiocFileCache,
-    BiocParallel,
+    SingleCellExperiment,
     magrittr,
     methods,
     stats,
     tibble,
     utils
 Imports:
-    SummarizedExperiment,
-    SingleCellExperiment,
+    BiocFileCache,
+    BiocParallel,
     dplyr,
     ggplot2,
     rlang,
-    SC3,
     glue,
     memoise,
     purrr,
     rappdirs,
     stringr,
-    tidyr,
-    BASiCS,
-    DrImpute,
-    mclust,
-    RaceID,
-    scater,
-    scPipe,
-    scran
+    tidyr
 Suggests:
     BiocStyle,
     covr,
