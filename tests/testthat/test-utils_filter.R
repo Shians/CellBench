@@ -35,7 +35,7 @@ test_that(
         keep_high_count_genes(x, n = 2),
         x[4:5, ]
     )
-)}
+})
 
 test_that(
     "Keeping high count cells works", {
