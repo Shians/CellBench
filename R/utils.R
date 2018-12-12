@@ -2,16 +2,18 @@
 mhead <- function(x, n = 6) {
     stopifnot(
         !is.null(dim(x)),
-        n < ncol(x),
-        n < nrow(x)
+        is.numeric(n),
+        n > 0
     )
 
-    x[1:n, 1:n]
+    n1 <- min(n, nrow(x))
+    n2 <- min(n, ncol(x))
+    x[1:n1, 1:n2]
 }
 
 # left to right function composition
 chain <- function(...) {
-    do.call(compose, rev(list(...))
+    do.call(purrr::compose, rev(list(...)))
 }
 
 # check if object is a list of functions
@@ -39,21 +41,6 @@ fn_outer_prod <- function(fn_list1, fn_list2) {
     output
 }
 
-# explicitly set namespaced function for scope of function
-using <- function(x, allow.global = FALSE) {
-    stopifnot(is.function(x))
-
-    namespaced_fn <- deparse(substitute(x))
-    fn_name <- gsub(".*::", "", namespaced_fn)
-
-    parent_is_global <- identical(parent.frame(), globalenv())
-    if (parent_is_global && !allow.global) {
-        stop(glue::glue("Cannot assign namespaced function `{namespaced_fn}` to global environment."))
-    }
-
-    assign(fn_name, eval(namespaced_fn), envir = parent.frame())
-}
-
 # summarise benchmark_tbl into two columns
 #' @importFrom rlang .data
 pipeline_summarise <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
@@ -69,7 +56,7 @@ pipeline_summarise <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
         dplyr::select(-"pipeline", "pipeline") %>%
         tibble::as.tibble()
 
-    tibble::add_column(x, result = .data$results)
+    tibble::add_column(x, result = results)
 }
 
 unicode_arrow <- function(towards = c("right", "left", "up", "down")) {
