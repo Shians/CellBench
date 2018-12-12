@@ -129,3 +129,72 @@ test_that(
 
     expect_identical(res, expected)
 })
+
+test_that(
+    "Errors are properly reported", {
+    data_list <- list(
+        x = 1:5
+    )
+
+    method_list <- list(
+        mean
+    )
+
+    expect_error(
+        apply_methods(data_list, method_list),
+        "every element of fn_list must be named"
+    )
+
+    expect_error
+})
+
+test_that(
+    "Apply methods works for expanding functions", {
+    x <- list(
+        data = c(1, 2, 3)
+    )
+
+    f_list <- list(
+        mean = mean,
+        median = median
+    )
+
+    expected <- structure(
+        list(
+            data = structure(c(1L, 1L), .Label = "data", class = "factor"),
+            f_list = structure(1:2, .Label = c("mean", "median"), class = "factor"),
+            result = c(2, 2)
+        ),
+        row.names = c(NA, -2L),
+        class = c("benchmark_tbl", "tbl_df", "tbl", "data.frame")
+    )
+
+    expect_identical(apply_methods(x, f_list), expected)
+})
+
+test_that(
+    "Multithreading works", {
+    set_cellbench_threads(2)
+
+    x <- list(
+        data1 = c(1, 2, 3),
+        data2 = c(1, 2, 3)
+    )
+
+    f_list <- list(
+        mean = mean
+    )
+
+    expected <- structure(
+        list(
+            data = structure(1:2, .Label = c("data1", "data2"), class = "factor"),
+            f_list = structure(c(1L, 1L), .Label = "mean", class = "factor"),
+            result = c(2, 2)
+        ),
+        row.names = c(NA, -2L),
+        class = c("benchmark_tbl", "tbl_df", "tbl", "data.frame")
+    )
+
+    expect_identical(apply_methods(x, f_list), expected)
+    set_cellbench_threads(1)
+})
