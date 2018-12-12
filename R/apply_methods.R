@@ -58,59 +58,40 @@ apply_methods.list <- function(
 
     n_threads <- min(getOption("CellBench.threads"), length(x))
 
-    multithread_param <- if (.Platform$OS.type == "windows") {
-        BiocParallel::SnowParam(n_threads)
+    multithread_param <- if (n_threads > 1) {
+        if (.Platform$OS.type == "windows") {
+            BiocParallel::SnowParam(n_threads)
+        } else {
+            BiocParallel::MulticoreParam(n_threads)
+        }
     } else {
-        BiocParallel::MulticoreParam(n_threads)
+        BiocParallel::SerialParam()
     }
 
     # apply each method to the data
     # return the data names, method name and result in a list of lists
     expand_results <- function(data_name) {
-        if (n_threads > 1) {
-            BiocParallel::bplapply(
-                BPPARAM = multithread_param,
-                method_names,
-                function(method_name) {
-                    result <- list(
-                        data_list = data_name,
-                        .temp = method_name,
-                        result =
-                            fn_list[[method_name]](x[[data_name]]),
-                            suppress = suppress.messages
-                    )
-                    list(result)
-                }
-            ) %>% purrr::reduce(append)
-        } else {
-            purrr::map(
-                method_names,
-                function(method_name) {
-                    result <- list(
-                        data_list = data_name,
-                        .temp = method_name,
-                        result =
-                            fn_list[[method_name]](x[[data_name]]),
-                            suppress = suppress.messages
-                    )
-                    list(result)
-                }
-            ) %>% purrr::reduce(append)
-        }
+        BiocParallel::bplapply(
+            BPPARAM = multithread_param,
+            method_names,
+            function(method_name) {
+                result <- list(
+                    data_list = data_name,
+                    .temp = method_name,
+                    result =
+                        fn_list[[method_name]](x[[data_name]]),
+                        suppress = suppress.messages
+                )
+                list(result)
+            }
+        ) %>% purrr::reduce(append)
     }
 
-    if (n_threads > 1) {
-        output <- BiocParallel::bplapply(
-            BPPARAM = multithread_param,
-            data_names,
-            expand_results
-        ) %>% purrr::reduce(append)
-    } else {
-        output <- purrr::map(
-            data_names,
-            expand_results
-        ) %>% purrr::reduce(append)
-    }
+    output <- BiocParallel::bplapply(
+        BPPARAM = multithread_param,
+        data_names,
+        expand_results
+    ) %>% purrr::reduce(append)
 
     output <- tibble::tibble(
         data = factor_no_sort(purrr::map_chr(output, function(x) x$data)),
