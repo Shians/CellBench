@@ -11,18 +11,7 @@ mhead <- function(x, n = 6) {
 
 # left to right function composition
 chain <- function(...) {
-    fs <- lapply(list(...), match.fun)
-
-    first <- fs[[1]]
-    rest <- fs[-1]
-
-    function(...) {
-        out <- first(...)
-        for (f in rest) {
-            out <- f(out)
-        }
-        out
-    }
+    do.call(compose, rev(list(...))
 }
 
 # check if object is a list of functions
@@ -149,16 +138,4 @@ seq_nrow <- function(x) {
 seq_ncol <- function(x) {
     if (!is.numeric(ncol(x))) return(integer(0))
     seq_len(ncol(x))
-}
-
-# wrap glue to collapse vectors with comma separators and a final separator
-#' @importFrom purrr partial
-nice_collapse <- function(x) {
-    collapse_with_comma <- purrr::partial(
-        glue::glue_collapse,
-        sep = ", ",
-        last = " and "
-    )
-
-    glue::glue(x) %>% collapse_with_comma()
 }
