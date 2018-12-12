@@ -49,11 +49,14 @@ fn_arg_seq <- function(func, ...) {
 
     # stop if there are invalid args
     if (length(invalid_args) != 0) {
-        invalid_args <- nice_collapse("'{invalid_args}'")
+        invalid_args <- glue::glue("'{invalid_args}'") %>% collapse_with_comma()
         stop(glue::glue("args not used in {func_name}: {invalid_args}"))
     }
 
-    arg_combs <- do.call(tidyr::crossing, args)
+    arg_combs <- do.call(
+        purrr::partial(expand.grid, stringsAsFactors = FALSE),
+        args
+    )
     cnames <- colnames(arg_combs)
 
     rows_as_list <- function(df) {
