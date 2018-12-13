@@ -32,8 +32,8 @@ collapse_with_comma <- purrr::partial(
 #' @examples
 cellbench_file <- function(filename = NULL) {
     if (is.null(filename)) {
-        dir(system.file("inst", "extdata", package = "CellBench"))
+        dir(system.file("extdata", package = "CellBench"))
     } else {
-        system.file("inst", "extdata", filename, package = "CellBench")
+        system.file("extdata", filename, package = "CellBench")
     }
 }
