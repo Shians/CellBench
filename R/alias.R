@@ -17,3 +17,23 @@ collapse_with_comma <- purrr::partial(
     sep = ", ",
     last = " and "
 )
+
+
+#' Get path to CellBench packaged data
+#'
+#' Search CellBench package for packaged data, leaving argument empty will list
+#' the available data.
+#'
+#' @param filename the name of the file to look for
+#'
+#' @return string containing the path to the packaged data
+#' @export
+#'
+#' @examples
+cellbench_file <- function(filename = NULL) {
+    if (is.null(filename)) {
+        dir(system.file("inst", "extdata", package = "CellBench"))
+    } else {
+        system.file("inst", "extdata", filename, package = "CellBench")
+    }
+}

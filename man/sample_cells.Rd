@@ -18,7 +18,7 @@ SingleCellExperiment object
 Sample n cells from a SingleCellExperiment object with no replacement.
 }
 \examples{
-data(sample_sce_data)
+sample_sce_data <- readRDS(cellbench_file("celseq_sce_sample.rds"))
 dim(sample_sce_data)
 x <- sample_cells(sample_sce_data, 10)
 dim(x)

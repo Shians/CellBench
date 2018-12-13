@@ -27,7 +27,7 @@ sample_cols <- function(x, n) {
 #' @export
 #'
 #' @examples
-#' data(sample_sce_data)
+#' sample_sce_data <- readRDS(cellbench_file("celseq_sce_sample.rds"))
 #' dim(sample_sce_data)
 #' x <- sample_cells(sample_sce_data, 10)
 #' dim(x)
@@ -47,7 +47,7 @@ sample_cells <- function(x, n) {
 #' @export
 #'
 #' @examples
-#' data(sample_sce_data)
+#' sample_sce_data <- readRDS(cellbench_file("10x_sce_sample.rds"))
 #' dim(sample_sce_data)
 #' x <- sample_genes(sample_sce_data, 50)
 #' dim(x)

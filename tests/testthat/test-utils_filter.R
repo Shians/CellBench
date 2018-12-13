@@ -11,7 +11,7 @@ test_that(
         x[-1, ]
     )
 
-    data(sample_sce_data)
+    sample_sce_data <- readRDS(cellbench_file("10x_sce_sample.rds"))
 
     x <- sample_sce_data
     counts(x)[1, ] <- 0

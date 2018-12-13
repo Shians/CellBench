@@ -97,14 +97,14 @@ load_mrna_mix_data <- function() {
 
 #' Load CellBench Data
 #'
-#' Load in all CellBench data described \href{https://github.com/LuyiTian/CellBench_data/blob/25f73cfcc87a84282cf55b4ac963032cc4da4988/README.md#summary-of-all-datasets}{here}.
+#' Load in all CellBench data described \href{https://github.com/LuyiTian/cellbench_file/blob/25f73cfcc87a84282cf55b4ac963032cc4da4988/README.md#summary-of-all-datasets}{here}.
 #'
 #' @return list of SingleCellExperiment
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' cellbench_data <- load_all_data()
+#' cellbench_file <- load_all_data()
 #' }
 load_all_data <- function() {
     data_path1 <- get_data(
