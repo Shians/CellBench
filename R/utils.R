@@ -41,9 +41,24 @@ fn_outer_prod <- function(fn_list1, fn_list2) {
     output
 }
 
-# summarise benchmark_tbl into two columns
+#' Collapse benchmark_tbl into a two column summary
+#'
+#' Collapse benchmark_tbl into two columns: "pipeline" and "result". The
+#' "pipeline" column will be the concatenated values from the data and methods
+#' columns while the "result" column remains unchanged from the benchmark_tbl.
+#' This is useful for having a string summary of the pipeline for annotating.
+#'
+#' @param x the benchmark_tbl to collapse
+#' @param sep the separator to use for concatenating the pipeline steps
+#' @param drop.steps if the data name and methods steps should be dropped from
+#'   the output. TRUE by default.
+#'
+#' @return
+#'
 #' @importFrom rlang .data
 #' @export
+#'
+#' @examples
 pipeline_collapse <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
     stopifnot(
         is(x, "benchmark_tbl"),
@@ -71,6 +86,16 @@ unicode_arrow <- function(towards = c("right", "left", "up", "down")) {
     )
 }
 
+#' Unicode arrow separators
+#'
+#' Utility function for generating unicode arrow separators.
+#'
+#' @param towards the direction the unicode arrow points towards
+#'
+#' @return a string containing an unicode arrow surrounded by two spaces
+#' @export
+#'
+#' @examples
 arrow_sep <- function(towards = c("right", "left", "up", "down")) {
     towards <- match.arg(towards)
     arrow <- unicode_arrow(towards)
@@ -88,6 +113,7 @@ factor_no_sort <- function(x) {
 #' @param x the benchmark_tbl object to convert
 #'
 #' @importFrom stats setNames
+#' @export
 as_pipeline_list <- function(x) {
     stopifnot(is(x, "benchmark_tbl"))
 
