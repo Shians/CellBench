@@ -64,6 +64,6 @@ test_that(
         data %>%
             apply_methods(methods1) %>%
             apply_methods(methods2) %>%
-            pipeline_summarise()
+            pipeline_collapse()
     )
 })

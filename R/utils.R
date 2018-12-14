@@ -43,7 +43,8 @@ fn_outer_prod <- function(fn_list1, fn_list2) {
 
 # summarise benchmark_tbl into two columns
 #' @importFrom rlang .data
-pipeline_summarise <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
+#' @export
+pipeline_collapse <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
     stopifnot(
         is(x, "benchmark_tbl"),
         dplyr::last(colnames(x)) == "result"
@@ -95,7 +96,7 @@ as_pipeline_list <- function(x) {
         return(as.list.data.frame(x))
     }
 
-    x <- pipeline_summarise(x, sep = "..")
+    x <- pipeline_collapse(x, sep = "..")
 
     setNames(x$result, nm = x$pipeline)
 }
