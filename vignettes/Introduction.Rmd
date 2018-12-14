@@ -35,79 +35,87 @@ The aim of this package is to make it simpler for developers to construct combin
 
 There are 3 fundamental components to the benchmarks in this package, `list`s of data, `list`s of functions and a `tibble` with a `list-column` that we will call a `benchmark_tbl`. For simplicity we use randomly generated data and simple functions, but hopefully it's clear how the idea extends into more complex functions and benchmarks.
 
+As a motivating example, we will have a simple look at what count-per-million library size normalisation and log-transformation does for our MDS plots. In addition to `CellBench` we will require the `limma` package.
+
 ```{r}
 library(CellBench)
-library(dplyr)
-library(purrr)
-library(ggplot2)
+library(limma)
 
-# ensure that a vector has 0 mean
-center <- function(x) {
-    x - mean(x)
-}
-
-# we start with random vectors
-datasets <- list(
-    set1 = rnorm(500, mean = 2, sd = 1),
-    set2 = rnorm(500, mean = 1, sd = 2)
+data <- list(
+    sample_10x = readRDS(cellbench_file("10x_sce_sample.rds"))
 )
 
-# we then have a "method" that adds additional noise
-add_noise <- list(
-    none = identity, # included to provide a baseline for comparison
-    add_bias = function(x) { x + 1 },
-    add_variance = function(x) { x + center(rnorm(500, mean = 0, sd = 2)) }
+norm_method <- list(
+    none = counts,
+    cpm = function(x) t(t(1e6 * counts(x)) / colSums(counts(x)))
+)
+
+transform <- list(
+    none = identity,
+    log2 = function(x) log2(x+1)
 )
 ```
 
-Now we have 2 `list`s.
+Now we have 3 `list`s.
 
-* A `list` of datasets. In this context it is two randomly generated vectors, but it can be any arbitrary object. Ideally all objects in the list are of the same type, this makes it success more likely when the same methods are applied across all datasets.
-* A `list` of functions. These are the functions that will perform one step of our pipeline stored neatly in a single object. For this example we have methods of adding noise to our sample, the first function simply returns the data as-is which is helpful for comparison. The second adds a bias by shifting all values by 1 and the third adds random noise with a standard deviation of 2.
+* A `list` of datasets. In this context it is a single `SingleCellExperiment`, but it can be any arbitrary object. Ideally all objects in the list are of the same type, this makes it success more likely when the same methods are applied across all datasets.
+* Two `list`s of functions. These are the functions that will perform one step of our pipeline stored neatly in a single object.
+    * The first list of functions will either extract the count (no normalisation) or perform count-per-million (cpm) library size normalisation.
+    * The second list of functions will wither return the object as-is (no transformation) or log2-transform the counts/cpm values with an offset of 1 to account for 0 counts/cpms.
 
 ```{r}
-# this allows us to construct the first `benchmark_tbl`
-res1 <- apply_methods(datasets, add_noise)
+res1 <- data %>%
+    apply_methods(norm_method)
+
 res1
 ```
 
-So we see that we have a `result` for every combination of `data` and `add_noise` method applied. We can then summarise this into metrics.
+So we see that we have a `result` for every combination of `data` and `norm_method` method applied. We can then apply the transform methods.
 
 ```{r}
-metric <- list(
-    mean = mean,
-    sd = sd
-)
+res2 <- res1 %>%
+    apply_methods(transform)
 
-res2 <- apply_methods(res1, metric)
 res2
 ```
 
-Now the `result` column has been augmented to reflect the metric produced from each metric summary of each result from the previous table. Thus it is simple to generate combinatorial benchmarking schemes simply by successively applying further `list`s of functions.
+Now the `result` column has been updated to reflect the matrix produced from each transform method applied each result from the previous table. Thus it is simple to generate combinatorial benchmarking schemes simply by successively applying further `list`s of functions.
 
-```{r, fig.retina = 1}
-# center ggplot titles and increase text size
-ggplot2::theme_update(plot.title = element_text(hjust = 0.5, size = 20))
+Finally we want to visualise the final results of each pipeline, here we will use `plotMDS` from the `limma` package and colour points by the `cell_line` column extracted from the `colData()` (column data) of the original data.
 
-res2 %>%
-    dplyr::filter(add_noise %in% c("add_bias", "none")) %>%
-    ggplot(aes(x = data, y = result, group = add_noise, fill = add_noise)) +
-    geom_bar(stat = "identity", position = "dodge") +
-    facet_grid(~metric) +
-    ggtitle("Effect of adding bias")
-
-res2 %>%
-    dplyr::filter(add_noise == "add_variance" | add_noise == "none") %>%
-    ggplot(aes(x = data, y = result, group = add_noise, fill = add_noise)) +
-    geom_bar(stat = "identity", position = "dodge") +
-    facet_grid(~metric) +
-    ggtitle("Effect of adding variance")
-```
-
-Then for a quick summary of what pipeline has been performed you can use `summary()` on the results table.
+To set this up we generate colours from the `cell_line` information in the original data. Then we use `pipeline_collapse()` to collapse the data and method names into a single columns to be used as the title in our plots.
 
 ```{r}
-summary(res2)
+# generate colour values from cell line information
+cell_line <- factor(colData(data$sample_10x)$cell_line)
+cell_line_col <- c("red", "blue", "green")[cell_line]
+
+collapsed_res <- res2 %>%
+    pipeline_collapse()
+
+collapsed_res
+```
+
+We can then loop through the rows and generate plots showing how each combination of normalisation and transformation affects our MDS visualisation.
+
+```{r}
+par(mfrow = c(2, 2)) # declare 2x2 plotting grid
+
+# loop through row of summarised pipeline table
+for (i in 1:nrow(collapsed_res)) {
+    title <- collapsed_res$pipeline[i]
+    expr_mat <- collapsed_res$result[[i]] # note the use of [[]] due to list
+    
+    #
+    limma::plotMDS(
+        expr_mat,
+        main = title,
+        pch = 19, # draw circles rather than label name
+        col = cell_line_col
+    )
+}
+
+par(mfrow = c(1, 1)) # undo plotting grid for future plots
 ```
 
 # Key objects and concepts
@@ -224,7 +232,7 @@ class(res2)
 
 Because they are tibbles, they respond well to `dplyr` verbs, or most regular `data.frame` manipulations.
 
-```{r}
+```{r, eval = FALSE}
 res2 %>% dplyr::filter(add_noise %in% c("add_variance", "none"))
 ```
 
