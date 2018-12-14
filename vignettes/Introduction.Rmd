@@ -98,7 +98,7 @@ collapsed_res
 
 We can then loop through the rows and generate plots showing how each combination of normalisation and transformation affects our MDS visualisation.
 
-```{r}
+```{r, fig.height = 9, fig.width = 8}
 par(mfrow = c(2, 2)) # declare 2x2 plotting grid
 
 # loop through row of summarised pipeline table
@@ -114,7 +114,9 @@ for (i in 1:nrow(collapsed_res)) {
         col = cell_line_col
     )
 }
+```
 
+```{r}
 par(mfrow = c(1, 1)) # undo plotting grid for future plots
 ```
 
