@@ -15,7 +15,8 @@ pipeline_collapse(x, sep = arrow_sep("right"), drop.steps = TRUE)
 the output. TRUE by default.}
 }
 \value{
-
+benchmark_tbl with pipeline and result columns (and all other columns
+  if drop.steps is FALSE)
 }
 \description{
 Collapse benchmark_tbl into two columns: "pipeline" and "result". The

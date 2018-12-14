@@ -16,3 +16,7 @@ string containing the path to the packaged data
 Search CellBench package for packaged data, leaving argument empty will list
 the available data.
 }
+\examples{
+cellbench_file() # shows available files
+cellbench_file("10x_sce_sample.rds") # returns path to 10x sample data
+}

@@ -30,6 +30,8 @@ collapse_with_comma <- purrr::partial(
 #' @export
 #'
 #' @examples
+#' cellbench_file() # shows available files
+#' cellbench_file("10x_sce_sample.rds") # returns path to 10x sample data
 cellbench_file <- function(filename = NULL) {
     if (is.null(filename)) {
         dir(system.file("extdata", package = "CellBench"))

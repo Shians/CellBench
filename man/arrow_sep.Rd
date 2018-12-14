@@ -15,3 +15,7 @@ a string containing an unicode arrow surrounded by two spaces
 \description{
 Utility function for generating unicode arrow separators.
 }
+\examples{
+arrow_sep("left") # left arrrow
+arrow_sep("up") # up arrrow
+}

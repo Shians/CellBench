@@ -53,12 +53,11 @@ fn_outer_prod <- function(fn_list1, fn_list2) {
 #' @param drop.steps if the data name and methods steps should be dropped from
 #'   the output. TRUE by default.
 #'
-#' @return
+#' @return benchmark_tbl with pipeline and result columns (and all other columns
+#'   if drop.steps is FALSE)
 #'
 #' @importFrom rlang .data
 #' @export
-#'
-#' @examples
 pipeline_collapse <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
     stopifnot(
         is(x, "benchmark_tbl"),
@@ -96,6 +95,8 @@ unicode_arrow <- function(towards = c("right", "left", "up", "down")) {
 #' @export
 #'
 #' @examples
+#' arrow_sep("left") # left arrrow
+#' arrow_sep("up") # up arrrow
 arrow_sep <- function(towards = c("right", "left", "up", "down")) {
     towards <- match.arg(towards)
     arrow <- unicode_arrow(towards)
