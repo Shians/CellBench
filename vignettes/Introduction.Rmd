@@ -120,6 +120,8 @@ for (i in 1:nrow(collapsed_res)) {
 par(mfrow = c(1, 1)) # undo plotting grid for future plots
 ```
 
+So we can see that applying a simple library size normalisation and log2 transform can dramatically improve the visual inference in our PCA plots.
+
 # Key objects and concepts
 
 ## Function Piping
