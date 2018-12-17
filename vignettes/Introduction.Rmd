@@ -41,7 +41,7 @@ As a motivating example, we will have a simple look at what count-per-million li
 library(CellBench)
 library(limma)
 
-data <- list(
+datasets <- list(
     sample_10x = readRDS(cellbench_file("10x_sce_sample.rds"))
 )
 
@@ -64,7 +64,7 @@ Now we have 3 `list`s.
     * The second list of functions will wither return the object as-is (no transformation) or log2-transform the counts/cpm values with an offset of 1 to account for 0 counts/cpms.
 
 ```{r}
-res1 <- data %>%
+res1 <- datasets %>%
     apply_methods(norm_method)
 
 res1
@@ -87,7 +87,7 @@ To set this up we generate colours from the `cell_line` information in the origi
 
 ```{r}
 # generate colour values from cell line information
-cell_line <- factor(colData(data$sample_10x)$cell_line)
+cell_line <- factor(colData(datasets$sample_10x)$cell_line)
 cell_line_col <- c("red", "blue", "green")[cell_line]
 
 collapsed_res <- res2 %>%
@@ -166,13 +166,22 @@ lapply(x, sqrt)
 
 ## List of datasets
 
-The benchmarking workflow starts with a list of datasets, even if you only have one dataset you will need to store it in a list for workflow to function. In our example the dataset was a list of 2 randomly generated vectors.
+The benchmarking workflow starts with a list of datasets, even if you only have one dataset you will need to store it in a list for workflow to function. In our example the dataset was a sample of the 10X cell mixture dataset.
 
 ```{r, eval = FALSE}
-# we use a list of random vectors
+sample_10x <- readRDS(cellbench_file("10x_sce_sample.rds"))
+
+# even with a single dataset we need to construct a list
 datasets <- list(
-    set1 = rnorm(500, mean = 2, sd = 1),
-    set2 = rnorm(500, mean = 1, sd = 2)
+    sample_10x = sample_10x
+)
+
+# we can add more datasets to the pipeline by adding to the list
+# here we have two datasets that are random samplings of the genes in the 10x
+# sample data
+datasets <- list(
+    subsample1_10x = sample_genes(sample_10x, n = 1000),
+    subsample2_10x = sample_genes(sample_10x, n = 1000)
 )
 
 # could have been any other kind of object as long as they are consistent
@@ -186,15 +195,21 @@ Any kind of object can be stored in a list, so there is great flexibility in wha
 
 ## List of functions
 
-In R functions themselves are a type of object, so they too can be stored in lists, this may be unfamiliar to most people but this allows very simple addition of methods.
+In R functions themselves are a type of object, so they too can be stored in lists, this is rarely used in common R but this allows very simple addition of methods.
 
 ```{r, eval = FALSE}
-# "identity" is a function, and we are assigning to a new name
-# the remaining two elements of the list are just regular function definitions
-add_noise <- list(
-    none = identity, # included to provide a baseline for comparison
-    add_bias = function(x) { x + 1 },
-    add_variance = function(x) { x + center(rnorm(500, mean = 0, sd = 2)) }
+# counts is a function that can be run with counts(x) here it is named 
+# "none" as it denotes the lack of normalisation
+norm_method <- list(
+    none = counts,
+    cpm = function(x) t(t(1e6 * counts(x)) / colSums(counts(x)))
+)
+
+# "identity" is a useful function that simply returns its input 
+# it allows the comparison between applying and not applying a method
+transform <- list(
+    none = identity,
+    log2 = function(x) log2(x+1)
 )
 ```
 
@@ -236,28 +251,46 @@ class(res2)
 
 Because they are tibbles, they respond well to `dplyr` verbs, or most regular `data.frame` manipulations.
 
-```{r, eval = FALSE}
-res2 %>% dplyr::filter(add_noise %in% c("add_variance", "none"))
+```{r}
+res2 %>% dplyr::filter(norm_method == "cpm")
 ```
 
 ## Applying methods
 
 The final idea that ties together the CellBench framework is the `apply_methods()` function, which takes a `benchmark_tbl` and applies a `list` of functions. The result is that each row is processed through each method, a new column is added specifying the method applied and the result is updated to the new value.
 
-```{r, eval = FALSE}
-# create a named list of functions to apply
-metric <- list(
-    mean = mean,
-    sd = sd
+```{r}
+# datasets
+datasets <- list(
+    sample_10x = readRDS(cellbench_file("10x_sce_sample.rds"))
 )
 
-# each function is applied to each entry in the results column
-res2 <- apply_methods(res1, metric)
+# first set of methods in pipeline
+norm_method <- list(
+    none = counts,
+    cpm = function(x) t(t(1e6 * counts(x)) / colSums(counts(x)))
+)
 
-# output contains rows equal to number of methods times number of input rows
-res2
+# second set of methods in pipeline
+transform <- list(
+    none = identity,
+    log2 = function(x) log2(x+1)
+)
+
+datasets %>%
+    apply_methods(norm_method)
+```
+
+`apply_methods` takes the name of the variable holding the methods list and puts uses it as the column name for those methods, and the names of the methods within the list are used as the values in that column. The `data` column will store the name of the names within the dataset list, but not inherit the name of the variable holding the dataset list.
+
+The way that the `apply_methods` is written means that you can simply pipe data through the methods without saving any intermediate results.
+
+```{r}
+datasets %>%
+    apply_methods(norm_method) %>%
+    apply_methods(transform)
 ```
 
 # Summary
 
-CellBench provides a lightweight and flexible framework for working with benchmarks that have multiple steps and result in combinatorial designs for application of methods. It makes use of simple and transparent R objects that are easy to understand and manipulate, with simple function 
+CellBench provides a lightweight and flexible framework for working with benchmarks that have multiple steps and result in combinatorial designs for application of methods. It makes use of simple and transparent R objects that are easy to understand and manipulate, using basic data and function list constructs as its input. The resulting tables are compatible with the popular `dplyr` manipulations and in general encourages a clean coding style that is easy to understand, debug and extend.
