@@ -27,7 +27,7 @@ test_that(
     )
 
     expect_equal(
-        sapply(fn_outer_prod(fn_list1, fn_list2), function(f) f(1)),
+        purrr::map_dbl(fn_outer_prod(fn_list1, fn_list2), function(f) f(1)),
         c(log..log = -Inf, log..exp = 1, exp..log = 1, exp..exp = 15.15426),
         tolerance = 1e-6
     )

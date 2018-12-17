@@ -14,7 +14,7 @@ test_that(
     )
 
     expect_identical(
-        sapply(fn_list, function(f) {f(1)}),
+        purrr::map_dbl(fn_list, function(f) {f(1)}),
         c(`fn(y = 1)` = 2, `fn(y = 2)` = 3, `fn(y = 3)` = 4)
     )
 })
