@@ -14,7 +14,6 @@ library(CellBench)
 library(limma)
 library(dplyr)
 library(purrr)
-library(ggplot2)
 ```
 
 
