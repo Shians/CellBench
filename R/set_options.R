@@ -38,9 +38,9 @@ set_cellbench_threads <- function(nthreads = 1) {
 #'
 #' @examples
 #' \dontrun{
-#' set_cellbench_cache(".CellBenchCache")) # hidden folder in local path
+#' set_cellbench_cache_path(".CellBenchCache")) # hidden folder in local path
 #' }
-#' set_cellbench_cache(file.path(tempdir(), ".CellBenchCache")) # store in temp directory valid for this session
+#' set_cellbench_cache_path(file.path(tempdir(), ".CellBenchCache")) # store in temp directory valid for this session
 #'
 set_cellbench_cache_path <- function(path = "./.CellBenchCache") {
     stopifnot(is.character(path))
