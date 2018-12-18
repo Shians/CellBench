@@ -14,6 +14,7 @@ NULL
 #' @rdname check_class
 #'
 #' @importFrom methods is
+#' @export
 #'
 #' @examples
 #' is_one_of(1, c("numeric", "logical")) # TRUE

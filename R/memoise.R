@@ -16,6 +16,7 @@
 #'
 #' @examples
 #' set_cellbench_cache_path(file.path(tempdir(), ".CellBenchCache"))
+#' f <- function(x) { x + 1 }
 #' cached_f <- cache_method(f)
 #'
 cache_method <- function(f, cache = getOption("CellBench.cache")) {

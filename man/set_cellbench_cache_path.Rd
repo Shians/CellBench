@@ -17,9 +17,11 @@ Set CellBench cache path
 }
 \examples{
 \dontrun{
-set_cellbench_cache_path(".CellBenchCache")) # hidden folder in local path
+# hidden folder in local path
+set_cellbench_cache_path(".CellBenchCache"))
 }
-set_cellbench_cache_path(file.path(tempdir(), ".CellBenchCache")) # store in temp directory valid for this session
+# store in temp directory valid for this session
+set_cellbench_cache_path(file.path(tempdir(), ".CellBenchCache"))
 
 }
 \seealso{
