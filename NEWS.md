@@ -1,3 +1,3 @@
-# CellBench 0.0.99
+# CellBench 0.0.1
 
 * Minimal functioning package created
