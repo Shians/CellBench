@@ -4,7 +4,7 @@ author: "Shian Su"
 date: "`r Sys.Date()`"
 output: BiocStyle::pdf_document
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Data Manipulation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

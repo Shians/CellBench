@@ -3,13 +3,25 @@
 #' @param object the benchmark_tbl to be summarised
 #' @param ... additional arguments affecting the summary produced.
 #'
+#' @return None
+#'
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' res <- apply_methods(datasets, methods)
+#' # list of data
+#' datasets <- list(
+#'     set1 = rnorm(500, mean = 2, sd = 1),
+#'     set2 = rnorm(500, mean = 1, sd = 2)
+#' )
+#'
+#' # list of functions
+#' add_noise <- list(
+#'     none = identity,
+#'     add_bias = function(x) { x + 1 }
+#' )
+#'
+#' res <- apply_methods(datasets, add_noise)
 #' summary(res)
-#' }
 summary.benchmark_tbl <- function(object, ...) {
     if (dplyr::last(colnames(object)) != "result") {
         # if benchmark_tbl has been manipulated by user to non-standard form

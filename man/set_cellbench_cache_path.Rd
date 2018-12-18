@@ -9,13 +9,17 @@ set_cellbench_cache_path(path = "./.CellBenchCache")
 \arguments{
 \item{path}{the path to where method caches should be stored}
 }
+\value{
+None
+}
 \description{
 Set CellBench cache path
 }
 \examples{
 \dontrun{
-set_cellbench_cache_path(path = ".CellBenchCache")
+set_cellbench_cache(".CellBenchCache")) # hidden folder in local path
 }
+set_cellbench_cache(file.path(tempdir(), ".CellBenchCache")) # store in temp directory valid for this session
 
 }
 \seealso{

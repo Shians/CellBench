@@ -9,6 +9,26 @@ as_pipeline_list(x)
 \arguments{
 \item{x}{the benchmark_tbl object to convert}
 }
+\value{
+list containing the results with names set to data and pipeline steps
+  separated by ..
+}
 \description{
 convert to list of results with pipeline as name
+}
+\examples{
+# list of data
+datasets <- list(
+    set1 = rnorm(500, mean = 2, sd = 1),
+    set2 = rnorm(500, mean = 1, sd = 2)
+)
+
+# list of functions
+add_noise <- list(
+    none = identity,
+    add_bias = function(x) { x + 1 }
+)
+
+res <- apply_methods(datasets, add_noise)
+as_pipeline_list(res)
 }

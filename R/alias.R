@@ -2,9 +2,6 @@
 # File for storing simple aliases for existing functions
 ###
 
-# alias for subsetting operator for code clarity elsewhere
-subset_inds <- `[`
-
 # apply function across rows
 row_apply <- purrr::partial(apply, MARGIN = 1)
 

@@ -7,6 +7,8 @@
 #'
 #' @param nthreads the number of threads used by CellBench
 #'
+#' @return None
+#'
 #' @export
 #'
 #' @examples
@@ -28,14 +30,17 @@ set_cellbench_threads <- function(nthreads = 1) {
 #'
 #' @param path the path to where method caches should be stored
 #'
+#' @return None
+#'
 #' @export
 #'
 #' @seealso [cache_method()]
 #'
 #' @examples
 #' \dontrun{
-#' set_cellbench_cache_path(path = ".CellBenchCache")
+#' set_cellbench_cache(".CellBenchCache")) # hidden folder in local path
 #' }
+#' set_cellbench_cache(file.path(tempdir(), ".CellBenchCache")) # store in temp directory valid for this session
 #'
 set_cellbench_cache_path <- function(path = "./.CellBenchCache") {
     stopifnot(is.character(path))

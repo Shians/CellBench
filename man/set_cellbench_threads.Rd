@@ -9,6 +9,9 @@ set_cellbench_threads(nthreads = 1)
 \arguments{
 \item{nthreads}{the number of threads used by CellBench}
 }
+\value{
+None
+}
 \description{
 Sets global parameter for CellBench to use multiple threads for applying
 methods. If any methods applied are multi-threaded then it's recommended to

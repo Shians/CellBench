@@ -1,4 +1,20 @@
-# take the "head" of matrix/tables as a n by n block
+#' Get head of 2 dimensional object as a square block
+#'
+#' head prints all columns which may flood the console, mhead takes a square
+#' block which can look nicer and still provide a good inspection of the
+#' contents
+#'
+#' @param x the object with 2 dimensions
+#' @param n the size of the n-by-n block to extract
+#'
+#' @return an n-by-n sized subset of x
+#' @export
+#'
+#' @examples
+#' x <- matrix(runif(100), nrow = 10, ncol = 10)
+#'
+#' mhead(x)
+#' mhead(x, n = 3)
 mhead <- function(x, n = 6) {
     stopifnot(
         !is.null(dim(x)),
@@ -8,7 +24,7 @@ mhead <- function(x, n = 6) {
 
     n1 <- min(n, nrow(x))
     n2 <- min(n, ncol(x))
-    x[1:n1, 1:n2]
+    x[seq_len(n1), seq_len(n2)]
 }
 
 # left to right function composition
@@ -58,6 +74,22 @@ fn_outer_prod <- function(fn_list1, fn_list2) {
 #'
 #' @importFrom rlang .data
 #' @export
+#'
+#' @examples
+#' # list of data
+#' datasets <- list(
+#'     set1 = rnorm(500, mean = 2, sd = 1),
+#'     set2 = rnorm(500, mean = 1, sd = 2)
+#' )
+#'
+#' # list of functions
+#' add_noise <- list(
+#'     none = identity,
+#'     add_bias = function(x) { x + 1 }
+#' )
+#'
+#' res <- apply_methods(datasets, add_noise)
+#' pipeline_collapse(res)
 pipeline_collapse <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
     stopifnot(
         is(x, "benchmark_tbl"),
@@ -115,6 +147,25 @@ factor_no_sort <- function(x) {
 #'
 #' @importFrom stats setNames
 #' @export
+#'
+#' @return list containing the results with names set to data and pipeline steps
+#'   separated by ..
+#'
+#' @examples
+#' # list of data
+#' datasets <- list(
+#'     set1 = rnorm(500, mean = 2, sd = 1),
+#'     set2 = rnorm(500, mean = 1, sd = 2)
+#' )
+#'
+#' # list of functions
+#' add_noise <- list(
+#'     none = identity,
+#'     add_bias = function(x) { x + 1 }
+#' )
+#'
+#' res <- apply_methods(datasets, add_noise)
+#' as_pipeline_list(res)
 as_pipeline_list <- function(x) {
     stopifnot(is(x, "benchmark_tbl"))
 

@@ -11,6 +11,7 @@ filter_zero_genes <- function(x) {
     x[!zero_genes, ]
 }
 
+#' @importFrom magrittr extract
 # filter down to highest expressed genes
 keep_high_count_genes <- function(x, n) {
     stopifnot(is_one_of(x, c("SingleCellExperiment", "matrix")))
@@ -23,13 +24,14 @@ keep_high_count_genes <- function(x, n) {
 
     highest <- rowSums(counts) %>%
         order(decreasing = TRUE) %>%
-        subset_inds(seq_len(n)) %>%
+        magrittr::extract(seq_len(n)) %>%
         sort()
 
     x[highest, ]
 }
 
 # filter down to largest samples
+#' @importFrom magrittr extract
 keep_high_count_cells <- function(x, n) {
     stopifnot(is_one_of(x, c("SingleCellExperiment", "matrix")))
 
@@ -41,13 +43,14 @@ keep_high_count_cells <- function(x, n) {
 
     highest <- colSums(counts) %>%
         order(decreasing = TRUE) %>%
-        subset_inds(seq_len(n))  %>%
+        magrittr::extract(seq_len(n))  %>%
         sort()
 
     x[, highest]
 }
 
 #' @importFrom stats var
+#' @importFrom magrittr extract
 # filter down to highest expressed genes
 keep_high_var_genes <- function(x, n) {
     stopifnot(is_one_of(x, c("SingleCellExperiment", "matrix")))
@@ -61,7 +64,7 @@ keep_high_var_genes <- function(x, n) {
     scaled_var <- row_apply(counts, stats::var) / rowSums(counts)
     highest <- scaled_var %>%
         order(decreasing = TRUE) %>%
-        `[`(seq_len(n))
+        magrittr::extract(seq_len(n))
 
     x[highest, ]
 }

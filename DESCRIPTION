@@ -1,7 +1,7 @@
 Package: CellBench
 Type: Package
 Title: Construct Benchmarks for Analysis Methods
-Version: 0.1.0
+Version: 0.0.99
 Authors@R: c(
     person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")),
     person("Saskia", "Freytag", role = "aut"),
@@ -14,14 +14,14 @@ Maintainer: Shian Su <su.s@wehi.edu.au>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 biocViews:
-    Software
+    Infrastructure
 URL: https://github.com/shians/cellbench
 BugReports: https://github.com/Shians/CellBench/issues
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 3.0),
+    R (>= 3.5),
     SingleCellExperiment,
     magrittr,
     methods,
@@ -32,13 +32,11 @@ Imports:
     BiocFileCache,
     BiocParallel,
     dplyr,
-    ggplot2,
     rlang,
     glue,
     memoise,
     purrr,
     rappdirs,
-    stringr,
     tidyr
 Suggests:
     BiocStyle,

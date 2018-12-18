@@ -14,6 +14,13 @@ NULL
 #' @rdname check_class
 #'
 #' @importFrom methods is
+#'
+#' @examples
+#' is_one_of(1, c("numeric", "logical")) # TRUE
+#' is_one_of(1, c("character", "logical")) # FALSE
+#'
+#' is_all_of(1, c("numeric", "logical")) # FALSE
+#' is_all_of(tibble::tibble(), c("tbl", "data.frame")) # TRUE
 is_one_of <- function(x, classes) {
     stopifnot(is(classes, "character"))
     purrr::map_lgl(classes, function(class) is(x, class)) %>% any()
@@ -26,6 +33,7 @@ is_any_of <- is_one_of
 #' @rdname check_class
 #'
 #' @importFrom methods is
+#' @export
 is_all_of <- function(x, classes) {
     stopifnot(is(classes, "character"))
     purrr::map_lgl(classes, function(class) is(x, class)) %>% all()

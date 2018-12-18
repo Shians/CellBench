@@ -24,3 +24,19 @@ Collapse benchmark_tbl into two columns: "pipeline" and "result". The
 columns while the "result" column remains unchanged from the benchmark_tbl.
 This is useful for having a string summary of the pipeline for annotating.
 }
+\examples{
+# list of data
+datasets <- list(
+    set1 = rnorm(500, mean = 2, sd = 1),
+    set2 = rnorm(500, mean = 1, sd = 2)
+)
+
+# list of functions
+add_noise <- list(
+    none = identity,
+    add_bias = function(x) { x + 1 }
+)
+
+res <- apply_methods(datasets, add_noise)
+pipeline_collapse(res)
+}

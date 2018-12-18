@@ -24,8 +24,7 @@ methods will not return varying results over repeated runs as one might
 expect.
 }
 \examples{
-\dontrun{
+set_cellbench_cache(file.path(tempdir(), ".CellBenchCache"))
 cached_f <- cache_method(f)
-}
 
 }

@@ -15,9 +15,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' set_cellbench_cache(file.path(tempdir(), ".CellBenchCache"))
 #' cached_f <- cache_method(f)
-#' }
 #'
 cache_method <- function(f, cache = getOption("CellBench.cache")) {
     stopifnot(is.function(f))
@@ -32,6 +31,8 @@ cache_method <- function(f, cache = getOption("CellBench.cache")) {
 #' Clear CellBench Cache
 #'
 #' Clears the method cache for CellBench
+#'
+#' @return None
 #'
 #' @export
 #'

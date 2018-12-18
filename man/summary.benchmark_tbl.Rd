@@ -11,12 +11,25 @@
 
 \item{...}{additional arguments affecting the summary produced.}
 }
+\value{
+None
+}
 \description{
 Summary of benchmark_tbl
 }
 \examples{
-\dontrun{
-res <- apply_methods(datasets, methods)
+# list of data
+datasets <- list(
+    set1 = rnorm(500, mean = 2, sd = 1),
+    set2 = rnorm(500, mean = 1, sd = 2)
+)
+
+# list of functions
+add_noise <- list(
+    none = identity,
+    add_bias = function(x) { x + 1 }
+)
+
+res <- apply_methods(datasets, add_noise)
 summary(res)
-}
 }

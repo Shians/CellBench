@@ -4,4 +4,5 @@
 ^doc$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^.CellBench$
+^\.CellBench$
+^\.git$

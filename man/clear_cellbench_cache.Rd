@@ -6,6 +6,9 @@
 \usage{
 clear_cellbench_cache()
 }
+\value{
+None
+}
 \description{
 Clears the method cache for CellBench
 }

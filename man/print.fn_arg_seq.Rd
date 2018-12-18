@@ -11,6 +11,13 @@
 
 \item{...}{addition arguments for print}
 }
+\value{
+None
+}
 \description{
 Print method for fn_arg_seq output
+}
+\examples{
+fn_seq <- fn_arg_seq(kmeans, centers = 1:3)
+fn_seq
 }

@@ -157,6 +157,8 @@ load_all_data <- function() {
 #'
 #' Delete the datasets cached by the load_*_data set of functions
 #'
+#' @return None
+#'
 #' @export
 #'
 #' @examples

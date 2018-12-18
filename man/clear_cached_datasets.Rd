@@ -6,6 +6,9 @@
 \usage{
 clear_cached_datasets()
 }
+\value{
+None
+}
 \description{
 Delete the datasets cached by the load_*_data set of functions
 }

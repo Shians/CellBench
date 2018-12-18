@@ -27,3 +27,10 @@ Check an object against a vector of class names. Testing if they
   least every class specified, but it can have addition classes and still
   pass the check.
 }
+\examples{
+is_one_of(1, c("numeric", "logical")) # TRUE
+is_one_of(1, c("character", "logical")) # FALSE
+
+is_all_of(1, c("numeric", "logical")) # FALSE
+is_all_of(tibble::tibble(), c("tbl", "data.frame")) # TRUE
+}
