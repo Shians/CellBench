@@ -24,7 +24,7 @@ methods will not return varying results over repeated runs as one might
 expect.
 }
 \examples{
-set_cellbench_cache(file.path(tempdir(), ".CellBenchCache"))
+set_cellbench_cache_path(file.path(tempdir(), ".CellBenchCache"))
 cached_f <- cache_method(f)
 
 }
