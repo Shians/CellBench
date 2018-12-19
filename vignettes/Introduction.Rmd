@@ -122,9 +122,32 @@ par(mfrow = c(1, 1)) # undo plotting grid for future plots
 
 So we can see that applying a simple library size normalisation and log2 transform can dramatically improve the visual inference in our PCA plots. 
 
+# Downloading benchmark data
+
+This package provides access to the single cell mixology data produced by Tian et al. (2018). These can be accessed through the `load_*_data()` functions, when run for the first time they will download the data from the web. On subsequent runs they will load the data from a local cache.
+
+Each set of data is loaded as a list of SingleCellExperiment objects. They are grouped into the mixing strategy used to produce the datasets, each dataset within the same mixing strategy can be expected to have the same columns in their colData.
+
+```{r, eval = FALSE}
+# loading the individual sets of data
+sc_data <- load_sc_data()
+mrna_mix_data <- load_mrna_mix_data()
+cell_mix_data <- load_cell_mix_data()
+
+# loading all datasets
+all_data <- load_all_data()
+```
+
+To clear the data from the local cache, you can run `clear_cached_datasets()`.
+
+```{r, eval = FALSE}
+# removes all locally cached CellBench datasets
+clear_cached_datasets()
+```
+
 # Key objects and concepts
 
-## Function Piping
+## Function piping
 
 In this package many examples make heavy use of the pipe operator `%>%` from [magrittr](https://magrittr.tidyverse.org). This is useful for writing cleaner code that is easier to debug.
 
@@ -148,7 +171,7 @@ x %>% f(a) %>% g(b) %>% h(c)
 
 We can see in the last example that with many functions composed together, the piped form reads from left to right and it's clear which arguments belong to which function, whereas in the nested form it is more difficult to clearly identify what is happening. In general piping data into a function calls the function with the data serving as the first argument, more complex behaviour can be achieved and is describe on the [magrittr](https://magrittr.tidyverse.org) web page.
 
-## Mapping or List-apply
+## Mapping or list-apply
 
 Lists in R are containers for a collection of arbitrary objects. In this package we encourage users to use lists as containers for a series of identically-typed objects, using them as if they were vectors for data types that vectors cannot contain. For example we store our datasets in lists of SingleCellExperiment objects and analysis methods in lists of functions, these data types would not be accepted within a vector.
 
@@ -289,6 +312,31 @@ The way that the `apply_methods` is written means that you can simply pipe data 
 datasets %>%
     apply_methods(norm_method) %>%
     apply_methods(transform)
+```
+
+# Advanced usage
+
+## Multithreading
+
+Application of methods can be done in parallel, this is done by setting the global threads used by CellBench. This option may cause conflicts if the applied methods have their own internal parallelism. If any of the methods have internal parallelism then it is recommended to leave CellBench in single threaded mode.
+
+```{r, eval = FALSE}
+# set cellbench to use 4 threads
+set_cellbench_threads(4)
+```
+
+## Function return caching
+
+CellBench can use the `memoise` to cache function results so that calling functions with the same arguments simply loads results from the local cache rather than repeating computation. Because of the atypical way that CellBench calls functions (as a member of a list), caching in memory using memoise doesn't appear to work, so it is necessary to cache on disk.
+
+To use function return value caching in CellBench we first declare a folder to store our return values and then replace our regular methods with their cached versions.
+
+```{r, eval = FALSE}
+set_cellbench_cache_path(".CellBenchCache")
+methods <- list(
+    method1 = cache_method(method1),
+    method2 = cache_method(method2)
+)
 ```
 
 # Summary
