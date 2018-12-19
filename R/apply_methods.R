@@ -56,25 +56,39 @@ apply_methods.list <- function(
         .name <- deparse(substitute(fn_list))
     }
 
-    n_threads <- min(getOption("CellBench.threads"), length(x))
+    n_threads <- min(
+        getOption("CellBench.threads"),
+        length(x) * length(fn_list)
+    )
 
-    multithread_param <- if (n_threads > 1) {
+    if (n_threads > 1) {
         if (.Platform$OS.type == "windows") {
-            BiocParallel::SnowParam(n_threads)
+            multithread_param <- BiocParallel::SnowParam(n_threads)
         } else {
-            BiocParallel::MulticoreParam(n_threads)
+            multithread_param <- BiocParallel::MulticoreParam(n_threads)
         }
     } else {
-        BiocParallel::SerialParam()
+        multithread_param <- BiocParallel::SerialParam()
     }
 
     # apply each method to the data
     # return the data names, method name and result in a list of lists
     expand_results <- function(data_name) {
+        # repetition necessary because closure does not capture param
+        # properly
+        if (n_threads > 1) {
+            if (.Platform$OS.type == "windows") {
+                multithread_param <- BiocParallel::SnowParam(n_threads)
+            } else {
+                multithread_param <- BiocParallel::MulticoreParam(n_threads)
+            }
+        } else {
+            multithread_param <- BiocParallel::SerialParam()
+        }
         BiocParallel::bplapply(
             BPPARAM = multithread_param,
-            method_names,
-            function(method_name) {
+            X = method_names,
+            FUN = function(method_name) {
                 result <- list(
                     data_list = data_name,
                     .temp = method_name,
@@ -89,8 +103,8 @@ apply_methods.list <- function(
 
     output <- BiocParallel::bplapply(
         BPPARAM = multithread_param,
-        data_names,
-        expand_results
+        X = data_names,
+        FUN = expand_results
     ) %>% purrr::reduce(append)
 
     output <- tibble::tibble(

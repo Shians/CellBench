@@ -174,7 +174,6 @@ test_that(
 
 test_that(
     "Multithreading works", {
-    set_cellbench_threads(2)
 
     x <- list(
         data1 = c(1, 2, 3),
@@ -182,19 +181,17 @@ test_that(
     )
 
     f_list <- list(
-        mean = mean
+        mean = mean,
+        median = median
     )
 
-    expected <- structure(
-        list(
-            data = structure(1:2, .Label = c("data1", "data2"), class = "factor"),
-            f_list = structure(c(1L, 1L), .Label = "mean", class = "factor"),
-            result = c(2, 2)
-        ),
-        row.names = c(NA, -2L),
-        class = c("benchmark_tbl", "tbl_df", "tbl", "data.frame")
-    )
+    set_cellbench_threads(4)
+    expect_identical(getOption("CellBench.threads"), 4)
+    res <- apply_methods(x, f_list)
 
-    expect_identical(apply_methods(x, f_list), expected)
     set_cellbench_threads(1)
+    expect_identical(getOption("CellBench.threads"), 1)
+    expected <- apply_methods(x, f_list)
+
+    expect_identical(res, expected)
 })

@@ -1,7 +1,7 @@
 Package: CellBench
 Type: Package
 Title: Construct Benchmarks for Analysis Methods
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: c(
     person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")),
     person("Saskia", "Freytag", role = "aut"),
