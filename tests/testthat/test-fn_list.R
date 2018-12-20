@@ -25,4 +25,6 @@ test_that(
         "all fn_list members must have names, e.g. fn_list(fn1 = log)",
         fixed = TRUE
     )
+
+    expect_error(fn_list(a = log, mean))
 })

@@ -34,7 +34,7 @@ test_that(
 })
 
 test_that(
-    "Pipiline summarisation works", {
+    "Pipeline summarisation works", {
     methods1 <- list(
         mean = mean,
         median = median
@@ -66,4 +66,17 @@ test_that(
             apply_methods(methods2) %>%
             pipeline_collapse()
     )
+})
+
+test_that(
+    "all_same_class works properly", {
+    x <- list(
+        1, 2, 3
+    )
+    expect_true(all_same_class(x))
+
+    x <- list(
+        1, 2, "a"
+    )
+    expect_false(all_same_class(x))
 })
