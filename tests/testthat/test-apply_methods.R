@@ -186,12 +186,26 @@ test_that(
     )
 
     set_cellbench_threads(4)
-    expect_identical(getOption("CellBench.threads"), 4)
     res <- apply_methods(x, f_list)
 
     set_cellbench_threads(1)
-    expect_identical(getOption("CellBench.threads"), 1)
     expected <- apply_methods(x, f_list)
+
+    expect_identical(res, expected)
+
+    f_list2 <- fn_list(
+        f1 = function(x) x + 1
+    )
+
+    set_cellbench_threads(4)
+    res <- x %>%
+        apply_methods(f_list) %>%
+        apply_methods(f_list2)
+
+    set_cellbench_threads(1)
+    expected <- x %>%
+        apply_methods(f_list) %>%
+        apply_methods(f_list2)
 
     expect_identical(res, expected)
 })
