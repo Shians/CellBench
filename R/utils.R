@@ -213,3 +213,15 @@ make_combinations <- function(...) {
     )
     out[, rev(colnames(out))]
 }
+
+all_same_class <- function(x) {
+    classes <- purrr::map(x, class)
+
+    intersect_classes <- sort(purrr::reduce(classes, intersect))
+    first_classes <- sort(classes[[1]])
+
+    # all elements have the same class if the intersection of all classes
+    # has the same length as the first classes and same values
+    (length(intersect_classes) == length(first_classes)) &&
+        all.equal(intersect_classes, first_classes)
+}

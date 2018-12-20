@@ -1,4 +1,18 @@
-# constructor for a function list
+#' Constructor for a function list
+#'
+#' Constructor for a list of functions, a thin wrapper around list() which
+#' checks that all the inputs are functions and have names
+#'
+#' @param ... objects, must all be named
+#'
+#' @return a list of named functions
+#' @export
+#'
+#' @examples
+#' flist <- fn_list(
+#'     mean = mean,
+#'     median = median
+#' )
 fn_list <- function(...) {
     out <- list(...)
 
