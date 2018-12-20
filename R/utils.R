@@ -205,3 +205,11 @@ seq_ncol <- function(x) {
     if (!is.numeric(ncol(x))) return(integer(0))
     seq_len(ncol(x))
 }
+
+make_combinations <- function(...) {
+    out <- do.call(
+        purrr::partial(expand.grid, stringsAsFactors = FALSE),
+        rev(list(...))
+    )
+    out[, rev(colnames(out))]
+}
