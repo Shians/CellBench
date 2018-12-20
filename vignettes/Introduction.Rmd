@@ -320,6 +320,8 @@ datasets %>%
 
 Application of methods can be done in parallel, this is done by setting the global threads used by CellBench. This option may cause conflicts if the applied methods have their own internal parallelism. If any of the methods have internal parallelism then it is recommended to leave CellBench in single threaded mode.
 
+**CAUTION**: Multi-threading with CellBench uses significantly more memory that one might expect, each thread can potentially make a full copy of all data in the environment. Be aware of this when working on memory-intensive tasks.
+
 ```{r, eval = FALSE}
 # set cellbench to use 4 threads
 set_cellbench_threads(4)
@@ -331,6 +333,12 @@ CellBench can use the `memoise` to cache function results so that calling functi
 
 To use function return value caching in CellBench we first declare a folder to store our return values and then replace our regular methods with their cached versions.
 
+**NOTE**: Caching a method that has pseudo-random behaviours means that the same result will be retrieved from the cache, negating the pseudo-random property of the method. This is generally undesirable.
+
+**CAUTION**: Since only the function call signature and input value is considered for retrieving cached results, if the body of the underlying function is altered then CellBench will retrieve an outdated result.
+
+**CAUTION**: As each result is save to disk, be careful with caching functions that produce large output and may need to be run on many different inputs.
+
 ```{r, eval = FALSE}
 set_cellbench_cache_path(".CellBenchCache")
 methods <- list(
@@ -338,6 +346,14 @@ methods <- list(
     method2 = cache_method(method2)
 )
 ```
+
+The function cache can be cleared using `clear_cellbench_cache()`. This will only work if the cache was set in the same session as it is cleared. Otherwise the cache folder will need to be located manually and deleted.
+
+```{r, eval = FALSE}
+# clears the cache set by set_cellbench_cache_path() in the same session
+clear_cellbench_cache()
+```
+
 
 # Summary
 
