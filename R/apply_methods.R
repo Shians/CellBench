@@ -56,6 +56,7 @@ apply_methods.list <- function(
         .name <- deparse(substitute(fn_list))
     }
 
+    # calculate number of threads required
     n_threads <- min(
         getOption("CellBench.threads"),
         length(x) * length(fn_list)
@@ -71,48 +72,31 @@ apply_methods.list <- function(
         multithread_param <- BiocParallel::SerialParam()
     }
 
-    # apply each method to the data
-    # return the data names, method name and result in a list of lists
-    expand_results <- function(data_name) {
-        # repetition necessary because closure does not capture param
-        # properly
-        if (n_threads > 1) {
-            if (.Platform$OS.type == "windows") {
-                multithread_param <- BiocParallel::SnowParam(n_threads)
-            } else {
-                multithread_param <- BiocParallel::MulticoreParam(n_threads)
-            }
-        } else {
-            multithread_param <- BiocParallel::SerialParam()
+    output <- make_combinations(data_names, method_names)
+    colnames(output) <- c("data", .name)
+
+    tasks <- purrr::map2(
+        output$data,
+        output[[.name]],
+        function(dname, fname) {
+            list(
+                data = x[[dname]],
+                method = fn_list[[fname]]
+            )
         }
-        BiocParallel::bplapply(
-            BPPARAM = multithread_param,
-            X = method_names,
-            FUN = function(method_name) {
-                result <- list(
-                    data_list = data_name,
-                    .temp = method_name,
-                    result =
-                        fn_list[[method_name]](x[[data_name]]),
-                        suppress = suppress.messages
-                )
-                list(result)
-            }
-        ) %>% purrr::reduce(append)
-    }
-
-    output <- BiocParallel::bplapply(
-        BPPARAM = multithread_param,
-        X = data_names,
-        FUN = expand_results
-    ) %>% purrr::reduce(append)
-
-    output <- tibble::tibble(
-        data = factor_no_sort(purrr::map_chr(output, function(x) x$data)),
-        .temp = factor_no_sort(purrr::map_chr(output, function(x) x$.temp)),
-        result = purrr::map(output, function(x) x$result)
     )
-    names(output)[2] <- .name
+
+    result <- BiocParallel::bplapply(
+        BPPARAM = multithread_param,
+        X = tasks,
+        FUN = function(task) { task$method(task$data) }
+    )
+
+    output <- tibble::as_tibble(output)
+    output <- tibble::add_column(output, result = result)
+
+    output$data <- factor_no_sort(output$data)
+    output[[.name]] <- factor_no_sort(output[[.name]])
 
     if (all_length_one(output$result)) {
         output$result <- unlist(output$result)
@@ -122,6 +106,7 @@ apply_methods.list <- function(
     output
 }
 
+# check that all elements of a list have length one
 all_length_one <- function(x) {
     stopifnot(is(x, "list"))
     all(purrr::map_lgl(x, function(x) { length(x) == 1 }))
@@ -144,24 +129,49 @@ apply_methods.benchmark_tbl <- function(
         .name <- deparse(substitute(fn_list))
     }
 
-    results <- list()
+    # calculate number of threads required
+    n_threads <- min(
+        getOption("CellBench.threads"),
+        nrow(x) * length(fn_list)
+    )
+
+    if (n_threads > 1) {
+        if (.Platform$OS.type == "windows") {
+            multithread_param <- BiocParallel::SnowParam(n_threads)
+        } else {
+            multithread_param <- BiocParallel::MulticoreParam(n_threads)
+        }
+    } else {
+        multithread_param <- BiocParallel::SerialParam()
+    }
+
+    tasks <- list()
     for (data in x$result) {
         for (fn in fn_list) {
-            results <- append(
-                results,
-                list(
-                    suppressMsgAndPrint(fn(data), suppress = suppress.messages)
-                )
+            tasks <- append(
+                tasks,
+                list(list(method = fn, data = data))
             )
         }
     }
 
+    results <- BiocParallel::bplapply(
+        BPPARAM = multithread_param,
+        X = tasks,
+        suppress.messages = suppress.messages,
+        FUN = function(task, suppress.messages) {
+            suppressMsgAndPrint(
+                task$method(task$data),
+                suppress = suppress.messages
+            )
+        }
+    )
+
     output <- x %>% dplyr::select(-"result")
-    output <- tidyr::crossing(x, factor_no_sort(method_names))
+    output <- tidyr::crossing(output, factor_no_sort(method_names))
     names(output)[ncol(output)] <- .name
     output <- output %>%
-        dplyr::mutate(result = results) %>%
-        dplyr::select(-"result", "result") # move result column to end
+        tibble::add_column(result = results)
 
     if (all_length_one(output$result)) {
         output$result <- unlist(output$result)
