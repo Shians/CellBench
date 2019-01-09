@@ -12,36 +12,38 @@ strip_results.benchmark_timing_tbl <- function(x) {
     x
 }
 
-keep_time_attr <- function(x, ...) {
-    UseMethod("keep_time_attr", x)
+strip_timing <- function(x) {
+    UseMethod("strip_timing", x)
 }
 
-keep_time_attr.benchmark_timing_tbl <- function(x, key) {
+strip_timing.benchmark_timing_tbl <- function(x) {
+    x <- x %>%
+        mutate(result = map(timed_result, function(x) x$result)) %>%
+        select(-"timed_result")
+
+    if (all_length_one(x$result)) {
+        x$result <- unlist(x$result)
+    }
+
+    x <- drop_class(x, "benchmark_timing_tbl")
+    x <- add_class(x, "benchmark_tbl")
+
+    x
+}
+
+unpack_timed_result.benchmark_timing_tbl <- function(x) {
     x %>%
-        mutate(timing = map_dbl(timing, function(x) x[[key]])) %>%
-        mutate(timing = as.duration(seconds(round(timing, digits = 3))))
-}
-
-keep_elapsed <- function(x, ...) {
-    UseMethod("keep_elapsed", x)
-}
-
-keep_elapsed.benchmark_timing_tbl <- function(x) {
-    keep_time_attr(x, "elapsed")
-}
-
-keep_user <- function(x, ...) {
-    UseMethod("keep_user", x)
-}
-
-keep_user.benchmark_timing_tbl <- function(x) {
-    keep_time_attr(x, "user")
-}
-
-keep_system <- function(x, ...) {
-    UseMethod("keep_system", x)
-}
-
-keep_system.benchmark_timing_tbl <- function(x) {
-    keep_time_attr(x, "system")
+        mutate(timing = map(timed_result, function(x) x$timing)) %>%
+        mutate(
+            user = duration_seconds(
+                map_dbl(timing, function(x) x[["user"]])
+            ),
+            system = duration_seconds(
+                map_dbl(timing, function(x) x[["system"]])
+            ),
+            elapsed = duration_seconds(
+                map_dbl(timing, function(x) x[["elapsed"]])
+            )
+        ) %>%
+        select(-timing, -timed_result)
 }
