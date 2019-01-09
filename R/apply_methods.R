@@ -106,12 +106,6 @@ apply_methods.list <- function(
     output
 }
 
-# check that all elements of a list have length one
-all_length_one <- function(x) {
-    stopifnot(is(x, "list"))
-    all(purrr::map_lgl(x, function(x) { length(x) == 1 }))
-}
-
 #' @rdname apply_methods
 #' @importFrom rlang .data
 #' @export

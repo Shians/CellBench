@@ -206,11 +206,17 @@ seq_ncol <- function(x) {
     seq_len(ncol(x))
 }
 
+# expand.grid altered so that last variable varies the fastest
 make_combinations <- function(...) {
+    if (any(names(list(...)) == "")) {
+        stop("all arguments must be named")
+    }
+
     out <- do.call(
         purrr::partial(expand.grid, stringsAsFactors = FALSE),
         rev(list(...))
     )
+
     out[, rev(colnames(out))]
 }
 
@@ -224,4 +230,22 @@ all_same_class <- function(x) {
     # has the same length as the first classes and same values
     (length(intersect_classes) == length(first_classes)) &&
         all.equal(intersect_classes, first_classes)
+}
+
+# check that all elements of a list have length one
+all_length_one <- function(x) {
+    stopifnot(is(x, "list"))
+    all(purrr::map_lgl(x, function(x) { length(x) == 1 }))
+}
+
+# add class to
+add_class <- function(x, class) {
+    stopifnot(is.character(class))
+
+    classes <- class(x)
+    if (class %in% classes) {
+        return(classes)
+    } else {
+        return(c(class, classes))
+    }
 }
