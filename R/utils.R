@@ -238,14 +238,35 @@ all_length_one <- function(x) {
     all(purrr::map_lgl(x, function(x) { length(x) == 1 }))
 }
 
-# add class to
+# add class to the classes of an object
 add_class <- function(x, class) {
     stopifnot(is.character(class))
 
     classes <- class(x)
     if (class %in% classes) {
-        return(classes)
+        return(x)
     } else {
-        return(c(class, classes))
+        class(x) <- c(class, classes)
+        return(x)
     }
+}
+
+# drop class from classes of an object
+drop_class <- function(x, class) {
+    stopifnot(is.character(class))
+
+    classes <- class(x)
+    if (!class %in% classes) {
+        return(x)
+    } else {
+        class(x) <- setdiff(classes, class)
+        return(x)
+    }
+}
+
+# convert to duration in seconds
+duration_seconds <- function(x) {
+    round(x, digits = 3) %>%
+        lubridate::seconds() %>%
+        lubridate::as.duration()
 }
