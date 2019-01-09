@@ -320,7 +320,7 @@ datasets %>%
 
 Application of methods can be done in parallel, this is done by setting the global threads used by CellBench. This option may cause conflicts if the applied methods have their own internal parallelism. If any of the methods have internal parallelism then it is recommended to leave CellBench in single threaded mode.
 
-**CAUTION**: Multi-threading with CellBench uses significantly more memory that one might expect, each thread can potentially make a full copy of all data in the environment. Be aware of this when working on memory-intensive tasks.
+**CAUTION**: Multi-threading with CellBench uses significantly more memory than one might expect, each thread can potentially make a full copy of all data in the environment. Be aware of this when working on memory-intensive tasks.
 
 ```{r, eval = FALSE}
 # set cellbench to use 4 threads
@@ -363,10 +363,12 @@ CellBench provides a helper function `fn_arg_seq` to create a list of functions 
 It takes a function as its first argument, then vectors of argument values with the name of the argument used by the function. A list of functions is returned with the specified argument filled in using each value in the vector. If multiple argument vectors are given then a vector of functions is returned with each combination of parameter values applied.
 
 ```{r}
+# f is a function of three parameters
 f <- function(x, y, z) {
     x + y + z
 }
 
+# f_list is a list of functions with two of the parameters pre-filled
 f_list <- fn_arg_seq(f, y = 1:2, z = 3:4)
 
 f_list
@@ -375,11 +377,11 @@ f_list
 ```{r}
 names(f_list)[1]
 g <- f_list[[1]]
-g(10) # 10 + 1 + 3
+g(10)
 
 names(f_list)[2]
 h <- f_list[[2]]
-h(20) # 2 + 2 + 3
+h(20)
 ```
 
 # Summary
