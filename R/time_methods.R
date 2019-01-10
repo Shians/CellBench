@@ -37,6 +37,7 @@ time_methods <- function(x, fn_list, .name = NULL, suppress.messages = TRUE) {
     UseMethod("time_methods", x)
 }
 
+#' @export
 time_methods.list <- function(
     x,
     fn_list,
@@ -44,6 +45,7 @@ time_methods.list <- function(
     suppress.messages = TRUE
 ) {
     data_names <- names(x)
+    method_names <- names(fn_list)
 
     if (is.null(.name)) {
         .name <- deparse(substitute(fn_list))

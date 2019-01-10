@@ -1,8 +1,37 @@
+#' Strip timing information
+#'
+#' Takes the result of a time_methods() call and remove timing information from
+#' the `timed_result` column, replacing it with a `result` column and converting
+#' it to a benchmark_tbl.
+#'
+#' @param x the benchmark_timing_tbl object
+#'
+#' @return benchmark_tbl
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' datasets <- list(
+#'     data1 = 1:1e8,
+#' )
+#'
+#' transforms <- list(
+#'     log = log,
+#'     sqrt = sqrt
+#' )
+#'
+#' datasets %>%
+#'     time_methods(transforms) %>%
+#'     strip_timing()
+#' }
+#'
 strip_timing <- function(x) {
     UseMethod("strip_timing", x)
 }
 
-#' importFrom rlang .data
+#' @rdname strip_timing
+#' @importFrom rlang .data
+#' @export
 strip_timing.benchmark_timing_tbl <- function(x) {
     x <- x %>%
         dplyr::mutate(result = purrr::map(.data$timed_result, function(x) x$result)) %>%
@@ -18,10 +47,42 @@ strip_timing.benchmark_timing_tbl <- function(x) {
     x
 }
 
-unpack_timing <- function(x, ...) {
+
+#' Unpack timing information
+#'
+#' Takes the result of a time_methods() call and remove the `timed_result`
+#' column, replacing it with three columns of durations representing the
+#' `system`, `user` and `elapsed` times from a system.time() call.
+#'
+#' @param x the benchmark_timing_tbl object
+#'
+#' @return a tibble containing pipeline steps and timing information
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' datasets <- list(
+#'     data1 = c(1, 2, 3)
+#' )
+#'
+#' transforms <- list(
+#'     log = function(x) { Sys.sleep(0.1); log(x) },
+#'     sqrt = function(x) { Sys.sleep(0.1); sqrt(x) }
+#' )
+#'
+#' datasets %>%
+#'     time_methods(transforms) %>%
+#'     unpack_timing()
+#' }
+#'
+unpack_timing <- function(x) {
     UseMethod("unpack_timing", x)
 }
 
+#' @rdname unpack_timing
+#' @importFrom dplyr mutate select
+#' @importFrom purrr map map_dbl
+#' @export
 unpack_timing.benchmark_timing_tbl <- function(x) {
     x %>%
         dplyr::mutate(
@@ -38,5 +99,6 @@ unpack_timing.benchmark_timing_tbl <- function(x) {
                 purrr::map_dbl(.data$timing, function(x) x[["elapsed"]])
             )
         ) %>%
-        dplyr::select(-"timing", -"timed_result")
+        dplyr::select(-"timing", -"timed_result") %>%
+        drop_class("benchmark_timing_tbl")
 }

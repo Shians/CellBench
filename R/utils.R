@@ -265,6 +265,7 @@ drop_class <- function(x, class) {
 }
 
 # convert to duration in seconds
+#' @importFrom lubridate seconds as.duration
 duration_seconds <- function(x) {
     round(x, digits = 3) %>%
         lubridate::seconds() %>%

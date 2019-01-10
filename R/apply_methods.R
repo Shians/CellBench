@@ -51,6 +51,7 @@ apply_methods.list <- function(
     suppress.messages = TRUE
 ) {
     data_names <- names(x)
+    method_names <- names(fn_list)
 
     if (is.null(.name)) {
         .name <- deparse(substitute(fn_list))
