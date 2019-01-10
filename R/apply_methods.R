@@ -32,6 +32,11 @@
 #' res <- apply_methods(datasets, add_noise)
 #'
 apply_methods <- function(x, fn_list, .name = NULL, suppress.messages = TRUE) {
+    method_names <- names(fn_list)
+    if (length(method_names) != length(fn_list)) {
+        stop("every element of fn_list must be named")
+    }
+
     UseMethod("apply_methods", x)
 }
 
@@ -46,11 +51,6 @@ apply_methods.list <- function(
     suppress.messages = TRUE
 ) {
     data_names <- names(x)
-    method_names <- names(fn_list)
-
-    if (length(method_names) != length(fn_list)) {
-        stop("every element of fn_list must be named")
-    }
 
     if (is.null(.name)) {
         .name <- deparse(substitute(fn_list))
