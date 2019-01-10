@@ -1,16 +1,22 @@
 #' Time methods
 #'
-#' apply_methods take either lists of datasets or benchmark_tbl objects and
-#' apply a list of functions. The output is a benchmark_timing_tbl where each
-#' method has been applied to each dataset or preceeding result.
+#' time_methods() take either lists of datasets or benchmark_timing_tbl objects
+#' and applies a list of functions. The output is a benchmark_timing_tbl where
+#' each method has been applied to each dataset or preceeding result. Unlike
+#' apply_methods(), time_methods() is always single threaded as to produce fair
+#' and more consistent timings.
 #'
-#' @param x the list of data or benchmark tibble to apply methods to
+#' @param x the list of data or benchmark timing tibble to apply methods to
 #' @param fn_list the list of methods to be applied
-#' @param .name (optional) the name of the column for methods applied
+#' @param name (optional) the name of the column for methods applied
 #' @param suppress.messages TRUE if messages from running methods should be
 #'   suppressed
 #'
-#' @return benchmark_tbl object containing results and timing from methods applied
+#' @return benchmark_timing_tbl object containing results from methods applied,
+#'   the first column is the name of the dataset as factors, middle columns
+#'   contain method names as factors and the final column is a list of lists
+#'   containing the results of applying the methods and timings from calling
+#'   system.time().
 #'
 #' @importFrom magrittr %>%
 #' @export
@@ -26,7 +32,7 @@
 #' )
 #'
 #' time_methods(datasets, transform) %>%
-#'     unpack_timing()
+#'     unpack_timing() # extract timings out of list
 #'
 time_methods <- function(x, fn_list, .name = NULL, suppress.messages = TRUE) {
     method_names <- names(fn_list)
@@ -37,11 +43,12 @@ time_methods <- function(x, fn_list, .name = NULL, suppress.messages = TRUE) {
     UseMethod("time_methods", x)
 }
 
+#' @rdname time_methods
 #' @export
 time_methods.list <- function(
     x,
     fn_list,
-    .name = NULL,
+    name = NULL,
     suppress.messages = TRUE
 ) {
     data_names <- names(x)
@@ -92,7 +99,7 @@ time_methods.list <- function(
 time_methods.benchmark_timing_tbl <- function(
     x,
     fn_list,
-    .name = NULL,
+    name = NULL,
     suppress.messages = TRUE
 ) {
     stopifnot(all_unique(names(fn_list)))

@@ -2,31 +2,41 @@
 % Please edit documentation in R/time_methods.R
 \name{time_methods}
 \alias{time_methods}
+\alias{time_methods.list}
 \alias{time_methods.benchmark_timing_tbl}
 \title{Time methods}
 \usage{
 time_methods(x, fn_list, .name = NULL, suppress.messages = TRUE)
 
-\method{time_methods}{benchmark_timing_tbl}(x, fn_list, .name = NULL,
+\method{time_methods}{list}(x, fn_list, name = NULL,
+  suppress.messages = TRUE)
+
+\method{time_methods}{benchmark_timing_tbl}(x, fn_list, name = NULL,
   suppress.messages = TRUE)
 }
 \arguments{
-\item{x}{the list of data or benchmark tibble to apply methods to}
+\item{x}{the list of data or benchmark timing tibble to apply methods to}
 
 \item{fn_list}{the list of methods to be applied}
 
-\item{.name}{(optional) the name of the column for methods applied}
-
 \item{suppress.messages}{TRUE if messages from running methods should be
 suppressed}
+
+\item{name}{(optional) the name of the column for methods applied}
 }
 \value{
-benchmark_tbl object containing results and timing from methods applied
+benchmark_timing_tbl object containing results from methods applied,
+  the first column is the name of the dataset as factors, middle columns
+  contain method names as factors and the final column is a list of lists
+  containing the results of applying the methods and timings from calling
+  system.time().
 }
 \description{
-apply_methods take either lists of datasets or benchmark_tbl objects and
-apply a list of functions. The output is a benchmark_timing_tbl where each
-method has been applied to each dataset or preceeding result.
+time_methods() take either lists of datasets or benchmark_timing_tbl objects
+and applies a list of functions. The output is a benchmark_timing_tbl where
+each method has been applied to each dataset or preceeding result. Unlike
+apply_methods(), time_methods() is always single threaded as to produce fair
+and more consistent timings.
 }
 \examples{
 datasets <- list(
@@ -39,6 +49,6 @@ transform <- list(
 )
 
 time_methods(datasets, transform) \%>\%
-    unpack_timing()
+    unpack_timing() # extract timings out of list
 
 }

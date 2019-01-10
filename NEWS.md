@@ -1,3 +1,7 @@
+# CellBench 0.0.4 (10-01-2019)
+
+* Added time_methods function
+
 # CellBench 0.0.3 (20-12-2018)
 
 * Implemented parallel application of methods to benchmark_tbl, previously only worked for dataset lists
