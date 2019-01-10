@@ -270,3 +270,8 @@ duration_seconds <- function(x) {
         lubridate::seconds() %>%
         lubridate::as.duration()
 }
+
+# wrapper to return summaried time in numerics rath
+simple_time <- function(...) {
+    summary(system.time(...))
+}
