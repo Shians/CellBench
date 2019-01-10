@@ -1,25 +1,12 @@
-strip_results <- function(x) {
-    UseMethod("strip_results", x)
-}
-
-strip_results.benchmark_timing_tbl <- function(x) {
-    x <- x %>%
-        mutate(timing = map(timed_result, function(x) x[["timing"]])) %>%
-        select(-"timed_result")
-
-    class(x) <- add_class(x, "benchmark_timing_tbl")
-
-    x
-}
-
 strip_timing <- function(x) {
     UseMethod("strip_timing", x)
 }
 
+#' importFrom rlang .data
 strip_timing.benchmark_timing_tbl <- function(x) {
     x <- x %>%
-        mutate(result = map(timed_result, function(x) x$result)) %>%
-        select(-"timed_result")
+        dplyr::mutate(result = purrr::map(.data$timed_result, function(x) x$result)) %>%
+        dplyr::select(-"timed_result")
 
     if (all_length_one(x$result)) {
         x$result <- unlist(x$result)
@@ -31,19 +18,25 @@ strip_timing.benchmark_timing_tbl <- function(x) {
     x
 }
 
-unpack_timed_result.benchmark_timing_tbl <- function(x) {
+unpack_timing <- function(x, ...) {
+    UseMethod("unpack_timing", x)
+}
+
+unpack_timing.benchmark_timing_tbl <- function(x) {
     x %>%
-        mutate(timing = map(timed_result, function(x) x$timing)) %>%
-        mutate(
+        dplyr::mutate(
+            timing = purrr::map(.data$timed_result, function(x) x$timing)
+        ) %>%
+        dplyr::mutate(
             user = duration_seconds(
-                map_dbl(timing, function(x) x[["user"]])
+                purrr::map_dbl(.data$timing, function(x) x[["user"]])
             ),
             system = duration_seconds(
-                map_dbl(timing, function(x) x[["system"]])
+                purrr::map_dbl(.data$timing, function(x) x[["system"]])
             ),
             elapsed = duration_seconds(
-                map_dbl(timing, function(x) x[["elapsed"]])
+                purrr::map_dbl(.data$timing, function(x) x[["elapsed"]])
             )
         ) %>%
-        select(-timing, -timed_result)
+        dplyr::select(-"timing", -"timed_result")
 }
