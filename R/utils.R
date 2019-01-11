@@ -266,8 +266,8 @@ drop_class <- function(x, class) {
 
 # convert to duration in seconds
 #' @importFrom lubridate seconds as.duration
-duration_seconds <- function(x) {
-    round(x, digits = 3) %>%
+duration_seconds <- function(x, digits = 3) {
+    round(x, digits = digits) %>%
         lubridate::seconds() %>%
         lubridate::as.duration()
 }
@@ -275,4 +275,12 @@ duration_seconds <- function(x) {
 # wrapper to return summaried time in numerics rath
 simple_time <- function(...) {
     summary(system.time(...))
+}
+
+# replace null values with default value
+if_null_then <- function(x, value) {
+    if (is.null(x)) {
+        x <- value
+    }
+    x
 }
