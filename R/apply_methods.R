@@ -60,21 +60,7 @@ apply_methods.list <- function(
         name <- deparse(substitute(fn_list))
     }
 
-    # calculate number of threads required
-    n_threads <- min(
-        getOption("CellBench.threads"),
-        length(x) * length(fn_list)
-    )
-
-    if (n_threads > 1) {
-        if (.Platform$OS.type == "windows") {
-            multithread_param <- BiocParallel::SnowParam(n_threads)
-        } else {
-            multithread_param <- BiocParallel::MulticoreParam(n_threads)
-        }
-    } else {
-        multithread_param <- BiocParallel::SerialParam()
-    }
+    multithread_param <- getOption("CellBench.bpparam", BiocParallel::bpparam())
 
     output <- make_combinations(data_names, method_names)
     colnames(output) <- c("data", name)
@@ -127,21 +113,7 @@ apply_methods.benchmark_tbl <- function(
         name <- deparse(substitute(fn_list))
     }
 
-    # calculate number of threads required
-    n_threads <- min(
-        getOption("CellBench.threads"),
-        nrow(x) * length(fn_list)
-    )
-
-    if (n_threads > 1) {
-        if (.Platform$OS.type == "windows") {
-            multithread_param <- BiocParallel::SnowParam(n_threads)
-        } else {
-            multithread_param <- BiocParallel::MulticoreParam(n_threads)
-        }
-    } else {
-        multithread_param <- BiocParallel::SerialParam()
-    }
+    multithread_param <- getOption("CellBench.bpparam", BiocParallel::bpparam())
 
     tasks <- list()
     for (data in x$result) {
