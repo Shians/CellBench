@@ -1,6 +1,8 @@
 # CellBench 0.0.4 (10-01-2019)
 
 * Added time_methods function
+* Added set_cellbench_bpparam for more advanced parallelism options
+* Changed `name` arguments in `time_methods()` and `apply_methods()` to `name`
 
 # CellBench 0.0.3 (20-12-2018)
 
