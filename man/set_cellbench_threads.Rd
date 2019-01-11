@@ -9,9 +9,6 @@ set_cellbench_threads(nthreads = 1)
 \arguments{
 \item{nthreads}{the number of threads used by CellBench}
 }
-\value{
-None
-}
 \description{
 Sets global parameter for CellBench to use multiple threads for applying
 methods. If any methods applied are multi-threaded then it's recommended to
@@ -21,4 +18,7 @@ multiple threads if methods applied can be set to run on single threads.
 \examples{
 set_cellbench_threads(1) # CellBench runs on a single thread
 
+}
+\seealso{
+[see_cellbench_bpparam()] for more advanced interface
 }

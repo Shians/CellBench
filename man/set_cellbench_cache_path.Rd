@@ -9,9 +9,6 @@ set_cellbench_cache_path(path = "./.CellBenchCache")
 \arguments{
 \item{path}{the path to where method caches should be stored}
 }
-\value{
-None
-}
 \description{
 Set CellBench cache path
 }
@@ -25,5 +22,5 @@ set_cellbench_cache_path(file.path(tempdir(), ".CellBenchCache"))
 
 }
 \seealso{
-[cache_method()]
+[cache_method()] for constructing cached methods.
 }

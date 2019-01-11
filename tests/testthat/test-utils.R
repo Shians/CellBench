@@ -80,3 +80,29 @@ test_that(
     )
     expect_false(all_same_class(x))
 })
+
+test_that(
+    "class manipulators work properly", {
+    expect_identical(class(add_class(1, "a")), c("a", "numeric"))
+    expect_identical(
+        1, 1 %>% add_class("a") %>% drop_class("a")
+    )
+
+    expect_identical(
+        1, 1 %>% drop_class("numeric") %>% drop_class("numeric")
+    )
+
+    expect_identical(
+        1, 1 %>% add_class("numeric")
+    )
+
+    expect_identical(
+        1, 1 %>% drop_class("a")
+    )
+})
+
+test_that(
+    "if_null_then works properly", {
+    expect_identical(if_null_then(NULL, 10), 10)
+    expect_identical(if_null_then(1, 10), 1)
+})

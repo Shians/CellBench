@@ -6,7 +6,7 @@
 \alias{time_methods.benchmark_timing_tbl}
 \title{Time methods}
 \usage{
-time_methods(x, fn_list, .name = NULL, suppress.messages = TRUE)
+time_methods(x, fn_list, name = NULL, suppress.messages = TRUE)
 
 \method{time_methods}{list}(x, fn_list, name = NULL,
   suppress.messages = TRUE)
@@ -19,10 +19,10 @@ time_methods(x, fn_list, .name = NULL, suppress.messages = TRUE)
 
 \item{fn_list}{the list of methods to be applied}
 
+\item{name}{(optional) the name of the column for methods applied}
+
 \item{suppress.messages}{TRUE if messages from running methods should be
 suppressed}
-
-\item{name}{(optional) the name of the column for methods applied}
 }
 \value{
 benchmark_timing_tbl object containing results from methods applied,
