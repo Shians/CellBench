@@ -19,6 +19,7 @@
 #'   system.time().
 #'
 #' @importFrom magrittr %>%
+#' @importFrom BiocParallel SerialParam bplapply bptry
 #' @export
 #'
 #' @examples
@@ -72,14 +73,17 @@ time_methods.list <- function(
         }
     )
 
-    timed_result <- lapply(
-        X = tasks,
-        FUN = function(task) {
-            list(
-                timing = simple_time(res <- task$method(task$data)),
-                result = res
-            )
-        }
+    timed_result <- BiocParallel::bptry(
+        BiocParallel::bplapply(
+            BPPARAM = BiocParallel::SerialParam(stop.on.error = FALSE),
+            X = tasks,
+            FUN = function(task) {
+                list(
+                    timing = simple_time(res <- task$method(task$data)),
+                    result = res
+                )
+            }
+        )
     )
 
     output <- tibble::as_tibble(output)
@@ -95,6 +99,7 @@ time_methods.list <- function(
 
 #' @rdname time_methods
 #' @importFrom rlang .data
+#' @importFrom BiocParallel SerialParam bplapply bptry
 #' @export
 time_methods.benchmark_timing_tbl <- function(
     x,
@@ -128,15 +133,19 @@ time_methods.benchmark_timing_tbl <- function(
         }
     }
 
-    results <- lapply(
-        X = tasks,
-        FUN = function(task) {
-            list(
-                timing = simple_time(res <- task$method(task$data)) + task$timing,
-                result = res
+    results <-
+        BiocParallel::bptry(
+            BiocParallel::bplapply(
+                BPPARAM = BiocParallel::SerialParam(stop.on.error = FALSE),
+                X = tasks,
+                FUN = function(task) {
+                    list(
+                        timing = simple_time(res <- task$method(task$data)) + task$timing,
+                        result = res
+                    )
+                }
             )
-        }
-    )
+        )
 
     output <- x %>% dplyr::select(-"timed_result")
     output <- tidyr::crossing(output, factor_no_sort(method_names))

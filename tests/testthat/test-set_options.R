@@ -19,6 +19,14 @@ test_that(
         "is.numeric(nthreads) is not TRUE",
         fixed = TRUE
     )
+
+    expect_error(
+        set_cellbench_bpparam(1),
+        'is(param, "BiocParallelParam") is not TRUE',
+        fixed = TRUE
+    )
+
+    expect_silent(set_cellbench_bpparam(BiocParallel::SerialParam()))
 })
 
 test_that(

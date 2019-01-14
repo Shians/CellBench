@@ -24,13 +24,31 @@ set_cellbench_threads <- function(nthreads = 1) {
     options("CellBench.threads" = nthreads)
 
     if (nthreads == 1) {
-        options("CellBench.bpparam" = BiocParallel::SerialParam())
-    } else if (nthreads > 1) {
+        options(
+            "CellBench.bpparam" = BiocParallel::SerialParam(
+                stop.on.error = FALSE
+            )
+        )
+        return()
+    }
+
+    if (nthreads > 1) {
         if (.Platform$OS.type == "windows") {
-            options("CellBench.bpparam" = BiocParallel::SnowParam(nthreads))
+            options(
+                "CellBench.bpparam" = BiocParallel::SnowParam(
+                    workers = nthreads,
+                    stop.on.error = FALSE
+                )
+            )
         } else {
-            options("CellBench.bpparam" = BiocParallel::MulticoreParam(nthreads))
+            options(
+                "CellBench.bpparam" = BiocParallel::MulticoreParam(
+                    workers = nthreads,
+                    stop.on.error = FALSE
+                )
+            )
         }
+        return()
     }
 
     invisible() # guard against implicit returns

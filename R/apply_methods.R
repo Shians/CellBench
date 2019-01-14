@@ -76,11 +76,14 @@ apply_methods.list <- function(
         }
     )
 
-    result <- BiocParallel::bplapply(
-        BPPARAM = multithread_param,
-        X = tasks,
-        FUN = function(task) { task$method(task$data) }
-    )
+    result <-
+        BiocParallel::bptry(
+            BiocParallel::bplapply(
+                BPPARAM = multithread_param,
+                X = tasks,
+                FUN = function(task) { task$method(task$data) }
+            )
+        )
 
     output <- tibble::as_tibble(output)
     output <- tibble::add_column(output, result = result)
@@ -125,17 +128,20 @@ apply_methods.benchmark_tbl <- function(
         }
     }
 
-    results <- BiocParallel::bplapply(
-        BPPARAM = multithread_param,
-        X = tasks,
-        suppress.messages = suppress.messages,
-        FUN = function(task, suppress.messages) {
-            suppressMsgAndPrint(
-                task$method(task$data),
-                suppress = suppress.messages
+    results <-
+        BiocParallel::bptry(
+            BiocParallel::bplapply(
+                BPPARAM = multithread_param,
+                X = tasks,
+                suppress.messages = suppress.messages,
+                FUN = function(task, suppress.messages) {
+                    suppressMsgAndPrint(
+                        task$method(task$data),
+                        suppress = suppress.messages
+                    )
+                }
             )
-        }
-    )
+        )
 
     output <- x %>% dplyr::select(-"result")
     output <- tidyr::crossing(output, factor_no_sort(method_names))
