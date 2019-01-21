@@ -62,19 +62,10 @@ time_methods.list <- function(
     output <- make_combinations(data_names, method_names)
     colnames(output) <- c("data", name)
 
-    tasks <- purrr::map2(
-        output$data,
-        output[[name]],
-        function(dname, fname) {
-            list(
-                data = x[[dname]],
-                method = fn_list[[fname]]
-            )
-        }
-    )
+    tasks <- .generate_tasks(output, x, fn_list, name)
 
-    timed_result <- BiocParallel::bptry(
-        BiocParallel::bplapply(
+    timed_result <-
+        .bp_try_apply(
             BPPARAM = BiocParallel::SerialParam(stop.on.error = FALSE),
             X = tasks,
             FUN = function(task) {
@@ -84,7 +75,6 @@ time_methods.list <- function(
                 )
             }
         )
-    )
 
     output <- tibble::as_tibble(output)
     output <- tibble::add_column(output, timed_result = timed_result)
@@ -92,7 +82,7 @@ time_methods.list <- function(
     output$data <- factor_no_sort(output$data)
     output[[name]] <- factor_no_sort(output[[name]])
 
-    class(output) <- c("benchmark_timing_tbl", class(output))
+    output <- add_class(output, "benchmark_timing_tbl")
 
     output
 }
@@ -134,17 +124,15 @@ time_methods.benchmark_timing_tbl <- function(
     }
 
     results <-
-        BiocParallel::bptry(
-            BiocParallel::bplapply(
-                BPPARAM = BiocParallel::SerialParam(stop.on.error = FALSE),
-                X = tasks,
-                FUN = function(task) {
-                    list(
-                        timing = simple_time(res <- task$method(task$data)) + task$timing,
-                        result = res
-                    )
-                }
-            )
+        .bp_try_apply(
+            BPPARAM = BiocParallel::SerialParam(stop.on.error = FALSE),
+            X = tasks,
+            FUN = function(task) {
+                list(
+                    timing = simple_time(res <- task$method(task$data)) + task$timing,
+                    result = res
+                )
+            }
         )
 
     output <- x %>% dplyr::select(-"timed_result")

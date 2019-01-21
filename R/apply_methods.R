@@ -65,24 +65,13 @@ apply_methods.list <- function(
     output <- make_combinations(data_names, method_names)
     colnames(output) <- c("data", name)
 
-    tasks <- purrr::map2(
-        output$data,
-        output[[name]],
-        function(dname, fname) {
-            list(
-                data = x[[dname]],
-                method = fn_list[[fname]]
-            )
-        }
-    )
+    tasks <- .generate_tasks(output, x, fn_list, name)
 
     result <-
-        BiocParallel::bptry(
-            BiocParallel::bplapply(
-                BPPARAM = multithread_param,
-                X = tasks,
-                FUN = function(task) { task$method(task$data) }
-            )
+        .bp_try_apply(
+            BPPARAM = multithread_param,
+            X = tasks,
+            FUN = function(task) { task$method(task$data) }
         )
 
     output <- tibble::as_tibble(output)
@@ -94,7 +83,8 @@ apply_methods.list <- function(
     if (all_length_one(output$result)) {
         output$result <- unlist(output$result)
     }
-    class(output) <- c("benchmark_tbl", class(output))
+
+    output <- add_class(output, "benchmark_tbl")
 
     output
 }
@@ -129,18 +119,16 @@ apply_methods.benchmark_tbl <- function(
     }
 
     results <-
-        BiocParallel::bptry(
-            BiocParallel::bplapply(
-                BPPARAM = multithread_param,
-                X = tasks,
-                suppress.messages = suppress.messages,
-                FUN = function(task, suppress.messages) {
-                    suppressMsgAndPrint(
-                        task$method(task$data),
-                        suppress = suppress.messages
-                    )
-                }
-            )
+        .bp_try_apply(
+            BPPARAM = multithread_param,
+            X = tasks,
+            suppress.messages = suppress.messages,
+            FUN = function(task, suppress.messages) {
+                suppressMsgAndPrint(
+                    task$method(task$data),
+                    suppress = suppress.messages
+                )
+            }
         )
 
     output <- x %>% dplyr::select(-"result")
@@ -175,3 +163,24 @@ apply_metrics <- apply_methods
 #' @export
 #'
 begin_benchmark <- apply_methods
+
+.generate_tasks <- function(output, x, fn_list, name) {
+    purrr::map2(
+        output$data,
+        output[[name]],
+        function(dname, fname) {
+            list(
+                data = x[[dname]],
+                method = fn_list[[fname]]
+            )
+        }
+    )
+}
+
+.bp_try_apply <- function(...) {
+    BiocParallel::bptry(
+        BiocParallel::bplapply(
+            ...
+        )
+    )
+}
