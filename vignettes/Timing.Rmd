@@ -1,0 +1,86 @@
+---
+title: "Timing methods in CellBench"
+author: "Shian Su"
+date: "`r Sys.Date()`"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+library(CellBench)
+```
+
+# Introduction
+
+CellBench provides the ability to measure the running time of pipelines. This is done using the `time_methods()` function which runs in the same way that `apply_methods()` does, with the difference that it does not run in parallel. This is an intentional design choice because running things in parallel usually results in some competition for computer resource and therefore produces less reliable or stable timings.
+
+# Timing methods
+
+The setup for timing methods is identical to applying methods. You have a list of data and a list of functions, then you use `time_methods()` instead of `apply_methods()`. 
+
+```{r}
+library(CellBench)
+
+# wrap a simple vector in a list
+datasets <- list(
+    data1 = c(1, 2, 3)
+)
+
+# use Sys.sleep in functions to simulate long-running functions
+transform <- list(
+    log = function(x) { Sys.sleep(0.1); log(x) },
+    sqrt = function(x) { Sys.sleep(0.1); sqrt(x) }
+)
+
+# time the functions
+res <- datasets %>%
+    time_methods(transform)
+
+res
+```
+
+Where we usually have the `result` column we now have `timed_result`, this is a list of two objects: the timing object and the result. It is necessary to keep the result so that we can chain computations together.
+
+```{r}
+res$timed_result[[1]]
+```
+
+As is the case with `apply_methods()`, more lists of methods can be applied and results will expand out combinatorially. The timings in this case will be cumulative over the methods applied.
+
+```{r}
+transform2 <- list(
+    plus = function(x) { Sys.sleep(0.1); x + 1 },
+    minus = function(x) { Sys.sleep(0.1); x - 1 }
+)
+
+res2 <- datasets %>%
+    time_methods(transform) %>%
+    time_methods(transform2)
+
+res2
+```
+
+The class of results from `time_methods()` is `benchmark_timing_tbl`. Once all methods have been applied, the result may be discarded using `unpack_timing()` and the object can be transformed into a more flat `tbl` representation. See `?proc_time` for an explanation of what `user`, `system` and `elapsed` refer to. 
+
+The timing values have been converted to `Duration` objects from the `lubridate` package, these behave as numeric measurements in seconds but have nicer printing properties (try `lubridate::duration(1000, units = "seconds")`).
+
+```{r}
+# discard results and expand out timings into columns
+res2 %>%
+    unpack_timing()
+```
+
+Alternatively the timing information can be discarded and a `benchmark_tbl` can be produced using `strip_timing()`.
+
+```{r}
+# discard timings and produce benchmark_tbl object
+res2 %>%
+    strip_timing()
+```
+
+# Summary
+
+CellBench provides a simple way to measure the running times of pipelines from various combinations of methods. This is done with the `time_methods()` function which is called in the same way as `apply_methods()` and has the same chaining properties. The resultant object can be transformed in two useful ways, as a flat `tibble` with timings expanded out as columns and discarding the results, or as a `benchmark_tbl` with the results as a `list-column` and discarding the timings.
