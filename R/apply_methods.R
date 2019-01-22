@@ -65,7 +65,7 @@ apply_methods.list <- function(
     output <- make_combinations(data_names, method_names)
     colnames(output) <- c("data", name)
 
-    tasks <- .generate_tasks.list(output, x, fn_list, name)
+    tasks <- .generate_tasks(output, x, fn_list, name)
 
     result <-
         .bp_try_apply(
@@ -165,7 +165,7 @@ apply_metrics <- apply_methods
 begin_benchmark <- apply_methods
 
 # wrapper for task generation
-.generate_tasks.list <- function(output_tbl, x, fn_list, name) {
+.generate_tasks <- function(output_tbl, x, fn_list, name) {
     purrr::map2(
         output_tbl$data,
         output_tbl[[name]],
