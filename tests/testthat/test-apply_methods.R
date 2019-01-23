@@ -145,7 +145,10 @@ test_that(
         "every element of fn_list must be named"
     )
 
-    expect_error
+    expect_error(
+        apply_methods(list(1:5), list(mean = mean)),
+        "every element of x must be named"
+    )
 })
 
 test_that(

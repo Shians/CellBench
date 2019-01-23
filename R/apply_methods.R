@@ -54,6 +54,10 @@ apply_methods.list <- function(
     suppress.messages = TRUE
 ) {
     data_names <- names(x)
+    if (length(data_names) != length(x)) {
+        stop("every element of x must be named")
+    }
+
     method_names <- names(fn_list)
 
     if (is.null(name)) {
@@ -74,16 +78,7 @@ apply_methods.list <- function(
             FUN = function(task) { task$method(task$data) }
         )
 
-    output <- tibble::as_tibble(output)
-    output <- tibble::add_column(output, result = result)
-
-    output$data <- factor_no_sort(output$data)
-    output[[name]] <- factor_no_sort(output[[name]])
-
-    if (all_length_one(output$result)) {
-        output$result <- unlist(output$result)
-    }
-
+    output <- .make_output(output, result, name)
     output <- add_class(output, "benchmark_tbl")
 
     output
@@ -185,4 +180,23 @@ begin_benchmark <- apply_methods
             ...
         )
     )
+}
+
+# assemble output
+.make_output <- function(output, result, name, timed = FALSE) {
+    output <- tibble::as_tibble(output)
+
+    if (timed) {
+        output <- tibble::add_column(output, timed_result = result)
+    } else {
+        output <- tibble::add_column(output, result = result)
+        if (all_length_one(output$result)) {
+            output$result <- unlist(output$result)
+        }
+    }
+
+    output$data <- factor_no_sort(output$data)
+    output[[name]] <- factor_no_sort(output[[name]])
+
+    output
 }

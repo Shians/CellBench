@@ -76,12 +76,7 @@ time_methods.list <- function(
             }
         )
 
-    output <- tibble::as_tibble(output)
-    output <- tibble::add_column(output, timed_result = timed_result)
-
-    output$data <- factor_no_sort(output$data)
-    output[[name]] <- factor_no_sort(output[[name]])
-
+    output <- .make_output(output, timed_result, name, timed = TRUE)
     output <- add_class(output, "benchmark_timing_tbl")
 
     output
