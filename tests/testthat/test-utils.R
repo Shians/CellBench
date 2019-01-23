@@ -106,3 +106,77 @@ test_that(
     expect_identical(if_null_then(NULL, 10), 10)
     expect_identical(if_null_then(1, 10), 1)
 })
+
+test_that(
+    "make_combiations works properly", {
+    x <- c("b", "a")
+    y <- c("y", "z")
+    z <- c("j", "i")
+
+    expect_equal(
+        make_combinations(data.frame(x, y), z),
+        tibble::tibble(
+            x = factor(c("b", "b", "a", "a")),
+            y = factor(c("y", "y", "z", "z")),
+            z = factor_no_sort(c("j", "i", "j", "i"))
+        )
+    )
+
+    expect_equal(
+        make_combinations(horse = data.frame(x, y), z),
+        tibble::tibble(
+            x = factor(c("b", "b", "a", "a")),
+            y = factor(c("y", "y", "z", "z")),
+            z = factor_no_sort(c("j", "i", "j", "i"))
+        )
+    )
+
+    expect_equal(
+        make_combinations(data.frame(x, y), shoe = z),
+        tibble::tibble(
+            x = factor(c("b", "b", "a", "a")),
+            y = factor(c("y", "y", "z", "z")),
+            shoe = factor_no_sort(c("j", "i", "j", "i"))
+        )
+    )
+
+    expect_equal(
+        make_combinations(horse = data.frame(x, y), shoe = z),
+        tibble::tibble(
+            x = factor(c("b", "b", "a", "a")),
+            y = factor(c("y", "y", "z", "z")),
+            shoe = factor_no_sort(c("j", "i", "j", "i"))
+        )
+    )
+})
+
+test_that(
+    "infer_names_from_dots works properly", {
+    x <- 1
+    y <- "a"
+    df <- data.frame(
+        foo = "foo",
+        bar = "bar"
+    )
+
+    expect_identical(infer_names_from_dots(x, y), c("x", "y"))
+    expect_identical(infer_names_from_dots(X = x, y), c("X", "y"))
+    expect_identical(infer_names_from_dots(X = x, y, df), c("X", "y", "df"))
+    expect_identical(infer_names_from_dots(X = x, y, DF = df), c("X", "y", "DF"))
+
+    expect_warning(
+        infer_names_from_dots(y = x, y, DF = df),
+        "not all names were unique, numbers appended to duplicates"
+    )
+})
+
+test_that(
+    "seq utils work", {
+    x <- matrix(1, ncol = 10, nrow = 8)
+
+    expect_identical(seq_nrow(x), 1:8)
+    expect_identical(seq_ncol(x), 1:10)
+
+    expect_length(seq_nrow(c(1,2,3)), 0)
+    expect_length(seq_ncol(c(1,2,3)), 0)
+})
