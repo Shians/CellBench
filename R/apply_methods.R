@@ -136,9 +136,8 @@ apply_methods.benchmark_tbl <- function(
         output$result <- unlist(output$result)
     }
 
-    if (!"benchmark_tbl" %in% class(output)) {
-        class(output) <- c("benchmark_tbl", class(output))
-    }
+    
+    output <- add_class(output, "benchmark_tbl")
 
     output
 }

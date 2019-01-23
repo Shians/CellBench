@@ -257,11 +257,11 @@ all_length_one <- function(x) {
 add_class <- function(x, class) {
     stopifnot(is.character(class))
 
-    classes <- class(x)
-    if (class %in% classes) {
+    existing_class <- class(x)
+    if (class %in% existing_class) {
         return(x)
     } else {
-        class(x) <- c(class, classes)
+        class(x) <- c(class, existing_class)
         return(x)
     }
 }
