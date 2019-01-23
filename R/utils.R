@@ -207,17 +207,32 @@ seq_ncol <- function(x) {
 }
 
 # expand.grid altered so that last variable varies the fastest
+# @importFrom tibble as_tibble
 make_combinations <- function(...) {
-    if (any(names(list(...)) == "")) {
-        stop("all arguments must be named")
+    input_names <- infer_names_from_dots(...)
+    input <- list(...) %>%
+        set_names(input_names)
+
+    is.character.or.df <- function(x) {
+        is.character(x) || is.data.frame(x)
     }
 
-    out <- do.call(
-        purrr::partial(expand.grid, stringsAsFactors = FALSE),
-        rev(list(...))
+    if (!all(purrr::map_lgl(input, is.character.or.df))) {
+        stop("all arguments must be either data.frames or character vectors")
+    }
+
+    input <- purrr::map(
+        input,
+        function(x) {
+            if (is.data.frame(x)) {
+                return(x)
+            } else {
+                return(factor_no_sort(x))
+            }
+        }
     )
 
-    out[, rev(colnames(out))]
+    tibble::as_tibble(do.call(tidyr::crossing, input))
 }
 
 all_same_class <- function(x) {
@@ -283,4 +298,22 @@ if_null_then <- function(x, value) {
         x <- value
     }
     x
+}
+
+# take variadic ellipses and return a vector of names,
+#' @importFrom rlang exprs
+infer_names_from_dots <- function(...) {
+    var_names <- purrr::map_chr(as.list(substitute(list(...))[-1L]), deparse)
+    given_names <- names(list(...))
+
+    if (is.null(given_names)) {
+        output <- var_names
+    } else {
+        output <- ifelse(given_names == "", var_names, given_names)
+    }
+
+    if (!all_unique(output)) {
+        warning("not all names were unique, numbers appended to duplicates")
+    }
+    make.names(output, unique = TRUE)
 }
