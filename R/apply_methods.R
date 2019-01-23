@@ -64,10 +64,10 @@ apply_methods.list <- function(
         name <- deparse(substitute(fn_list))
     }
 
-    multithread_param <- getOption("CellBench.bpparam", BiocParallel::bpparam())
+    multithread_param <- getOption("CellBench.bpparam")
 
-    output <- make_combinations(data_names, method_names)
-    colnames(output) <- c("data", name)
+    output <- make_combinations(data_names, method_names) %>%
+        magrittr::set_colnames(c("data", name))
 
     tasks <- .generate_tasks(output, x, fn_list, name)
 
@@ -101,7 +101,7 @@ apply_methods.benchmark_tbl <- function(
         name <- deparse(substitute(fn_list))
     }
 
-    multithread_param <- getOption("CellBench.bpparam", BiocParallel::bpparam())
+    multithread_param <- getOption("CellBench.bpparam")
 
     tasks <- list()
     for (data in x$result) {
