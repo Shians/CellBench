@@ -208,10 +208,11 @@ seq_ncol <- function(x) {
 
 # expand.grid altered so that last variable varies the fastest
 # @importFrom tibble as_tibble
+# @importFrom magrittr set_names
 make_combinations <- function(...) {
     input_names <- infer_names_from_dots(...)
     input <- list(...) %>%
-        set_names(input_names)
+        magrittr::set_names(input_names)
 
     is.character.or.df <- function(x) {
         is.character(x) || is.data.frame(x)
@@ -300,12 +301,19 @@ if_null_then <- function(x, value) {
     x
 }
 
+# replace empty values with default value
+if_empty_then <- function(x, value) {
+    if (length(x) == 0) {
+        x <- value
+    }
+    x
+}
+
 # take variadic ellipses and return a vector of names,
 #' @importFrom rlang exprs
 infer_names_from_dots <- function(...) {
     var_names <- purrr::map_chr(as.list(substitute(list(...))[-1L]), deparse)
     given_names <- names(list(...))
-
     if (is.null(given_names)) {
         output <- var_names
     } else {

@@ -71,12 +71,29 @@ apply_methods.list <- function(
 
     tasks <- .generate_tasks(output, x, fn_list, name)
 
-    result <-
-        .bp_try_apply(
-            BPPARAM = multithread_param,
-            X = tasks,
-            FUN = function(task) { task$method(task$data) }
-        )
+    result <- .bp_try_apply(
+        BPPARAM = multithread_param,
+        X = tasks,
+        suppress.messages = suppress.messages,
+        FUN = function(task, suppress.messages) {
+            suppressMsgAndPrint(
+                task$method(task$data),
+                suppress = suppress.messages
+            )
+        }
+    )
+
+    result <- purrr::map(
+        result,
+        name = name,
+        function(res, name) {
+            if (is.error(res) && is.null(res$error_location)) {
+                res$error_location <- name
+                res <- add_class(res, "task_error")
+            }
+            res
+        }
+    )
 
     output <- .make_output(output, result, name)
     output <- add_class(output, "benchmark_tbl")
@@ -113,18 +130,33 @@ apply_methods.benchmark_tbl <- function(
         }
     }
 
-    results <-
-        .bp_try_apply(
-            BPPARAM = multithread_param,
-            X = tasks,
-            suppress.messages = suppress.messages,
-            FUN = function(task, suppress.messages) {
+    results <- .bp_try_apply(
+        BPPARAM = multithread_param,
+        X = tasks,
+        suppress.messages = suppress.messages,
+        FUN = function(task, suppress.messages) {
+            if (is.error(task$data)) {
+                task$data
+            } else {
                 suppressMsgAndPrint(
                     task$method(task$data),
                     suppress = suppress.messages
                 )
             }
-        )
+        }
+    )
+
+    results <- purrr::map(
+        results,
+        name = name,
+        function(res, name) {
+            if (is.error(res) && is.null(res$error_location)) {
+                res$error_location <- name
+                res <- add_class(res, "task_error")
+            }
+            res
+        }
+    )
 
     output <- x %>% dplyr::select(-"result")
     output <- tidyr::crossing(output, factor_no_sort(method_names))
@@ -136,7 +168,7 @@ apply_methods.benchmark_tbl <- function(
         output$result <- unlist(output$result)
     }
 
-    
+
     output <- add_class(output, "benchmark_tbl")
 
     output
