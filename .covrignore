@@ -1,2 +1,4 @@
+R/alias.R
 R/load_data.R
+R/print.R
 R/zzz.R

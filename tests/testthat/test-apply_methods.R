@@ -212,3 +212,27 @@ test_that(
 
     expect_identical(res, expected)
 })
+
+test_that(
+    "Error propagation works", {
+    x <- list(
+        data1 = 1,
+        data2 = "a"
+    )
+
+    method <- list(
+        log = log
+    )
+
+    output <- apply_methods(x, method)
+    expect_is(output$result[[2]], "task_error")
+    expect_identical(output$result[[2]]$error_location, "method")
+
+    method2 <- list(
+        sqrt = sqrt
+    )
+
+    output2 <- apply_methods(output, method2)
+    expect_is(output2$result[[2]], "task_error")
+    expect_identical(output2$result[[2]]$error_location, "method")
+})

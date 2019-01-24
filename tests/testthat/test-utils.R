@@ -108,6 +108,12 @@ test_that(
 })
 
 test_that(
+    "if_empty_then works properly", {
+    expect_identical(if_empty_then(NULL, 10), 10)
+    expect_identical(if_empty_then(1, 10), 1)
+})
+
+test_that(
     "make_combiations works properly", {
     x <- c("b", "a")
     y <- c("y", "z")
