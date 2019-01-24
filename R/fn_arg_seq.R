@@ -84,19 +84,3 @@ fn_arg_seq <- function(func, ...) {
 
     out
 }
-
-#' Print method for fn_arg_seq output
-#'
-#' @param x fn_arg_seq object
-#' @param ... addition arguments for print
-#'
-#' @return None
-#'
-#' @export
-#'
-#' @examples
-#' fn_seq <- fn_arg_seq(kmeans, centers = 1:3)
-#' fn_seq
-print.fn_arg_seq <- function(x, ...) {
-    print(utils::str(x), ...)
-}
