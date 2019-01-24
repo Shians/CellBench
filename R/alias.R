@@ -1,6 +1,4 @@
-###
-# File for storing simple aliases for existing functions
-###
+## File containing simple function aliases that do not need to be tested.
 
 # apply function across rows
 row_apply <- purrr::partial(apply, MARGIN = 1)
@@ -15,24 +13,7 @@ collapse_with_comma <- purrr::partial(
     last = " and "
 )
 
-
-#' Get path to CellBench packaged data
-#'
-#' Search CellBench package for packaged data, leaving argument empty will list
-#' the available data.
-#'
-#' @param filename the name of the file to look for
-#'
-#' @return string containing the path to the packaged data
-#' @export
-#'
-#' @examples
-#' cellbench_file() # shows available files
-#' cellbench_file("10x_sce_sample.rds") # returns path to 10x sample data
-cellbench_file <- function(filename = NULL) {
-    if (is.null(filename)) {
-        dir(system.file("extdata", package = "CellBench"))
-    } else {
-        system.file("extdata", filename, package = "CellBench")
-    }
+is.error <- function(x) {
+    is(x, "error")
 }
+
