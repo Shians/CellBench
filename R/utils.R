@@ -326,8 +326,10 @@ infer_names_from_dots <- function(...) {
     make.names(output, unique = TRUE)
 }
 
+# convert rows of a data frame into list
+#' @importFrom magrittr set_names
 df_to_tasks <- function(df, names = rownames(df)) {
     stopifnot(is(df, "data.frame"))
     split(df, seq(nrow(df))) %>%
-        set_names(names)
+        magrittr::set_names(names)
 }

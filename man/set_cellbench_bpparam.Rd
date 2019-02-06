@@ -19,5 +19,5 @@ set_cellbench_threads(1) # CellBench runs on a single thread
 
 }
 \seealso{
-[see_cellbench_threads()] for more basic interface
+[set_cellbench_threads()] for more basic interface
 }
