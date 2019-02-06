@@ -61,7 +61,7 @@ fn_arg_seq <- function(func, ...) {
 
     rows_as_list <- function(df) {
         row_apply(df, function(x) { as.list(x) %>% setNames(nm = cnames) }) %>%
-            purrr::map(function(x) { append(list("...f" = func), x) })
+            purrr::map(function(x) { append(list(".f" = func), x) })
     }
 
     out <- purrr::map(
