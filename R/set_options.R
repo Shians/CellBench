@@ -7,7 +7,7 @@
 #'
 #' @param nthreads the number of threads used by CellBench
 #'
-#' @seealso [see_cellbench_bpparam()] for more advanced interface
+#' @seealso [set_cellbench_bpparam()] for more advanced interface
 #'
 #' @export
 #'
@@ -62,7 +62,7 @@ set_cellbench_threads <- function(nthreads = 1) {
 #'
 #' @param param the BiocParallel parameter object
 #'
-#' @seealso [see_cellbench_threads()] for more basic interface
+#' @seealso [set_cellbench_threads()] for more basic interface
 #'
 #' @importFrom BiocParallel bpnworkers
 #' @export
