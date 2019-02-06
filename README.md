@@ -77,6 +77,12 @@ datasets %>%
 
 The result table is essentially a regular `tibble` and works with all `tidyverse` packages.
 
+See
+
+```r vignette("Introduction", package = "CellBench")```
+
+for a more detailed introduction and example with biological data.
+
 # Features
 
 * High compatibility with dplyr and rest of tidyverse, fundamental data object can be used with dplyr verbs

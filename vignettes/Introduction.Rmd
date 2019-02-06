@@ -335,11 +335,11 @@ To use function return value caching in CellBench we first declare a folder to s
 
 **NOTE**: Caching a method that has pseudo-random behaviours means that the same result will be retrieved from the cache, negating the pseudo-random property of the method. This is generally undesirable.
 
+**CAUTION**: Be careful when using caching with multiple threads, if more than one instance of a function runs with the exact same arguments, then the instances will attempt to write to the cache simultaneously and corrupt it.
+
 **CAUTION**: Since only the function call signature and input value is considered for retrieving cached results, if the body of the underlying function is altered then CellBench will retrieve an outdated result.
 
-**CAUTION**: As each result is save to disk, be careful with caching functions that produce large output and may need to be run on many different inputs.
-
-**CAUTION**: Be careful when using caching with multiple threads, if more than one instance of a function runs with the exact same arguments, then the instances will attempt to write to the cache simultaneously and corrupt it.
+**CAUTION**: As each result is save to disk, be careful with caching functions that produce large output and need to be run on many different inputs.
 
 ```{r, eval = FALSE}
 set_cellbench_cache_path(".CellBenchCache")
