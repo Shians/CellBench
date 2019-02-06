@@ -14,3 +14,4 @@
 \description{
 task_error are objects that result from failed methods
 }
+\keyword{internal}

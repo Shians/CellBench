@@ -33,3 +33,4 @@ add_noise <- list(
 res <- apply_methods(datasets, add_noise)
 summary(res)
 }
+\keyword{internal}

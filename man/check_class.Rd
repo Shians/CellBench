@@ -34,3 +34,4 @@ is_one_of(1, c("character", "logical")) # FALSE
 is_all_of(1, c("numeric", "logical")) # FALSE
 is_all_of(tibble::tibble(), c("tbl", "data.frame")) # TRUE
 }
+\keyword{internal}

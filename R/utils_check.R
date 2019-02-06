@@ -12,9 +12,9 @@
 NULL
 
 #' @rdname check_class
+#' @keywords internal
 #'
 #' @importFrom methods is
-#' @export
 #'
 #' @examples
 #' is_one_of(1, c("numeric", "logical")) # TRUE
@@ -28,13 +28,13 @@ is_one_of <- function(x, classes) {
 }
 
 #' @rdname check_class
-#' @export
+#' @keywords internal
 is_any_of <- is_one_of
 
 #' @rdname check_class
+#' @keywords internal
 #'
 #' @importFrom methods is
-#' @export
 is_all_of <- function(x, classes) {
     stopifnot(is(classes, "character"))
     purrr::map_lgl(classes, function(class) is(x, class)) %>% all()
@@ -46,7 +46,8 @@ is_all_of <- function(x, classes) {
 #' @param x the vector to check
 #'
 #' @return TRUE if all values in the vector are unique
-#' @export
+#'
+#' @keywords internal
 #'
 #' @examples
 #' all_unique(c(1, 2, 3)) # TRUE

@@ -19,3 +19,4 @@ Check if all values in a vector are unique
 all_unique(c(1, 2, 3)) # TRUE
 all_unique(c(1, 2, 2)) # FALSE
 }
+\keyword{internal}

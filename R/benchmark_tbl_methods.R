@@ -6,6 +6,7 @@
 #' @return None
 #'
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #' # list of data

@@ -46,6 +46,7 @@ time_methods <- function(x, fn_list, name = NULL, suppress.messages = TRUE) {
 
 #' @rdname time_methods
 #' @export
+#' @keywords internal
 time_methods.list <- function(
     x,
     fn_list,
@@ -86,6 +87,7 @@ time_methods.list <- function(
 #' @importFrom rlang .data
 #' @importFrom BiocParallel SerialParam bplapply bptry
 #' @export
+#' @keywords internal
 time_methods.benchmark_timing_tbl <- function(
     x,
     fn_list,

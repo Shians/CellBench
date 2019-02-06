@@ -32,6 +32,7 @@ strip_timing <- function(x) {
 #' @rdname strip_timing
 #' @importFrom rlang .data
 #' @export
+#' @keywords internal
 strip_timing.benchmark_timing_tbl <- function(x) {
     x <- x %>%
         dplyr::mutate(result = purrr::map(.data$timed_result, function(x) x$result)) %>%
@@ -83,6 +84,7 @@ unpack_timing <- function(x) {
 #' @importFrom dplyr mutate select
 #' @importFrom purrr map map_dbl
 #' @export
+#' @keywords internal
 unpack_timing.benchmark_timing_tbl <- function(x) {
     x %>%
         dplyr::mutate(

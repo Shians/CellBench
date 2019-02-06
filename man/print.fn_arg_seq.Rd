@@ -18,3 +18,4 @@ Print method for fn_arg_seq output
 fn_seq <- fn_arg_seq(kmeans, centers = 1:3)
 fn_seq
 }
+\keyword{internal}

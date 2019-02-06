@@ -6,6 +6,7 @@
 #' @param ... not used
 #'
 #' @export
+#' @keywords internal
 print.task_error <- function(x, ...) {
     cat(
         glue::glue(
@@ -25,6 +26,7 @@ print.task_error <- function(x, ...) {
 #' @param ... addition arguments for print
 #'
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #' fn_seq <- fn_arg_seq(kmeans, centers = 1:3)
