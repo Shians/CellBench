@@ -58,7 +58,7 @@ clear_cellbench_cache <- function() {
     files <- file.path(cache_path, dir(cache_path))
 
     if (length(files) > 0) {
-        file.remove(files)
+        rem <- file.remove(files)
     }
 
     message(glue::glue("{sum(rem)} files removed from cache"))
