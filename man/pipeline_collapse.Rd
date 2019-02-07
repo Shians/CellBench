@@ -40,3 +40,6 @@ add_noise <- list(
 res <- apply_methods(datasets, add_noise)
 pipeline_collapse(res)
 }
+\seealso{
+\code{\link{as_pipeline_list}}
+}

@@ -4,12 +4,12 @@
 \name{CellBench-package}
 \alias{CellBench-package}
 \alias{CellBench}
-\title{A framework for benchmarking combinations of methods}
+\title{A framework for benchmarking combinations of methods in multi-stage pipelines}
 \description{
-A framework for benchmarking combinations of methods
+A framework for benchmarking combinations of methods in multi-stage pipelines
 }
 \seealso{
-The core function in this package: \code{\link{apply_methods}}
+The core function in this package is \code{\link{apply_methods}}, see \code{vignette("Introduction", package = "CellBench")} for basic usage
 }
 \author{
 Shian Su <\url{https://www.github.com/shians}>

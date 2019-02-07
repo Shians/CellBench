@@ -12,20 +12,29 @@ cache_method(f, cache = getOption("CellBench.cache"))
 \item{cache}{the cache information (from memoise package)}
 }
 \value{
-function object whose results are cached
+function whose results are cached and is called identically to f
 }
 \description{
 Take a function and return a cached version. The arguments and results of a
-cached method is saved in a file and if the cached function is called again
+cached method is saved to disk and if the cached function is called again
 with the same arguments then the results will be retrieved from the cache
-rather than be recomputed. \bold{(CAUTION)} Because cached functions called
+rather than be recomputed.
+}
+\details{
+\bold{(CAUTION)} Because cached functions called
 with the same argument will always return the same output, pseudo-random
 methods will not return varying results over repeated runs as one might
 expect.
+
+This function is a thin wrapper around \code{\link[memoise]{memoise}}
 }
 \examples{
+# sets cache path to a temporary directory
 set_cellbench_cache_path(file.path(tempdir(), ".CellBenchCache"))
 f <- function(x) { x + 1 }
 cached_f <- cache_method(f)
 
+}
+\seealso{
+\code{\link{set_cellbench_cache_path}}
 }

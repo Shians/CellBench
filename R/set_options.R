@@ -85,7 +85,7 @@ set_cellbench_bpparam <- function(param) {
 #'
 #' @export
 #'
-#' @seealso [cache_method()] for constructing cached methods.
+#' @seealso \code{\link{cache_method}} for constructing cached methods.
 #'
 #' @examples
 #' \dontrun{

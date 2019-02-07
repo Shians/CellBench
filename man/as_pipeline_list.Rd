@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{as_pipeline_list}
 \alias{as_pipeline_list}
-\title{convert to list of results with pipeline as name}
+\title{convert benchmark_tbl to list}
 \usage{
 as_pipeline_list(x)
 }
@@ -14,7 +14,7 @@ list containing the results with names set to data and pipeline steps
   separated by ..
 }
 \description{
-convert to list of results with pipeline as name
+convert a benchmark_tbl to a list where the name of the elements represent the pipeline steps separated by "..". This can be useful for using the apply family of functions.
 }
 \examples{
 # list of data
@@ -31,4 +31,7 @@ add_noise <- list(
 
 res <- apply_methods(datasets, add_noise)
 as_pipeline_list(res)
+}
+\seealso{
+\code{\link{pipeline_collapse}}
 }

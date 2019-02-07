@@ -75,6 +75,8 @@ fn_outer_prod <- function(fn_list1, fn_list2) {
 #' @importFrom rlang .data
 #' @export
 #'
+#' @seealso \code{\link{as_pipeline_list}}
+#'
 #' @examples
 #' # list of data
 #' datasets <- list(
@@ -141,7 +143,9 @@ factor_no_sort <- function(x) {
     factor(x, levels = unique(x))
 }
 
-#' convert to list of results with pipeline as name
+#' convert benchmark_tbl to list
+#'
+#' convert a benchmark_tbl to a list where the name of the elements represent the pipeline steps separated by "..". This can be useful for using the apply family of functions.
 #'
 #' @param x the benchmark_tbl object to convert
 #'
@@ -150,6 +154,8 @@ factor_no_sort <- function(x) {
 #'
 #' @return list containing the results with names set to data and pipeline steps
 #'   separated by ..
+#'
+#' @seealso \code{\link{pipeline_collapse}}
 #'
 #' @examples
 #' # list of data
@@ -171,7 +177,7 @@ as_pipeline_list <- function(x) {
 
     if (dplyr::last(colnames(x)) != "result") {
         # if benchmark_tbl has been manipulated by user to non-standard form
-        return(as.list.data.frame(x))
+        stop("final column should contain 'result'")
     }
 
     x <- pipeline_collapse(x, sep = "..")

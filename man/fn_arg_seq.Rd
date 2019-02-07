@@ -19,7 +19,10 @@ list of functions with the specified arguments pre-applied. Names of
 Generate a list of functions where specific arguments have been pre-applied
 from a sequences of arguments, i.e. a function f(x, n) may have the 'n'
 argument pre-applied with specific values to obtain functions f1(x, n = 1)
-and f2(x, n = 2) stored in a list. If multiple argument vectors are provided
+and f2(x, n = 2) stored in a list.
+}
+\details{
+If multiple argument vectors are provided
 then the combinations of arguments in the sequences will be generated.
 }
 \examples{

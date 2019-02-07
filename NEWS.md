@@ -1,3 +1,10 @@
+# CellBench 0.0.7
+
+## Modifications
+* purrr version number requirement set to (>= 0.3.0) because of argument name change in `partial()`
+* Documentation reorganised to clean up package documentation index.
+* Added landing page for `?CellBench`
+
 # CellBench 0.0.6
 
 ## New Features

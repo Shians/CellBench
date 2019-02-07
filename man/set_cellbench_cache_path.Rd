@@ -22,5 +22,5 @@ set_cellbench_cache_path(file.path(tempdir(), ".CellBenchCache"))
 
 }
 \seealso{
-[cache_method()] for constructing cached methods.
+\code{\link{cache_method}} for constructing cached methods.
 }

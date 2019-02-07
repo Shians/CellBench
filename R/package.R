@@ -1,8 +1,8 @@
-#' A framework for benchmarking combinations of methods
+#' A framework for benchmarking combinations of methods in multi-stage pipelines
 #'
 #' @docType package
 #' @name CellBench-package
 #' @aliases CellBench
 #' @author Shian Su <\url{https://www.github.com/shians}>
-#' @seealso The core function in this package: \code{\link{apply_methods}}
+#' @seealso The core function in this package is \code{\link{apply_methods}}, see \code{vignette("Introduction", package = "CellBench")} for basic usage
 NULL
