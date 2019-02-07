@@ -1,6 +1,6 @@
 Package: CellBench
 Type: Package
-Title: Construct Benchmarks for Analysis Methods
+Title: Construct Benchmarks for Single Cell Analysis Methods
 Version: 0.0.7
 Authors@R: c(
     person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")),
@@ -11,8 +11,13 @@ Authors@R: c(
     person("Peter", "Hickey", role = "ctb"),
     person("Stuart", "Lee", role = "ctb"))
 Maintainer: Shian Su <su.s@wehi.edu.au>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: This package contains infrastructure for benchmarking analysis 
+    methods and access to single cell mixture benchmarking data. It provides
+    a framework for organising analysis methods and testing combinations of
+    methods in a pipeline without explicitly laying out each combination. It
+    also provides utilities for sampling and filtering SingleCellExperiment
+    objects, constructing lists of functions with varying parameters, and
+    multithreaded evaluation of analysis methods.
 biocViews:
     Software,
     Infrastructure
