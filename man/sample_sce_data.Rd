@@ -13,7 +13,7 @@
   \item{HCC827_prop}{proportion of mRNA from HCC827 cell line}
 }}
 \usage{
-\code{data(sample_sce_data)}
+data(sample_sce_data)
 }
 \description{
 A dataset containing 200 genes and 50 cells randomly sampled from the CelSeq

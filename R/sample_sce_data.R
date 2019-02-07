@@ -5,7 +5,7 @@
 #' different human adenocarcinoma cell lines. Useful for quick prototyping of
 #' method wrappers.
 #'
-#' @usage \code{data(sample_sce_data)}
+#' @usage data(sample_sce_data)
 #'
 #' @format A SingleCellExperiment object with sample annotations in
 #'   \code{colData(sample_sce_data)}. The annotation contains various QC metrics
