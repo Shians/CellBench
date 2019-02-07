@@ -14,6 +14,7 @@ Maintainer: Shian Su <su.s@wehi.edu.au>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 biocViews:
+    Software,
     Infrastructure
 URL: https://github.com/shians/cellbench
 BugReports: https://github.com/Shians/CellBench/issues
