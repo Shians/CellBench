@@ -5,6 +5,8 @@
 #' @param x a task_error object
 #' @param ... not used
 #'
+#' @return None
+#'
 #' @export
 #' @keywords internal
 print.task_error <- function(x, ...) {
@@ -24,6 +26,8 @@ print.task_error <- function(x, ...) {
 #'
 #' @param x fn_arg_seq object
 #' @param ... addition arguments for print
+#'
+#' @return None
 #'
 #' @export
 #' @keywords internal

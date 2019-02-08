@@ -7,6 +7,8 @@
 #'
 #' @param nthreads the number of threads used by CellBench
 #'
+#' @return None
+#'
 #' @seealso [set_cellbench_bpparam()] for more advanced interface
 #'
 #' @export
@@ -64,6 +66,8 @@ set_cellbench_threads <- function(nthreads = 1) {
 #'
 #' @seealso [set_cellbench_threads()] for more basic interface
 #'
+#' @return None
+#'
 #' @importFrom BiocParallel bpnworkers
 #' @export
 #'
@@ -80,6 +84,8 @@ set_cellbench_bpparam <- function(param) {
 }
 
 #' Set CellBench cache path
+#'
+#' @return None
 #'
 #' @param path the path to where method caches should be stored
 #'

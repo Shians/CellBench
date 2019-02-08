@@ -11,6 +11,9 @@
 
 \item{...}{addition arguments for print}
 }
+\value{
+None
+}
 \description{
 Print method for fn_arg_seq output
 }

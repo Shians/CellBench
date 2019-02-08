@@ -9,6 +9,9 @@ set_cellbench_bpparam(param)
 \arguments{
 \item{param}{the BiocParallel parameter object}
 }
+\value{
+None
+}
 \description{
 This is a more advanced interface for changing CellBench's parallelism
 settings. Internally CellBench uses BiocParallel for parallism, consult
