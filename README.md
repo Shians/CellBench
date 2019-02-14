@@ -4,14 +4,14 @@
 [![Coverage status](https://codecov.io/gh/Shians/CellBench/branch/master/graph/badge.svg)](https://codecov.io/github/Shians/CellBench?branch=master)
 
 <img src="https://github.com/Shians/CellBench/raw/master/CellBench.png" width="150" />
- 
+
 R package for benchmarking single cell analysis methods. Currently under development. Functions and API are liable to change without warning.
 
 # Installation
 
 ```r
 if (!require(remotes)) install.packages("remotes")
-remotes::install_github("shians/CellBench")
+remotes::install_github("shians/CellBench", ref = "R-3.5")
 ```
 
 # Introduction
