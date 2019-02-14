@@ -27,7 +27,7 @@ License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 3.6),
+    R (>= 3.5),
     SingleCellExperiment,
     magrittr,
     methods,
