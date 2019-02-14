@@ -81,7 +81,9 @@ The result table is essentially a regular `tibble` and works with all `tidyverse
 
 See
 
-```r vignette("Introduction", package = "CellBench")```
+```r
+vignette("Introduction", package = "CellBench")
+```
 
 for a more detailed introduction and example with biological data.
 
