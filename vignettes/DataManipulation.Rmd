@@ -151,6 +151,7 @@ tbl
 tidyr::unnest(tbl)
 ```
 
+\newpage
 # Manipulating Functions
 
 ## Basics of Functional Programming
@@ -224,6 +225,30 @@ plus_two <- partial(plus, y = 2)
 
 plus_two(1)
 ```
+
+## Sequence of Partial Applications
+
+CellBench offers a function to help construct partially-applied functions with oen or more sequences of arguments.
+
+```{r}
+# define a function that multiplies 3 numbers together
+g <- function(x, y, z) {
+    x * y * z
+}
+
+g(1, 2, 3)
+```
+
+```{r}
+# create a list of functions with the second and third values partially applied
+# all combinations of y and z are generates, resulting in a list of 4 functions
+g_list <- fn_arg_seq(g, y = c(1, 2), z = c(3, 4))
+
+# apply each of the functions in the list to the value 1
+lapply(g_list, function(func) { func(x = 1) })
+```
+
+This can be very useful for testing out a range or grid of parameters with very little code repetition.
 
 ## Memoisation
 

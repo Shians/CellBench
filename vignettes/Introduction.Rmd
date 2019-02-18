@@ -106,7 +106,6 @@ for (i in 1:nrow(collapsed_res)) {
     title <- collapsed_res$pipeline[i]
     expr_mat <- collapsed_res$result[[i]] # note the use of [[]] due to list
     
-    #
     limma::plotMDS(
         expr_mat,
         main = title,
