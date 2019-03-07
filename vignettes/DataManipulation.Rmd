@@ -158,7 +158,7 @@ tidyr::unnest(tbl)
 
 The book Advanced R contains an excellent section on [Functional Programming](http://adv-r.had.co.nz/Functional-programming.html). The primary idea we want to make use of is that functions are objects, not too different from numbers or character strings. For example we can think of anonymous functions like raw literal values.
 
-```{r, eval = FALSE}
+```{r, result = 'hide'}
 # a numeric literal
 1
 
@@ -171,7 +171,7 @@ function(x) { print(x) }
 
 We can assign these to variables in the same way
 
-```{r, eval = FALSE}
+```{r, result = 'hide'}
 # assigning numeric literal
 x <- 1
 
@@ -184,7 +184,7 @@ f <- function(x) { print(x) }
 
 We can also reassign variables to other variables
 
-```{r, eval = FALSE}
+```{r, result = 'hide'}
 # assigning numeric literal
 x <- 1
 y <- x # y = 1
