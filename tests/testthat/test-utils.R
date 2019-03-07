@@ -15,25 +15,6 @@ test_that(
 })
 
 test_that(
-    "Function outer product works", {
-    fn_list1 <- list(
-        log = log,
-        exp = exp
-    )
-
-    fn_list2 <- list(
-        log = log,
-        exp = exp
-    )
-
-    expect_equal(
-        purrr::map_dbl(fn_outer_prod(fn_list1, fn_list2), function(f) f(1)),
-        c(log..log = -Inf, log..exp = 1, exp..log = 1, exp..exp = 15.15426),
-        tolerance = 1e-6
-    )
-})
-
-test_that(
     "Pipeline summarisation works", {
     methods1 <- list(
         mean = mean,
