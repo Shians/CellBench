@@ -139,7 +139,7 @@ time_methods.benchmark_timing_tbl <- function(
         tibble::add_column(timed_result = results)
 
     if (!"benchmark_timing_tbl" %in% class(output)) {
-        class(output) <- c("benchmark_timing_tbl", class(output))
+        output <- add_class(output, "benchmark_timing_tbl")
     }
 
     output

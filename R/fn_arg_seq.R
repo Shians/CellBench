@@ -82,7 +82,5 @@ fn_arg_seq <- function(func, ...) {
 
     names(out) <- call_sigs
 
-    class(out) <- append("fn_arg_seq", class(out))
-
     out
 }

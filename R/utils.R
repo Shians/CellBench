@@ -34,27 +34,7 @@ chain <- function(...) {
 
 # check if object is a list of functions
 is_fn_list <- function(x) {
-    is(x, "list") && all(purrr::map_lgl(x, is.function))
-}
-
-# create outer product by function composition
-fn_outer_prod <- function(fn_list1, fn_list2) {
-    stopifnot(is_fn_list(fn_list1))
-    stopifnot(is_fn_list(fn_list2))
-
-    fnames1 <- names(fn_list1)
-    fnames2 <- names(fn_list2)
-
-    output <- list()
-    for (fname1 in fnames1) {
-        for (fname2 in fnames2) {
-            fname <- paste(fname1, fname2, sep = "..")
-            output[[fname]] <- chain(fname1, fname2)
-        }
-    }
-
-    class(output) <- c("fn_list", class(output))
-    output
+    is(x, "list") && purrr::every(x, is.function)
 }
 
 #' Collapse benchmark_tbl into a two column summary
@@ -224,7 +204,7 @@ make_combinations <- function(...) {
         is.character(x) || is.data.frame(x)
     }
 
-    if (!all(purrr::map_lgl(input, is.character.or.df))) {
+    if (!purrr::every(input, is.character.or.df)) {
         stop("all arguments must be either data.frames or character vectors")
     }
 
@@ -257,7 +237,7 @@ all_same_class <- function(x) {
 # check that all elements of a list have length one
 all_length_one <- function(x) {
     stopifnot(is(x, "list"))
-    all(purrr::map_lgl(x, function(x) { length(x) == 1 }))
+    purrr::every(x, function(x) { length(x) == 1 })
 }
 
 # add class to the classes of an object
