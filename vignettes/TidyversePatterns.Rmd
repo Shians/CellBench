@@ -36,6 +36,7 @@ For quick concise references of tidyverse features and functions I recommend
 all of the cheatsheets available at 
 https://www.rstudio.com/resources/cheatsheets/.
 
+\newpage
 # Functional Programming with purrr
 
 ## Methods as Function Objects
@@ -223,6 +224,7 @@ centrality <- function(x, mode = c("mean", "median")) {
 map2(x, y, centrality)
 ```
 
+\newpage
 # Table Manipulation with dplyr
 
 ## Operations on the Benchmark tibble
@@ -267,18 +269,50 @@ res %>%
     mutate(data = paste0("data", data))
 ```
 
+\newpage
 # Plotting with ggplot2
 
 ## Basic Plotting
 
+Tibble results are easy to use with ggplot2. For a more extensive introduction to ggplot2 see [R for Data Science: Chapter 3](https://r4ds.had.co.nz/data-visualisation.html). Here we will plot results of our pipelines in a single plot, because the result column is a list-column, it needs to be unnested to produce a "flat" table, see `?tidyr::unnest` for more explanation on unnesting. For convenience, we also use `pipeline_collapse()` from CellBench to concatenate the method names at each stop to produce a single character string representing a pipeline.
+
 ```{r}
 library(tidyr)
 library(ggplot2)
+
+# I prefer my own theme for ggplot2, following theme code is optional
+theme_set(theme_bw() + theme(
+    plot.title = element_text(face = "plain", size = rel(20/12),
+                              hjust = 1/2, margin = margin(t = 10, b = 20)),
+    axis.text = element_text(size = rel(14/12)),
+    strip.text.x = element_text(size = rel(16/12)),
+    axis.title = element_text(size = rel(16/12))
+))
+
+scale_colour_discrete <- function(...) scale_colour_brewer(..., palette="Set1")
+scale_fill_discrete <- function(...) scale_fill_brewer(... , palette="Set1")
+```
+
+```{r}
+# pipeline collapse constructs a single string from the pipeline steps,
+# unnest expands the list-column of results, transforming the result 
+# into a flat table.
+collapsed_res <- pipeline_collapse(res) %>%
+    unnest()
+
+ggplot(collapsed_res, aes(x = pipeline, y = result)) +
+    geom_boxplot()
 ```
 
 
 ## Facetting
 
-```{r}
+We can "facet" the above plot by sectioning off related graphics. This general idea covered in the [facet section](https://r4ds.had.co.nz/data-visualisation.html#facets) of the previously linked text. This also demonstrates the benefits of having the data in a tibble format.
 
+```{r}
+# remember that we have to unnest the data before it's appropriate
+# for plotting
+ggplot(unnest(res), aes(x = add_noise, y = result)) +
+    geom_boxplot() +
+    facet_grid(~data)
 ```
