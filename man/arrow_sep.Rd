@@ -4,10 +4,13 @@
 \alias{arrow_sep}
 \title{Unicode arrow separators}
 \usage{
-arrow_sep(towards = c("right", "left", "up", "down"))
+arrow_sep(towards = c("right", "left"), unicode = FALSE)
 }
 \arguments{
 \item{towards}{the direction the unicode arrow points towards}
+
+\item{unicode}{whether unicode arrows should be used. Does not work inside
+plots within knitted PDF documents.}
 }
 \value{
 a string containing an unicode arrow surrounded by two spaces
@@ -17,5 +20,5 @@ Utility function for generating unicode arrow separators.
 }
 \examples{
 arrow_sep("left") # left arrrow
-arrow_sep("up") # up arrrow
+arrow_sep("right") # right arrrow
 }

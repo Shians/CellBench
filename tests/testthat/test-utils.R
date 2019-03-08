@@ -33,10 +33,10 @@ test_that(
     expect_identical(
         structure(
             list(
-                pipeline = c(
-                    "data1 → mean → add1", "data1 → mean → times2",
-                    "data1 → median → add1", "data1 → median → times2"
-                ),
+                pipeline = factor(c(
+                    "data1 » mean » add1", "data1 » mean » times2",
+                    "data1 » median » add1", "data1 » median » times2"
+                )),
                 result = c(3, 4, 3, 4)
             ),
             row.names = c(NA, -4L),
@@ -46,6 +46,24 @@ test_that(
             apply_methods(methods1) %>%
             apply_methods(methods2) %>%
             pipeline_collapse()
+    )
+
+    expect_identical(
+        structure(
+            list(
+                pipeline = factor(c(
+                    "mean » add1", "mean » times2",
+                    "median » add1", "median » times2"
+                )),
+                result = c(3, 4, 3, 4)
+            ),
+            row.names = c(NA, -4L),
+            class = c("tbl_df", "tbl", "data.frame")
+        ),
+        data %>%
+            apply_methods(methods1) %>%
+            apply_methods(methods2) %>%
+            pipeline_collapse(data.name = FALSE)
     )
 })
 
