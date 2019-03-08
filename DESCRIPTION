@@ -51,6 +51,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    limma
+    limma,
+    ggplot2
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
