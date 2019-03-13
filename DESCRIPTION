@@ -1,7 +1,7 @@
 Package: CellBench
 Type: Package
 Title: Construct Benchmarks for Single Cell Analysis Methods
-Version: 0.99.7
+Version: 0.99.8
 Authors@R: c(
     person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")),
     person("Saskia", "Freytag", role = "aut"),
@@ -23,7 +23,7 @@ biocViews:
     Infrastructure
 URL: https://github.com/shians/cellbench
 BugReports: https://github.com/Shians/CellBench/issues
-License: GPL-3 + file LICENSE.md
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
