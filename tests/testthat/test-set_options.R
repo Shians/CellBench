@@ -8,12 +8,6 @@ test_that(
     set_cellbench_threads(2)
     expect_identical(getOption("CellBench.threads"), 2)
 
-    set_cellbench_threads(0)
-    expect_identical(getOption("CellBench.threads"), 1)
-
-    set_cellbench_threads(-1)
-    expect_identical(getOption("CellBench.threads"), 1)
-
     expect_error(
         set_cellbench_threads("foo"),
         "is.numeric(nthreads) is not TRUE",
