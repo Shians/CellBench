@@ -269,6 +269,26 @@ res %>%
     mutate(data = paste0("data", data))
 ```
 
+## Calculating multiple columns of metrics
+
+We often want to plot two or more metrics against each other, for this purpose it is most useful to have each metric in its own column. The default CellBench model does not appear to support this, but it can be done quite easily using `spread()` from the `tidyr` package.
+
+```{r}
+metric <- list(
+    mean = mean,
+    median = median
+)
+
+# simply applying the metrics results in a single column
+res %>%
+    apply_methods(metric)
+
+# spread metrics across columns
+res %>%
+    apply_methods(metric) %>%
+    spread(metric, result)
+```
+
 \newpage
 # Plotting with ggplot2
 
