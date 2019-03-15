@@ -3,6 +3,9 @@
 #' @docType package
 #' @name CellBench-package
 #' @aliases CellBench
+#'
 #' @author Shian Su <\url{https://www.github.com/shians}>
 #' @seealso The core function in this package is \code{\link{apply_methods}}, see \code{vignette("Introduction", package = "CellBench")} for basic usage
+#' @importFrom methods is
+#' @importFrom magrittr %>%
 NULL
