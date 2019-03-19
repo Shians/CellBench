@@ -1,7 +1,7 @@
 Package: CellBench
 Type: Package
 Title: Construct Benchmarks for Single Cell Analysis Methods
-Version: 0.99.9
+Version: 0.99.10
 Authors@R: c(
     person("Shian", "Su", email = "su.s@wehi.edu.au", role = c("cre", "aut")),
     person("Saskia", "Freytag", role = "aut"),
@@ -10,7 +10,6 @@ Authors@R: c(
     person("Matthew", "Ritchie", role = "aut"),
     person("Peter", "Hickey", role = "ctb"),
     person("Stuart", "Lee", role = "ctb"))
-Maintainer: Shian Su <su.s@wehi.edu.au>
 Description: This package contains infrastructure for benchmarking analysis 
     methods and access to single cell mixture benchmarking data. It provides
     a framework for organising analysis methods and testing combinations of
