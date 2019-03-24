@@ -4,12 +4,17 @@
 \alias{fn_arg_seq}
 \title{Create a list of functions with arguments varying over a sequence}
 \usage{
-fn_arg_seq(func, ...)
+fn_arg_seq(func, ..., .strict = FALSE)
 }
 \arguments{
 \item{func}{function to generate list from}
 
 \item{...}{vectors of values to use as arguments}
+
+\item{.strict}{TRUE if argument names are checked, giving an error if
+specified argument does not appear in function signature. Note that
+functions with multiple methods generally have only f(x, ...) as their
+signature, so the check would fail even if the arguments are passed on.}
 }
 \value{
 list of functions with the specified arguments pre-applied. Names of
