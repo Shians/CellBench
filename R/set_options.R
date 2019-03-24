@@ -17,11 +17,10 @@
 #' set_cellbench_threads(1) # CellBench runs on a single thread
 #'
 set_cellbench_threads <- function(nthreads = 1) {
-    stopifnot(is.numeric(nthreads))
-
-    if (nthreads < 1) {
-        nthreads <- 1
-    }
+    stopifnot(
+        is.numeric(nthreads),
+        nthreads >= 1
+    )
 
     options("CellBench.threads" = nthreads)
 
@@ -31,10 +30,7 @@ set_cellbench_threads <- function(nthreads = 1) {
                 stop.on.error = FALSE
             )
         )
-        return()
-    }
-
-    if (nthreads > 1) {
+    } else {
         if (.Platform$OS.type == "windows") {
             options(
                 "CellBench.bpparam" = BiocParallel::SnowParam(
@@ -50,7 +46,6 @@ set_cellbench_threads <- function(nthreads = 1) {
                 )
             )
         }
-        return()
     }
 
     invisible() # guard against implicit returns

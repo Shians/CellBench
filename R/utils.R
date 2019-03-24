@@ -34,27 +34,7 @@ chain <- function(...) {
 
 # check if object is a list of functions
 is_fn_list <- function(x) {
-    is(x, "list") && all(purrr::map_lgl(x, is.function))
-}
-
-# create outer product by function composition
-fn_outer_prod <- function(fn_list1, fn_list2) {
-    stopifnot(is_fn_list(fn_list1))
-    stopifnot(is_fn_list(fn_list2))
-
-    fnames1 <- names(fn_list1)
-    fnames2 <- names(fn_list2)
-
-    output <- list()
-    for (fname1 in fnames1) {
-        for (fname2 in fnames2) {
-            fname <- paste(fname1, fname2, sep = "..")
-            output[[fname]] <- chain(fname1, fname2)
-        }
-    }
-
-    class(output) <- c("fn_list", class(output))
-    output
+    is(x, "list") && purrr::every(x, is.function)
 }
 
 #' Collapse benchmark_tbl into a two column summary
@@ -68,6 +48,8 @@ fn_outer_prod <- function(fn_list1, fn_list2) {
 #' @param sep the separator to use for concatenating the pipeline steps
 #' @param drop.steps if the data name and methods steps should be dropped from
 #'   the output. TRUE by default.
+#' @param data.name if the dataset name should be included in the pipeline
+#'   string. Useful if only a single dataset is used.
 #'
 #' @return benchmark_tbl with pipeline and result columns (and all other columns
 #'   if drop.steps is FALSE)
@@ -92,7 +74,12 @@ fn_outer_prod <- function(fn_list1, fn_list2) {
 #'
 #' res <- apply_methods(datasets, add_noise)
 #' pipeline_collapse(res)
-pipeline_collapse <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
+pipeline_collapse <- function(
+    x,
+    sep = arrow_sep("right"),
+    drop.steps = TRUE,
+    data.name = TRUE
+) {
     stopifnot(
         is(x, "benchmark_tbl"),
         dplyr::last(colnames(x)) == "result"
@@ -100,10 +87,20 @@ pipeline_collapse <- function(x, sep = arrow_sep("right"), drop.steps = TRUE) {
 
     results <- dplyr::pull(x, "result")
 
+    if (!data.name) {
+        data <- x$data
+        x <- dplyr::select(x, -"data")
+    }
+
     x <- dplyr::select(x, -"result") %>%
         tidyr::unite("pipeline", dplyr::everything(), sep = sep, remove = drop.steps) %>%
-        dplyr::select(-"pipeline", "pipeline") %>%
-        tibble::as.tibble()
+        dplyr::select(-"pipeline", "pipeline") %>% # put "pipeline" on last column
+        tibble::as_tibble() %>%
+        dplyr::mutate(pipeline = factor_no_sort(.data$pipeline))
+
+    if (!data.name) {
+        tibble::add_column(x, data = data, before = 1)
+    }
 
     tibble::add_column(x, result = results)
 }
@@ -119,21 +116,35 @@ unicode_arrow <- function(towards = c("right", "left", "up", "down")) {
     )
 }
 
+ascii_arrow <- function(towards = c("right", "left")) {
+    switch(
+        towards,
+        "left" = "\u00AB",
+        "right" = "\u00BB"
+    )
+}
+
 #' Unicode arrow separators
 #'
 #' Utility function for generating unicode arrow separators.
 #'
 #' @param towards the direction the unicode arrow points towards
+#' @param unicode whether unicode arrows should be used. Does not work inside
+#'   plots within knitted PDF documents.
 #'
 #' @return a string containing an unicode arrow surrounded by two spaces
 #' @export
 #'
 #' @examples
 #' arrow_sep("left") # left arrrow
-#' arrow_sep("up") # up arrrow
-arrow_sep <- function(towards = c("right", "left", "up", "down")) {
+#' arrow_sep("right") # right arrrow
+arrow_sep <- function(towards = c("right", "left"), unicode = FALSE) {
     towards <- match.arg(towards)
-    arrow <- unicode_arrow(towards)
+    if (!unicode) {
+        arrow <- ascii_arrow(towards)
+    } else {
+        arrow <- unicode_arrow(towards)
+    }
     glue::glue(" {arrow} ")
 }
 
@@ -224,7 +235,7 @@ make_combinations <- function(...) {
         is.character(x) || is.data.frame(x)
     }
 
-    if (!all(purrr::map_lgl(input, is.character.or.df))) {
+    if (!purrr::every(input, is.character.or.df)) {
         stop("all arguments must be either data.frames or character vectors")
     }
 
@@ -257,7 +268,7 @@ all_same_class <- function(x) {
 # check that all elements of a list have length one
 all_length_one <- function(x) {
     stopifnot(is(x, "list"))
-    all(purrr::map_lgl(x, function(x) { length(x) == 1 }))
+    purrr::every(x, function(x) { length(x) == 1 })
 }
 
 # add class to the classes of an object

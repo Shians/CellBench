@@ -16,7 +16,7 @@
 fn_list <- function(...) {
     out <- list(...)
 
-    if (!all(purrr::map_lgl(out, is.function))) {
+    if (!purrr::every(out, is.function)) {
         stop("all fn_list members must be functions")
     }
 
@@ -31,6 +31,5 @@ fn_list <- function(...) {
         stop(glue::glue("all fn_list members must have names, indices of members without name: {missing_names}"))
     }
 
-    class(out) <- c("fn_list", class(out))
     out
 }

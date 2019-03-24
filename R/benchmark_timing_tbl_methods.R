@@ -7,6 +7,9 @@
 #' @param x the benchmark_timing_tbl object
 #'
 #' @return benchmark_tbl
+#'
+#' @seealso [unpack_timing()]
+#'
 #' @export
 #'
 #' @examples
@@ -58,6 +61,9 @@ strip_timing.benchmark_timing_tbl <- function(x) {
 #' @param x the benchmark_timing_tbl object
 #'
 #' @return a tibble containing pipeline steps and timing information
+#'
+#' @seealso [strip_timing()]
+#'
 #' @export
 #'
 #' @examples

@@ -11,7 +11,6 @@ test_that(
         mean = mean,
         median = median
     )
-    class(expected) <- c("fn_list", "list")
 
     expect_identical(flist, expected)
 

@@ -10,6 +10,10 @@
 #'
 #' @param func function to generate list from
 #' @param ... vectors of values to use as arguments
+#' @param .strict TRUE if argument names are checked, giving an error if
+#'   specified argument does not appear in function signature. Note that
+#'   functions with multiple methods generally have only f(x, ...) as their
+#'   signature, so the check would fail even if the arguments are passed on.
 #'
 #' @return list of functions with the specified arguments pre-applied. Names of
 #'     the list indicate the values that have been pre-applied.
@@ -37,7 +41,7 @@
 #' g_list[[2]]() # x: 1 y: 4
 #' g_list[[3]]() # x: 2 y: 3
 #' g_list[[4]]() # x: 2 y: 4
-fn_arg_seq <- function(func, ...) {
+fn_arg_seq <- function(func, ..., .strict = FALSE) {
     stopifnot(is.function(func))
 
     # get actual fucntion name
@@ -50,7 +54,7 @@ fn_arg_seq <- function(func, ...) {
     invalid_args <- setdiff(names_args, names_f_args)
 
     # stop if there are invalid args
-    if (length(invalid_args) != 0) {
+    if (.strict && length(invalid_args) != 0) {
         invalid_args <- glue::glue("'{invalid_args}'") %>% collapse_with_comma()
         stop(glue::glue("args not used in {func_name}: {invalid_args}"))
     }
@@ -81,8 +85,6 @@ fn_arg_seq <- function(func, ...) {
     call_sigs <- glue::glue("{func_name}({arg_sigs})")
 
     names(out) <- call_sigs
-
-    class(out) <- append("fn_arg_seq", class(out))
 
     out
 }

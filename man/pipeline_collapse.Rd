@@ -4,7 +4,8 @@
 \alias{pipeline_collapse}
 \title{Collapse benchmark_tbl into a two column summary}
 \usage{
-pipeline_collapse(x, sep = arrow_sep("right"), drop.steps = TRUE)
+pipeline_collapse(x, sep = arrow_sep("right"), drop.steps = TRUE,
+  data.name = TRUE)
 }
 \arguments{
 \item{x}{the benchmark_tbl to collapse}
@@ -13,6 +14,9 @@ pipeline_collapse(x, sep = arrow_sep("right"), drop.steps = TRUE)
 
 \item{drop.steps}{if the data name and methods steps should be dropped from
 the output. TRUE by default.}
+
+\item{data.name}{if the dataset name should be included in the pipeline
+string. Useful if only a single dataset is used.}
 }
 \value{
 benchmark_tbl with pipeline and result columns (and all other columns

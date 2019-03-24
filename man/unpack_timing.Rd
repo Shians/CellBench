@@ -37,4 +37,7 @@ datasets \%>\%
 }
 
 }
+\seealso{
+[strip_timing()]
+}
 \keyword{internal}

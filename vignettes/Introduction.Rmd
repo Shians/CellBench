@@ -106,7 +106,6 @@ for (i in 1:nrow(collapsed_res)) {
     title <- collapsed_res$pipeline[i]
     expr_mat <- collapsed_res$result[[i]] # note the use of [[]] due to list
     
-    #
     limma::plotMDS(
         expr_mat,
         main = title,
@@ -114,13 +113,11 @@ for (i in 1:nrow(collapsed_res)) {
         col = cell_line_col
     )
 }
-```
 
-```{r}
 par(mfrow = c(1, 1)) # undo plotting grid for future plots
 ```
 
-So we can see that applying a simple library size normalisation and log2 transform can dramatically improve the visual inference in our PCA plots. 
+So we can see that applying a simple library size normalisation and log2 transform can dramatically improve the visual inference in our PCA plots.
 
 # Downloading benchmark data
 
@@ -191,7 +188,7 @@ lapply(x, sqrt)
 
 The benchmarking workflow starts with a list of datasets, even if you only have one dataset you will need to store it in a list for workflow to function. In our example the dataset was a sample of the 10X cell mixture dataset.
 
-```{r, eval = FALSE}
+```{r, result = 'hide'}
 sample_10x <- readRDS(cellbench_file("10x_sce_sample.rds"))
 
 # even with a single dataset we need to construct a list
@@ -220,7 +217,7 @@ Any kind of object can be stored in a list, so there is great flexibility in wha
 
 In R functions themselves are a type of object, so they too can be stored in lists, this is rarely used in common R but this allows very simple addition of methods.
 
-```{r, eval = FALSE}
+```{r, result = 'hide'}
 # counts is a function that can be run with counts(x) here it is named 
 # "none" as it denotes the lack of normalisation
 norm_method <- list(
@@ -238,7 +235,7 @@ transform <- list(
 
 The key thing to note is that the function must be callable and take a single argument. This may mean you need to write a wrapper function or use `purrr::partial()` to fill in some arguments. For example both `mean` and `sd` have `na.rm` arguments, because the element of the list must itself be a function, simply writing something like `mean(na.rm = TRUE)` will not work, as it is an incomplete function call. Instead we have two main options:
 
-```{r, eval = FALSE}
+```{r, result = 'hide'}
 # using anonymous function wrappers
 metric <- list(
     mean = function(x) { mean(x, na.rm = TRUE) },

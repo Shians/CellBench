@@ -32,6 +32,5 @@ data_list <- function(...) {
         stop(glue::glue("all data_list members must have names, indices of members without name: {missing_names}"))
     }
 
-    class(out) <- c("data_list", class(out))
     out
 }

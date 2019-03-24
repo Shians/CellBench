@@ -38,5 +38,5 @@ test_that(
         x + y
     }
 
-    expect_error(fn_arg_seq(fn, z = 1:3), "args not used in fn: 'z'", fixed = TRUE)
+    expect_error(fn_arg_seq(fn, z = 1:3, .strict = TRUE), "args not used in fn: 'z'", fixed = TRUE)
 })
