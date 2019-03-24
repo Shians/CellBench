@@ -52,4 +52,6 @@ time_methods(datasets, transform) \%>\%
     unpack_timing() # extract timings out of list
 
 }
-\keyword{internal}
+\seealso{
+[apply_methods()]
+}

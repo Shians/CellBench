@@ -17,6 +17,9 @@
 #'   applying the methods.
 #'
 #' @importFrom magrittr %>%
+#'
+#' @seealso [time_methods()]
+#'
 #' @export
 #'
 #' @examples
@@ -47,7 +50,6 @@ apply_methods <- function(x, fn_list, name = NULL, suppress.messages = TRUE) {
 #' @importFrom BiocParallel SnowParam MulticoreParam
 #' @importFrom tibble tibble
 #' @export
-#' @keywords internal
 apply_methods.list <- function(
     x,
     fn_list,
@@ -105,7 +107,6 @@ apply_methods.list <- function(
 #' @rdname apply_methods
 #' @importFrom rlang .data
 #' @export
-#' @keywords internal
 apply_methods.benchmark_tbl <- function(
     x,
     fn_list,
@@ -178,19 +179,16 @@ apply_methods.benchmark_tbl <- function(
 
 #' @rdname apply_methods
 #' @export
-#' @keywords internal
 apply_methods.tbl_df <- apply_methods.benchmark_tbl
 
 #' @rdname apply_methods
 #'
 #' @export
-#'
 apply_metrics <- apply_methods
 
 #' @rdname apply_methods
 #'
 #' @export
-#'
 begin_benchmark <- apply_methods
 
 # wrapper for task generation

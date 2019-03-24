@@ -37,4 +37,7 @@ datasets \%>\%
 }
 
 }
+\seealso{
+[unpack_timing()]
+}
 \keyword{internal}
