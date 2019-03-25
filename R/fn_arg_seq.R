@@ -85,6 +85,7 @@ fn_arg_seq <- function(func, ..., .strict = FALSE) {
     call_sigs <- glue::glue("{func_name}({arg_sigs})")
 
     names(out) <- call_sigs
+    out <- add_class(out, "fn_arg_seq")
 
     out
 }
