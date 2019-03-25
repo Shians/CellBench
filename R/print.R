@@ -36,7 +36,6 @@ print.task_error <- function(x, ...) {
 #' fn_seq <- fn_arg_seq(kmeans, centers = 1:3)
 #' fn_seq
 print.fn_arg_seq <- function(x, ...) {
-    print(glue::glue("List of {length(g_list)} partial functions"))
-    print(glue::glue(" $ {names(g_list)}"))
+    print(glue::glue("List of {length(x)} partial functions"))
+    print(glue::glue(" $ {names(x)}"))
 }
-
