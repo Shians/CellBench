@@ -63,5 +63,5 @@ res <- apply_methods(datasets, add_noise)
 
 }
 \seealso{
-[time_methods()]
+\code{\link{time_methods}}
 }

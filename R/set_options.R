@@ -9,7 +9,7 @@
 #'
 #' @return None
 #'
-#' @seealso [set_cellbench_bpparam()] for more advanced interface
+#' @seealso \code{\link{set_cellbench_bpparam}} for more advanced interface
 #'
 #' @export
 #'
@@ -59,7 +59,7 @@ set_cellbench_threads <- function(nthreads = 1) {
 #'
 #' @param param the BiocParallel parameter object
 #'
-#' @seealso [set_cellbench_threads()] for more basic interface
+#' @seealso \code{\link{set_cellbench_threads}} for more basic interface
 #'
 #' @return None
 #'

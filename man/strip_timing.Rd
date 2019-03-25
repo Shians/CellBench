@@ -38,6 +38,6 @@ datasets \%>\%
 
 }
 \seealso{
-[unpack_timing()]
+\code{\link{unpack_timing}}
 }
 \keyword{internal}
