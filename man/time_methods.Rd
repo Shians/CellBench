@@ -53,5 +53,5 @@ time_methods(datasets, transform) \%>\%
 
 }
 \seealso{
-[apply_methods()]
+\code{\link{apply_methods}}
 }

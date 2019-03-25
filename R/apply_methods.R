@@ -18,7 +18,7 @@
 #'
 #' @importFrom magrittr %>%
 #'
-#' @seealso [time_methods()]
+#' @seealso \code{\link{time_methods}}
 #'
 #' @export
 #'

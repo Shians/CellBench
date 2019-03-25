@@ -8,7 +8,7 @@
 #'
 #' @return benchmark_tbl
 #'
-#' @seealso [unpack_timing()]
+#' @seealso \code{\link{unpack_timing}}
 #'
 #' @export
 #'
@@ -62,7 +62,7 @@ strip_timing.benchmark_timing_tbl <- function(x) {
 #'
 #' @return a tibble containing pipeline steps and timing information
 #'
-#' @seealso [strip_timing()]
+#' @seealso \code{\link{strip_timing}}
 #'
 #' @export
 #'

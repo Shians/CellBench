@@ -38,6 +38,6 @@ datasets \%>\%
 
 }
 \seealso{
-[strip_timing()]
+\code{\link{strip_timing}}
 }
 \keyword{internal}

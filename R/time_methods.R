@@ -21,7 +21,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom BiocParallel SerialParam bplapply bptry
 #'
-#' @seealso [apply_methods()]
+#' @seealso \code{\link{apply_methods}}
 #'
 #' @export
 #'

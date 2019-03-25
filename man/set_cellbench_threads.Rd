@@ -23,5 +23,5 @@ set_cellbench_threads(1) # CellBench runs on a single thread
 
 }
 \seealso{
-[set_cellbench_bpparam()] for more advanced interface
+\code{\link{set_cellbench_bpparam}} for more advanced interface
 }
