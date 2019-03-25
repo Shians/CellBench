@@ -5,7 +5,7 @@
 
 <img src="https://github.com/Shians/CellBench/raw/master/CellBench.png" width="150" />
 
-R package for benchmarking single cell analysis methods, primarily inspired by the modelling structure used in [DSC](https://github.com/stephenslab/dsc). Currently under development. Functions and API are liable to change without warning.
+R package for benchmarking single cell analysis methods, primarily inspired by the modelling structure used in [DSC](https://github.com/stephenslab/dsc).
 
 # Installation
 
