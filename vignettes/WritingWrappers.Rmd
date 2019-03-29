@@ -107,16 +107,11 @@ drimpute_wrapper <- function(expr, ks = 5:15, method = c("mean", "med")) {
 }
 ```
 
-Then we can alter these wrappers on-the-fly using `pryr::partial()`
+Then we can alter these wrappers on-the-fly using `purrr::partial()`
 
 ```{r}
 imputation_method <- fn_list(
-    dr_impute_mean = pryr::partial(drimpute_wrapper, method = "mean"),
-    dr_impute_median = pryr::partial(drimpute_wrapper, method = "med")
+    dr_impute_mean = purrr::partial(drimpute_wrapper, method = "mean"),
+    dr_impute_median = purrr::partial(drimpute_wrapper, method = "med")
 )
 ```
-
-## Using Lists to Pass Arguments
-
-Coming soon...
-
