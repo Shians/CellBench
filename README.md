@@ -11,7 +11,7 @@ R package for benchmarking single cell analysis methods, primarily inspired by t
 
 ```r
 if (!require(remotes)) install.packages("remotes")
-remotes::install_github("shians/CellBench", ref = "R-3.5")
+remotes::install_github("shians/CellBench", ref = "R-3.5", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 # Introduction
