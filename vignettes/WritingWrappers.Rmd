@@ -1,0 +1,122 @@
+---
+title: "Writing Wrappers"
+author: "Shian Su"
+date: "`r Sys.Date()`"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Writing Wrappers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+library(CellBench)
+library(purrr)
+```
+
+# Introduction
+
+This vignette will introduce the reason for creating method wrappers and
+conventions to follow. Method wrappers are a way to subtlely alter the behaviour
+of functions from other libraries. CellBench requires that all methods within a
+step accept the same type of input and produce the same type of output, this is
+often not the case for functions of different libraries which perform the same
+task, therefore it is necessary to write code that "wraps" these methods to
+conform to our requirements.
+
+Examples of wrappers can be found at the following Github repositories
+
+* [NormCBM](https://github.com/Shians/NormCBM)
+
+# Wrapper Guidelines
+
+There are some requirements for wrappers used in CellBench:
+
+* All method wrappers must be able to run with a single argument. All other
+arguments need to be optional with sensible defaults.
+* All methods of the same pipeline step must accept objects of the same type and
+produce objects of the same type. They should at the very least be the same
+`class()`, also be careful of methods that return raw counts compared to
+normalised counts.
+
+To ensure flexibility and compatibility of wrappers, the following conventions are recommended:
+
+* Wrappers be able to take either SingleCellExperiment objects OR expression matrices.
+* Wrappers should do the minimal amount of work possible. Ideally it does a little bit of data manipulation, runs a meaningful function and post-processes the results slightly. Wrappers should not perform multiple steps of a pipeline.
+
+# Practical Examples
+
+## Simple Wrapper
+
+Wrappers should only require a single argument, additional arguments should be set to sensible defaults, if more arguments non-defaultable are absolutely necessary then wrappers should take a list as its first argument.
+
+```{r}
+# generic skeleton for a wrapper
+wrapper <- function(sce, ...) {
+    stopifnot(is(sce, "SingleCellExperiment"))
+    
+    res <- method_function(sce, ...)
+    
+    return(res)
+}
+```
+
+We can write a simple wrapper for `DrImpute()`:
+
+```{r}
+# one possible wrapper implmentation
+drimpute_wrapper <- function(expr, ...) {
+    # wrapper only accepts SingleCellExperiment or matrix type objects
+    stopifnot(
+        is(expr, "SingleCellExperiment") ||
+        is(expr, "matrix")
+    )
+
+    if (is(expr, "SingleCellExperiment")) {
+        expr <- SingleCellExperiment::normcounts(expr)
+    }
+
+    expr_processed <- DrImpute::preprocessSC(expr)
+    count_mat <- DrImpute::DrImpute(expr_processed, ...)
+
+    return(count_mat)
+}
+```
+
+Any argument passed into `...` will be passed onto `DrImpute()`. Sometimes it helps to explicitly name the arguments we may want to change, or limit what we allow to be changed in order to guarantee better consistency.
+
+```{r}
+# another possible implementation
+# DrImpute's default ks is 10:15, we can use 5:15 for robustness
+drimpute_wrapper <- function(expr, ks = 5:15, method = c("mean", "med")) {
+    stopifnot(
+        is(expr, "SingleCellExperiment") ||
+        is(expr, "matrix")
+    )
+
+    if (is(expr, "SingleCellExperiment")) {
+        expr <- SingleCellExperiment::normcounts(expr)
+    }
+
+    expr_processed <- DrImpute::preprocessSC(expr)
+    
+    method <- match.arg(method)
+    count_mat <- DrImpute::DrImpute(expr_processed, ks = ks, method = method)
+
+    return(count_mat)
+}
+```
+
+Then we can alter these wrappers on-the-fly using `pryr::partial()`
+
+```{r}
+imputation_method <- fn_list(
+    dr_impute_mean = pryr::partial(drimpute_wrapper, method = "mean"),
+    dr_impute_median = pryr::partial(drimpute_wrapper, method = "med")
+)
+```
+
+## Using Lists to Pass Arguments
+
+Coming soon...
+

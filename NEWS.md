@@ -1,3 +1,14 @@
+# CellBench 0.99.10
+* Accepted into Bioconductor
+
+## New Features
+* Added new vignettes for Tidyverse Patters and Method Wrappers
+
+## Modifications
+* `fn_arg_seq()` now has a `.strict` argument to check if arguments supplied are actually used in the function. Default is `FALSE`, previously this check is always done, but it failed for functions that use methods dispatch.
+* `pipeline_collapse()` now has a `data.name` argument for if the name of the dataset should be kept in the pipeline string. Useful if only one dataset is used.
+* `arrow_sep()` now uses ascii glyphs (only left and right available) instead of unicode. Unicode arrows fail when ggplots in rmarkdown is compiled into PDF, a common enough use-case for this to be concerning.
+
 # CellBench 0.0.7
 
 ## Modifications
