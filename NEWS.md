@@ -1,8 +1,13 @@
+# CellBench 1.1.1
+
+## New Features
+* Added any_task_errors() function to check if any tasks failed in benchmark tibble
+
 # CellBench 0.99.10
 * Accepted into Bioconductor
 
 ## New Features
-* Added new vignettes for Tidyverse Patters and Method Wrappers
+* Added new vignettes for Tidyverse Patterns and Method Wrappers
 
 ## Modifications
 * `fn_arg_seq()` now has a `.strict` argument to check if arguments supplied are actually used in the function. Default is `FALSE`, previously this check is always done, but it failed for functions that use methods dispatch.
