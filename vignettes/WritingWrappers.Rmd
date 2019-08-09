@@ -27,6 +27,8 @@ conform to our requirements.
 Examples of wrappers can be found at the following Github repositories
 
 * [NormCBM](https://github.com/Shians/NormCBM)
+* [ImputeCBM](https://github.com/Shians/ImputeCBM)
+* [ClusterCBM](https://github.com/Shians/ClusterCBM)
 
 # Wrapper Guidelines
 
@@ -41,7 +43,7 @@ normalised counts.
 
 To ensure flexibility and compatibility of wrappers, the following conventions are recommended:
 
-* Wrappers be able to take either SingleCellExperiment objects OR expression matrices.
+* Wrappers take SingleCellExperiment objects.
 * Wrappers should do the minimal amount of work possible. Ideally it does a little bit of data manipulation, runs a meaningful function and post-processes the results slightly. Wrappers should not perform multiple steps of a pipeline.
 
 # Practical Examples
@@ -65,21 +67,15 @@ We can write a simple wrapper for `DrImpute()`:
 
 ```{r}
 # one possible wrapper implmentation
-drimpute_wrapper <- function(expr, ...) {
+drimpute_wrapper <- function(sce, ...) {
     # wrapper only accepts SingleCellExperiment or matrix type objects
-    stopifnot(
-        is(expr, "SingleCellExperiment") ||
-        is(expr, "matrix")
-    )
+    stopifnot(is(sce, "SingleCellExperiment"))
 
-    if (is(expr, "SingleCellExperiment")) {
-        expr <- SingleCellExperiment::normcounts(expr)
-    }
-
+    expr <- SingleCellExperiment::normcounts(sce)
     expr_processed <- DrImpute::preprocessSC(expr)
-    count_mat <- DrImpute::DrImpute(expr_processed, ...)
+    logcounts(sce) <- DrImpute::DrImpute(expr_processed, ...)
 
-    return(count_mat)
+    return(sce)
 }
 ```
 
@@ -88,22 +84,16 @@ Any argument passed into `...` will be passed onto `DrImpute()`. Sometimes it he
 ```{r}
 # another possible implementation
 # DrImpute's default ks is 10:15, we can use 5:15 for robustness
-drimpute_wrapper <- function(expr, ks = 5:15, method = c("mean", "med")) {
-    stopifnot(
-        is(expr, "SingleCellExperiment") ||
-        is(expr, "matrix")
-    )
+drimpute_wrapper <- function(sce, ks = 5:15, method = c("mean", "med")) {
+    stopifnot(is(sce, "SingleCellExperiment"))
 
-    if (is(expr, "SingleCellExperiment")) {
-        expr <- SingleCellExperiment::normcounts(expr)
-    }
+    expr <- SingleCellExperiment::normcounts(sce)
 
     expr_processed <- DrImpute::preprocessSC(expr)
-    
     method <- match.arg(method)
-    count_mat <- DrImpute::DrImpute(expr_processed, ks = ks, method = method)
+    logcounts(sce) <- DrImpute::DrImpute(expr_processed, ks = ks, method = method)
 
-    return(count_mat)
+    return(sce)
 }
 ```
 
@@ -115,3 +105,7 @@ imputation_method <- fn_list(
     dr_impute_median = purrr::partial(drimpute_wrapper, method = "med")
 )
 ```
+
+# Final remarks
+
+Wrappers for methods should take `SingleCellExperiment` and return `SingleCellExperiments` with results stored in the the appropriate slots of `assays`, `colData` or `rowData`. If the computational results don't fit nicely into these slots the they should be placed in an appropriate property in `metadata`.
