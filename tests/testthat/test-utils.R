@@ -113,7 +113,7 @@ test_that(
 })
 
 test_that(
-    "make_combiations works properly", {
+    "make_combinations works properly", {
     x <- c("b", "a")
     y <- c("y", "z")
     z <- c("j", "i")
