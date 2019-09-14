@@ -31,6 +31,8 @@ CellBench is a package to assist with creating benchmarks for single cell analys
 
 The aim of this package is to make it simpler for developers to construct combinatorial designs and provide a flat data structure to store the organised outputs of analysis methods. We provide some fully constructed benchmarking pipelines for a set of single-cell benchmark datasets, and we hope that the framework will allow users to easily construct benchmarks in an organised and expressive manner.
 
+For more realistic examples, run `cellbench_case_study()` to see a case study using CellBench.
+
 # Quick start
 
 There are 3 fundamental components to the benchmarks in this package, `list`s of data, `list`s of functions and a `tibble` with a `list-column` that we will call a `benchmark_tbl`. For simplicity we use randomly generated data and simple functions, but hopefully it's clear how the idea extends into more complex functions and benchmarks.

@@ -2,6 +2,7 @@
 
 ## Modifications
 * Updated the WritingWrappers vignette.
+* Added a case study precompiled vignette.
 
 # CellBench 1.1.1
 
