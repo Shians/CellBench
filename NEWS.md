@@ -1,5 +1,8 @@
 # CellBench 1.1.2
 
+## Bug Fixes
+* Updated make_combinations to work with tidyr 1.0.0
+
 ## Modifications
 * Updated the WritingWrappers vignette.
 * Added a case study precompiled vignette.

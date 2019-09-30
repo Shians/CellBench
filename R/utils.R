@@ -231,6 +231,9 @@ make_combinations <- function(...) {
     input <- list(...) %>%
         magrittr::set_names(input_names)
 
+    # unnaming data.frame list elements required for tidyr >= 1.0.0
+    names(input)[purrr::map_lgl(input, is.data.frame)] <- ""
+
     is.character.or.df <- function(x) {
         is.character(x) || is.data.frame(x)
     }
