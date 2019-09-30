@@ -7,5 +7,5 @@
 #' cellbench_case_study()
 #' }
 cellbench_case_study <- function() {
-    browseURL(system.file("doc", "CellBenchCaseStudy.html", package = "CellBench"))
+    browseURL(system.file("case-study", "CellBenchCaseStudy.html", package = "CellBench"))
 }
