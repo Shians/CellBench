@@ -22,7 +22,6 @@ get_data <- function(url, filename) {
 
 #' @describeIn load_all_data Load single cell data
 #' @export
-#' @keywords internal
 load_sc_data <- function() {
     data_path <- get_data(
         "https://github.com/Shians/scBenchData/raw/master/single_cell_data.RData",
@@ -47,7 +46,6 @@ load_sc_data <- function() {
 
 #' @describeIn load_all_data Load cell mixture data
 #' @export
-#' @keywords internal
 load_cell_mix_data <- function() {
     data_path <- get_data(
         "https://github.com/Shians/scBenchData/raw/master/mix_9cell_data.RData",
@@ -76,7 +74,6 @@ load_cell_mix_data <- function() {
 
 #' @describeIn load_all_data Load mrna mixture data
 #' @export
-#' @keywords internal
 load_mrna_mix_data <- function() {
     data_path <- get_data(
         "https://github.com/Shians/scBenchData/raw/master/mrna_mix_data.RData",

@@ -1,3 +1,10 @@
+# CellBench 1.1.3
+
+## Bug Fixes
+* Data loading functions now appear in package index and documentation
+
+## 
+
 # CellBench 1.1.2
 
 ## Bug Fixes

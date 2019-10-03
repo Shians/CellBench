@@ -35,4 +35,3 @@ Load in all CellBench data described at <https://github.com/LuyiTian/CellBench_d
 cellbench_file <- load_all_data()
 }
 }
-\keyword{internal}
