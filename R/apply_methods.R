@@ -17,6 +17,7 @@
 #'   applying the methods.
 #'
 #' @importFrom magrittr %>%
+#' @importFrom tidyselect all_of
 #'
 #' @seealso \code{\link{time_methods}}
 #'
@@ -118,10 +119,16 @@ apply_methods.benchmark_tbl <- function(
     method_names <- names(fn_list)
 
     if (missing("name")) {
+        # get name from variable name
         name <- deparse(substitute(fn_list))
     }
 
     multithread_param <- getOption("CellBench.bpparam")
+
+    # sort columns from left to right, for when users input unsorted data
+    # otherwise order will not match tidyr::crossing
+    methods_columns <- names(x)[-ncol(x)]
+    x <- dplyr::arrange_at(x, dplyr::vars(tidyselect::all_of(methods_columns)))
 
     tasks <- list()
     for (data in x$result) {

@@ -1,3 +1,8 @@
+# CellBench 1.3.2
+
+## Bug Fixes
+* apply_methods and time_methods now correctly produces results for custom data.frames whose columns are not sorted from left to right
+
 # CellBench 1.1.3
 
 ## Bug Fixes
