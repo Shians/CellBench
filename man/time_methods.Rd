@@ -8,11 +8,9 @@
 \usage{
 time_methods(x, fn_list, name = NULL, suppress.messages = TRUE)
 
-\method{time_methods}{list}(x, fn_list, name = NULL,
-  suppress.messages = TRUE)
+\method{time_methods}{list}(x, fn_list, name = NULL, suppress.messages = TRUE)
 
-\method{time_methods}{benchmark_timing_tbl}(x, fn_list, name = NULL,
-  suppress.messages = TRUE)
+\method{time_methods}{benchmark_timing_tbl}(x, fn_list, name = NULL, suppress.messages = TRUE)
 }
 \arguments{
 \item{x}{the list of data or benchmark timing tibble to apply methods to}

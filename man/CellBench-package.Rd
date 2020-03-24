@@ -6,7 +6,10 @@
 \alias{CellBench}
 \title{A framework for benchmarking combinations of methods in multi-stage pipelines}
 \description{
-A framework for benchmarking combinations of methods in multi-stage pipelines
+This package contains a framework for benchmarking combinations of methods in
+a multi-stage pipeline. It is mainly based around the \code{apply_methods}
+function, which takes lists of functions to be applied in stages of a
+pipeline.
 }
 \seealso{
 The core function in this package is \code{\link{apply_methods}},

@@ -4,14 +4,16 @@
 \name{sample_sce_data}
 \alias{sample_sce_data}
 \title{This is data for testing functions in CellBench.}
-\format{A SingleCellExperiment object with sample annotations in
+\format{
+A SingleCellExperiment object with sample annotations in
   \code{colData(sample_sce_data)}. The annotation contains various QC metrics
   as well as the cell line mixture proportions
 \describe{
   \item{H2228_prop}{proportion of mRNA from H2228 cell line}
   \item{H1975_prop}{proportion of mRNA from H1975 cell line}
   \item{HCC827_prop}{proportion of mRNA from HCC827 cell line}
-}}
+}
+}
 \usage{
 data(sample_sce_data)
 }

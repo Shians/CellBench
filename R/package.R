@@ -1,5 +1,10 @@
 #' A framework for benchmarking combinations of methods in multi-stage pipelines
 #'
+#' This package contains a framework for benchmarking combinations of methods in
+#' a multi-stage pipeline. It is mainly based around the \code{apply_methods}
+#' function, which takes lists of functions to be applied in stages of a
+#' pipeline.
+#'
 #' @docType package
 #' @name CellBench-package
 #' @aliases CellBench

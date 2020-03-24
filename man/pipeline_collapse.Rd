@@ -4,8 +4,12 @@
 \alias{pipeline_collapse}
 \title{Collapse benchmark_tbl into a two column summary}
 \usage{
-pipeline_collapse(x, sep = arrow_sep("right"), drop.steps = TRUE,
-  data.name = TRUE)
+pipeline_collapse(
+  x,
+  sep = arrow_sep("right"),
+  drop.steps = TRUE,
+  data.name = TRUE
+)
 }
 \arguments{
 \item{x}{the benchmark_tbl to collapse}
