@@ -118,8 +118,12 @@ test_that(
     y <- c("y", "z")
     z <- c("j", "i")
 
+    # explicitly set stringsAsFactors as default changed from TRUE to FALSE in
+    # R 4.0.0
+    xy_df <- data.frame(x, y, stringsAsFactors = TRUE)
+
     expect_equal(
-        make_combinations(data.frame(x, y), z),
+        make_combinations(xy_df, z),
         tibble::tibble(
             x = factor(c("b", "b", "a", "a")),
             y = factor(c("y", "y", "z", "z")),
@@ -128,7 +132,7 @@ test_that(
     )
 
     expect_equal(
-        make_combinations(horse = data.frame(x, y), z),
+        make_combinations(horse = xy_df, z),
         tibble::tibble(
             x = factor(c("b", "b", "a", "a")),
             y = factor(c("y", "y", "z", "z")),
@@ -137,7 +141,7 @@ test_that(
     )
 
     expect_equal(
-        make_combinations(data.frame(x, y), shoe = z),
+        make_combinations(xy_df, shoe = z),
         tibble::tibble(
             x = factor(c("b", "b", "a", "a")),
             y = factor(c("y", "y", "z", "z")),
@@ -146,7 +150,7 @@ test_that(
     )
 
     expect_equal(
-        make_combinations(horse = data.frame(x, y), shoe = z),
+        make_combinations(horse = xy_df, shoe = z),
         tibble::tibble(
             x = factor(c("b", "b", "a", "a")),
             y = factor(c("y", "y", "z", "z")),
