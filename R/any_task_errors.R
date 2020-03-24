@@ -13,8 +13,6 @@ any_task_errors <- function(x, verbose) {
 
 #' @describeIn any_task_errors
 #'
-#' @inherit any_task_errors
-#'
 #' @export
 any_task_errors.benchmark_tbl <- function(x, verbose = FALSE) {
     any_errors <- FALSE
