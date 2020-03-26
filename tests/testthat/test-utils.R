@@ -157,6 +157,25 @@ test_that(
             shoe = factor_no_sort(c("j", "i", "j", "i"))
         )
     )
+
+    # check make_combination handles unsorted input
+    xy_comb_unsrt <- make_combinations(x, y) %>%
+        select(y, x)
+
+    expect_equal(
+        make_combinations(xy_comb_unsrt, z),
+        tibble::tibble(
+            y = factor(
+                c("y", "y", "y", "y", "z", "z", "z", "z"),
+                levels = c("y", "z")),
+            x = factor(
+                c("b", "b", "a", "a", "b", "b", "a", "a"),
+                levels = c("b", "a")),
+            z = factor(
+                c("j", "i", "j", "i", "j", "i", "j", "i"),
+                levels = c("j", "i"))
+        )
+    )
 })
 
 test_that(
