@@ -114,19 +114,19 @@ test_that(
 
 test_that(
     "make_combinations works properly", {
-    x <- c("b", "a")
-    y <- c("y", "z")
-    z <- c("j", "i")
+    x <- factor_no_sort(c("b", "a"))
+    y <- factor_no_sort(c("y", "z"))
+    z <- factor_no_sort(c("j", "i"))
 
     # explicitly set stringsAsFactors as default changed from TRUE to FALSE in
     # R 4.0.0
-    xy_df <- data.frame(x, y, stringsAsFactors = TRUE)
+    xy_df <- data.frame(x, y)
 
     expect_equal(
         make_combinations(xy_df, z),
         tibble::tibble(
-            x = factor(c("b", "b", "a", "a")),
-            y = factor(c("y", "y", "z", "z")),
+            x = factor_no_sort(c("b", "b", "a", "a")),
+            y = factor_no_sort(c("y", "y", "z", "z")),
             z = factor_no_sort(c("j", "i", "j", "i"))
         )
     )
@@ -134,8 +134,8 @@ test_that(
     expect_equal(
         make_combinations(horse = xy_df, z),
         tibble::tibble(
-            x = factor(c("b", "b", "a", "a")),
-            y = factor(c("y", "y", "z", "z")),
+            x = factor_no_sort(c("b", "b", "a", "a")),
+            y = factor_no_sort(c("y", "y", "z", "z")),
             z = factor_no_sort(c("j", "i", "j", "i"))
         )
     )
@@ -143,8 +143,8 @@ test_that(
     expect_equal(
         make_combinations(xy_df, shoe = z),
         tibble::tibble(
-            x = factor(c("b", "b", "a", "a")),
-            y = factor(c("y", "y", "z", "z")),
+            x = factor_no_sort(c("b", "b", "a", "a")),
+            y = factor_no_sort(c("y", "y", "z", "z")),
             shoe = factor_no_sort(c("j", "i", "j", "i"))
         )
     )
@@ -152,8 +152,8 @@ test_that(
     expect_equal(
         make_combinations(horse = xy_df, shoe = z),
         tibble::tibble(
-            x = factor(c("b", "b", "a", "a")),
-            y = factor(c("y", "y", "z", "z")),
+            x = factor_no_sort(c("b", "b", "a", "a")),
+            y = factor_no_sort(c("y", "y", "z", "z")),
             shoe = factor_no_sort(c("j", "i", "j", "i"))
         )
     )

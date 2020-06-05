@@ -234,12 +234,12 @@ make_combinations <- function(...) {
     # unnaming data.frame list elements required for tidyr >= 1.0.0
     names(input)[purrr::map_lgl(input, is.data.frame)] <- ""
 
-    is.character.or.df <- function(x) {
-        is.character(x) || is.data.frame(x)
+    is.valid.input <- function(x) {
+        is.character(x) || is.data.frame(x) || is.factor(x)
     }
 
-    if (!purrr::every(input, is.character.or.df)) {
-        stop("all arguments must be either data.frames or character vectors")
+    if (!purrr::every(input, is.valid.input)) {
+        stop("all arguments must be either data.frames, character or factor vectors")
     }
 
     input <- purrr::map(
