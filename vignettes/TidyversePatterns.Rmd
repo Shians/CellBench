@@ -2,7 +2,7 @@
 title: "Tidyverse Patterns"
 author: "Shian Su"
 date: "`r Sys.Date()`"
-output: BiocStyle::pdf_document
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Tidyverse Patterns}
   %\VignetteEngine{knitr::rmarkdown}

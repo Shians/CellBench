@@ -2,7 +2,7 @@
 title: "Benchmark Data Manipulation"
 author: "Shian Su"
 date: "`r Sys.Date()`"
-output: BiocStyle::pdf_document
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Data Manipulation}
   %\VignetteEngine{knitr::rmarkdown}
