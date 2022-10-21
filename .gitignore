@@ -1,12 +1,11 @@
 Meta
 debug
-
+CellBench.BiocCheck
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 .CellBenchCache
 ..Rcheck
-
 *.RData
 *.Rproj
