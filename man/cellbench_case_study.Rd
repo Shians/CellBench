@@ -6,6 +6,9 @@
 \usage{
 cellbench_case_study()
 }
+\value{
+opens a vignette containing a case study
+}
 \description{
 Open vignetted containing a case study using CellBench
 }
@@ -13,4 +16,5 @@ Open vignetted containing a case study using CellBench
 \dontrun{
 cellbench_case_study()
 }
+
 }

@@ -22,6 +22,6 @@ Check the results column of a benchmark tibble for any task_error objects.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{benchmark_tbl}: 
-}}
+\item \code{any_task_errors(benchmark_tbl)}: 
 
+}}

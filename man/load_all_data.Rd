@@ -23,13 +23,13 @@ Load in all CellBench data described at <https://github.com/LuyiTian/CellBench_d
 }
 \section{Functions}{
 \itemize{
-\item \code{load_sc_data}: Load single cell data
+\item \code{load_sc_data()}: Load single cell data
 
-\item \code{load_cell_mix_data}: Load cell mixture data
+\item \code{load_cell_mix_data()}: Load cell mixture data
 
-\item \code{load_mrna_mix_data}: Load mrna mixture data
+\item \code{load_mrna_mix_data()}: Load mrna mixture data
+
 }}
-
 \examples{
 \dontrun{
 cellbench_file <- load_all_data()
