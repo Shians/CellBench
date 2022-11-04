@@ -73,8 +73,8 @@ is_fn_list <- function(x) {
 #' )
 #'
 #' res <- apply_methods(datasets, add_noise)
-#' pipeline_collapse(res)
-pipeline_collapse <- function(
+#' collapse_pipeline(res)
+collapse_pipeline <- function(
     x,
     sep = arrow_sep("right"),
     drop.steps = TRUE,
@@ -166,7 +166,7 @@ factor_no_sort <- function(x) {
 #' @return list containing the results with names set to data and pipeline steps
 #'   separated by ..
 #'
-#' @seealso \code{\link{pipeline_collapse}}
+#' @seealso \code{\link{collapse_pipeline}}
 #'
 #' @examples
 #' # list of data
@@ -191,7 +191,7 @@ as_pipeline_list <- function(x) {
         stop("final column should contain 'result'")
     }
 
-    x <- pipeline_collapse(x, sep = "..")
+    x <- collapse_pipeline(x, sep = "..")
 
     setNames(x$result, nm = x$pipeline)
 }
@@ -353,3 +353,8 @@ df_to_tasks <- function(df, names = rownames(df)) {
     split(df, seq(nrow(df))) %>%
         magrittr::set_names(names)
 }
+
+# Retain for backward compatibility
+#' @rdname collapse_pipeline
+#' @export
+pipeline_collapse <- collapse_pipeline

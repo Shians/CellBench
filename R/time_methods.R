@@ -2,7 +2,7 @@
 #'
 #' time_methods() take either lists of datasets or benchmark_timing_tbl objects
 #' and applies a list of functions. The output is a benchmark_timing_tbl where
-#' each method has been applied to each dataset or preceeding result. Unlike
+#' each method has been applied to each dataset or preceding result. Unlike
 #' apply_methods(), time_methods() is always single threaded as to produce fair
 #' and more consistent timings.
 #'

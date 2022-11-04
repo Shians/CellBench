@@ -33,5 +33,5 @@ res <- apply_methods(datasets, add_noise)
 as_pipeline_list(res)
 }
 \seealso{
-\code{\link{pipeline_collapse}}
+\code{\link{collapse_pipeline}}
 }
