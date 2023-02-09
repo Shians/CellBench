@@ -21,6 +21,7 @@ get_data <- function(url, filename) {
 }
 
 #' @describeIn load_all_data Load single cell data
+#' @importFrom BiocGenerics updateObject
 #' @export
 load_sc_data <- function() {
     data_path <- get_data(
@@ -36,9 +37,9 @@ load_sc_data <- function() {
     load(data_path)
 
     out <- list(
-        "sc_10x" = sc_10x,
-        "sc_celseq" = sc_celseq,
-        "sc_dropseq" = sc_dropseq
+        "sc_10x" = updateObject(sc_10x),
+        "sc_celseq" = updateObject(sc_celseq),
+        "sc_dropseq" = updateObject(sc_dropseq)
     )
 
     invisible(out)
@@ -100,6 +101,7 @@ load_mrna_mix_data <- function() {
 #' Load in all CellBench data described at <https://github.com/LuyiTian/CellBench_data/blob/master/README.md>.
 #'
 #' @return list of SingleCellExperiment
+#' @importFrom BiocGenerics updateObject
 #' @export
 #'
 #' @examples
@@ -137,9 +139,9 @@ load_all_data <- function() {
     load(data_path3)
 
     out <- list(
-        "sc_10x" = sc_10x,
-        "sc_celseq" = sc_celseq,
-        "sc_dropseq" = sc_dropseq,
+        "sc_10x" = updateObject(sc_10x),
+        "sc_celseq" = updateObject(sc_celseq),
+        "sc_dropseq" = updateObject(sc_dropseq),
         "cell_mix1" = mix_9cell_07clean_1cell_mat,
         "cell_mix2" = mix_9cell_08clean_1cell_mat,
         "cell_mix3" = mix_9cell_09clean_1cell_mat,
