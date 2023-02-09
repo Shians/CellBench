@@ -93,6 +93,7 @@ apply_methods.list <- function(
         function(res, name) {
             if (is.error(res) && is.null(res$error_location)) {
                 res$error_location <- name
+                res <- add_class(res, "error")
                 res <- add_class(res, "task_error")
             }
             res

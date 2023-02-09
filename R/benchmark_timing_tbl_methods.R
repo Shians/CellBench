@@ -92,9 +92,21 @@ unpack_timing <- function(x) {
 #' @export
 #' @keywords internal
 unpack_timing.benchmark_timing_tbl <- function(x) {
+    extract_timing <- function(x) {
+        if (is(x, "error")) {
+            list(
+                user = NaN,
+                system = NaN,
+                elapsed = NaN
+            )
+        } else {
+            x$timing
+        }
+    }
+
     x %>%
         dplyr::mutate(
-            timing = purrr::map(.data$timed_result, function(x) x$timing)
+            timing = purrr::map(.data$timed_result, extract_timing)
         ) %>%
         dplyr::mutate(
             user = duration_seconds(
