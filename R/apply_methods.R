@@ -66,6 +66,7 @@ apply_methods.list <- function(
 
     if (is.null(name)) {
         name <- deparse(substitute(fn_list))
+        name <- gsub("methods$", "method", name)
     }
 
     multithread_param <- getOption("CellBench.bpparam")

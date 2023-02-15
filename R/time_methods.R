@@ -100,7 +100,9 @@ time_methods.benchmark_timing_tbl <- function(
     method_names <- names(fn_list)
 
     if (missing("name")) {
+        # get name from variable name
         name <- deparse(substitute(fn_list))
+        name <- gsub("methods$", "method", name)
     }
 
     output <- make_combinations(x, method_names)
