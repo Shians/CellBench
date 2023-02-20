@@ -17,4 +17,5 @@
 #'   interest.
 #' @importFrom methods is
 #' @importFrom magrittr %>%
+#' @importFrom assertthat assert_that
 NULL
