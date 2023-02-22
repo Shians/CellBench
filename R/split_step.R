@@ -10,6 +10,8 @@
 #'
 #' @return a results data.frame where the `step` column has been split into
 #' the `into` columns with duplicated values.
+#'
+#' @importFrom rlang :=
 #' @export
 #'
 #' @examples
