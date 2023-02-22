@@ -81,7 +81,7 @@ collapse_pipeline <- function(
     data.name = TRUE
 ) {
     stopifnot(
-        is(x, "benchmark_tbl"),
+        is(x, "data.frame"),
         dplyr::last(colnames(x)) == "result"
     )
 
