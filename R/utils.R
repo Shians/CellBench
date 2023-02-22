@@ -223,7 +223,6 @@ seq_ncol <- function(x) {
     seq_len(ncol(x))
 }
 
-# expand.grid altered so that last variable varies the fastest
 # @importFrom tibble as_tibble
 # @importFrom magrittr set_names
 make_combinations <- function(...) {
@@ -255,6 +254,47 @@ make_combinations <- function(...) {
 
     tibble::as_tibble(do.call(tidyr::crossing, input))
 }
+
+# @importFrom tibble as_tibble
+# @importFrom magrittr set_names
+# make_combinations_df <- function(...) {
+#     input_names <- infer_names_from_dots(...)
+#     input <- list(...) %>%
+#         magrittr::set_names(input_names)
+#
+#     # unnaming data.frame list elements required for tidyr >= 1.0.0
+#     names(input)[purrr::map_lgl(input, is.data.frame)] <- ""
+#
+#     is.valid.input <- function(x) {
+#         is.character(x) || is.data.frame(x) || is.factor(x)
+#     }
+#
+#     if (!purrr::every(input, is.valid.input)) {
+#         stop("all arguments must be either data.frames, character or factor vectors")
+#     }
+#
+#     input <- purrr::map(
+#         input,
+#         function(x) {
+#             if (is.data.frame(x)) {
+#                 return(x)
+#             } else {
+#                 return(factor_no_sort(x))
+#             }
+#         }
+#     )
+#
+#     df <- input[[1]] %>%
+#         dplyr::mutate(
+#             method_names = map(1:nrow(input[[1]]), function(x) {
+#                 out <- tibble::tibble(col = input[[2]])
+#                 names(out) <- names(input)[2]
+#                 out
+#             })
+#         )
+#
+#     df %>% tidyr::unnest(method_names)
+# }
 
 all_same_class <- function(x) {
     classes <- purrr::map(x, class)
