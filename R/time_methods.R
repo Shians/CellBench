@@ -105,8 +105,6 @@ time_methods.benchmark_timing_tbl <- function(
         name <- gsub("methods$", "method", name)
     }
 
-    output <- make_combinations(x, method_names)
-
     tasks <- list()
     for (data in x$timed_result) {
         for (fn in fn_list) {
