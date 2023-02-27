@@ -44,11 +44,11 @@
 fn_arg_seq <- function(func, ..., .strict = FALSE) {
     stopifnot(is.function(func))
 
-    # get actual fucntion name
+    # get actual function name
     func_name <- deparse(substitute(func))
     args <- list(...)
 
-    # find arguments inputted but not used by func
+    # find arguments input but not used by func
     names_args <- names(args)
     names_f_args <- names(formals(func))
     invalid_args <- setdiff(names_args, names_f_args)
@@ -76,7 +76,10 @@ fn_arg_seq <- function(func, ..., .strict = FALSE) {
     )
 
     arg_sigs <- row_apply(
-        arg_combs,
+        dplyr::mutate(
+            arg_combs,
+            dplyr::across(dplyr::everything(), as.character)
+        ),
         function(x) {
             paste(glue::glue("{cnames} = {x}"), collapse = ", ")
         }
