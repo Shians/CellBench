@@ -39,3 +39,18 @@ print.fn_arg_seq <- function(x, ...) {
     print(glue::glue("List of {length(x)} partial functions"))
     print(glue::glue(" $ {names(x)}"))
 }
+
+#' @exportS3Method vctrs::vec_ptype_abbr
+vec_ptype_abbr.task_error <- function(x, ...) {
+  "task_error"
+}
+
+#' @exportS3Method vctrs::vec_ptype_abbr
+vec_ptype_abbr.remote_error <- function(x, ...) {
+  "remote_error"
+}
+
+#' @exportS3Method vctrs::vec_ptype_abbr
+vec_ptype_abbr.SingleCellExperiment <- function(x, ...) {
+  "SingleCellExperiment"
+}

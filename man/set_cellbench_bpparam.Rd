@@ -14,7 +14,7 @@ None
 }
 \description{
 This is a more advanced interface for changing CellBench's parallelism
-settings. Internally CellBench uses BiocParallel for parallism, consult
+settings. Internally CellBench uses BiocParallel for parallelism, consult
 the documentation of BiocParallel to see what settings are available.
 }
 \examples{
