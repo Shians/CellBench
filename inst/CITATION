@@ -1,0 +1,21 @@
+citHeader("To cite the 'CellBench' package please use:")
+
+bibentry(
+    bibtype = "Article",
+    doi = "10.1093/bioinformatics/btz889",
+    author = personList(
+        as.person("Shian Su"),
+        as.person("Luyi Tian"),
+        as.person("Xueyi Dong"),
+        as.person("Peter F. Hickey"),
+        as.person("Saskia Freytag"),
+        as.person("Matthew E. Ritchie")
+    ),
+    journal = "Bioinformatics",
+    title = "CellBench: R/Bioconductor software for comparing single-cell RNA-seq analysis methods",
+    year = "2019",
+    month = "11",
+    volume = "36",
+    pages = "2288-2290",
+    number = "7"
+)
