@@ -21,7 +21,7 @@ any_task_errors.benchmark_tbl <- function(x, verbose = FALSE) {
         res <- x$result[[i]]
 
         if (is(res, "task_error")) {
-            any_errors = TRUE
+            any_errors <- TRUE
 
             if (verbose) {
                 message(glue::glue("task_error in row {i}"))
