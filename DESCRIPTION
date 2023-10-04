@@ -19,12 +19,12 @@ Description: This package contains infrastructure for benchmarking analysis
     multithreaded evaluation of analysis methods.
 biocViews:
     Software,
-    Infrastructure
+    Infrastructure,
+    SingleCell
 URL: https://github.com/shians/cellbench
 BugReports: https://github.com/Shians/CellBench/issues
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Depends:
     R (>= 3.6),
     SingleCellExperiment,
