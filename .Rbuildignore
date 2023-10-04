@@ -3,9 +3,12 @@
 ^\.travis\.yml$
 ^Meta$
 ^doc$
+^debug$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.CellBench$
 ^\.git$
 ^\.covrignore$
+^\.DS_Store$
+^CellBench.BiocCheck$
 ^CellBench.png$

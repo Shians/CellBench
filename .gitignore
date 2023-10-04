@@ -6,6 +6,7 @@ CellBench.BiocCheck
 .RData
 .Ruserdata
 .CellBenchCache
+.DS_Store
 ..Rcheck
 *.RData
 *.Rproj
