@@ -188,7 +188,7 @@ test_that(
         median = median
     )
 
-    set_cellbench_threads(4)
+    set_cellbench_threads(2)
     res <- apply_methods(x, f_list)
 
     set_cellbench_threads(1)
@@ -200,7 +200,7 @@ test_that(
         f1 = function(x) x + 1
     )
 
-    set_cellbench_threads(4)
+    set_cellbench_threads(2)
     res <- x %>%
         apply_methods(f_list) %>%
         apply_methods(f_list2)
